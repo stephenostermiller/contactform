@@ -1,0 +1,5 @@
+redirect seeother /contactform/contactform_1_0.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
+redirect seeother /contactform/contactform_1_1.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
+redirect seeother /contactform/contactform_1_1_1.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
+redirect seeother /contactform/contactform_1_1_2.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
+redirect seeother /contactform/contactform_1_1_3.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
