@@ -1,0 +1,33 @@
+<%bte.doc output="false"%>
+<%bte.tpl name=page %><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title><%bte.inc name=pageTitle %></title><%bte.grp onNoResolve=warning %>
+<meta name="description" content="<%bte.inc name=description %>"><%/bte.grp %><%bte.grp onNoResolve=warning %>
+<meta name="keywords" content="<%bte.inc name=keywords %>"><%/bte.grp %>
+<link rel="icon" href="contactform_16_16.png" type="image/png">
+</head>
+<body>
+<body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
+<a href="./"><img src="contactform.png" border=0 width=343 height=343 align=left alt="Contact Form"></a>
+<div style="padding:1cm;">
+<%bte.inc name=topContent %>
+</div>
+
+<br clear=all>
+
+<div style="padding:1cm;">
+<%bte.inc name=content %>
+</div>
+
+<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+
+</body>
+</html>
+<%/bte.tpl%>
+<%bte.tpl name=barMain%><a href="./">Main</a><%/bte.tpl%>
+<%bte.tpl name=barArticles%><a href="articles.html">Articles</a><%/bte.tpl%>
+<%bte.tpl name=barGames%><a href="games.html">Games</a><%/bte.tpl%>
+<%bte.tpl name=barJava%><a href="java.html">Java</a><%/bte.tpl%>
+<%/bte.doc%>

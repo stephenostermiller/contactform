@@ -1,0 +1,45 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Contact Form Address Configuration<%/bte.tpl%>
+<%bte.tpl name=description %>Various ways to configure contact form with address to which it is allowed to send email.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form, email addresses<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1>Contact Form Address Configuration</h1>
+
+Contact form uses a set of alias (the %Aliases variable) to allow email to be sent.  Each alias
+has two parts: a public name, and a private emal address.  The address is never shown on the 
+contact form page or in the page source.
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+
+<h2>Default Configuration</h2>
+<pre>my %Aliases = (
+	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
+	#'webmaster','webmaster@yoursite.tld',
+	#'postmaster','postmaster@yoursite.tld',
+);</pre>
+
+The two lines that start with # are commented out.  In this configuration the form will
+send email only to the web server administrator (as defined in the web server configuration).  
+It is almost certain that you want to change this.
+
+<h2>Just One Person</h2>
+<pre>my %Aliases = (
+	'John Doe','johndoe@example.com',
+);</pre>
+
+In this configuration, only John Doe can get email. Users will not be given a choice to send
+email to other people.
+
+<h2>Multiple People</h2>
+<pre>my %Aliases = (
+	'John Doe','johndoe@example.com',
+	'Jane Doe','janedoe@example.com',
+	'Webmaster','webmaster@example.com',
+	'Sales','webmaster@example.com',
+);</pre>
+
+In this configuration, the form can send email to John, Jane, Sales, or Webmaster.  Users of the
+will see a drop down menu from which they can choose one of these four options.
+
+<%/bte.tpl%>
+<%/bte.doc%>

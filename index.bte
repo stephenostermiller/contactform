@@ -1,29 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Contact Form</title>
-<meta name="description" content="A web form that will send contents via email, but without allowing spammers to harvest addresses.">
-<meta name="keywords" content="contact form, form mail, formmail, email form, spam prevention, email gateway, web to email">
-<link rel="icon" href="contactform_16_16.png" type="image/png">
-</head>
-<body>
-<body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
-<a href="./"><img src="contactform.png" border=0 width=343 height=343 align=left alt="Contact Form"></a>
-<div style="padding:1cm;">
-
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Contact Form<%/bte.tpl%>
+<%bte.tpl name=description %>A web form that will send contents via email, but without allowing spammers to harvest addresses.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form, form mail, formmail, email form, spam prevention, email gateway, web to email<%/bte.tpl%>
+<%bte.tpl name=topContent %>
 <h1>Contact Form</h1>
 A perl script that you can run on your website that will allow others to send you email 
 through a web interface.  Unlike other web to email gateways, Contact Form is designed to
 thwart spammers.  It does not allow email to be sent to unknown addresses, nor does it 
 reveal addresses that it knows.
-
-</div>
-
-<br clear=all>
-
-<div style="padding:1cm;">
-
+<%/bte.tpl%>
+<%bte.tpl name=content %>
 <h2>Design Goals</h2>
 <ul>
 <li>Allow email to be sent to a list of known email addresses through a web interface.</li>
@@ -122,10 +108,5 @@ Copyright (C) 2002-2004 <a href="http://ostermiller.org/contact.pl?regarding=Con
 <tr><td><a href="http://ente.limmat.ch:8080/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
 <tr><td><a href="http://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
 </table>
-
-</div>
-
-<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
-
-</body>
-</html>
+<%/bte.tpl%>
+<%/bte.doc%>
