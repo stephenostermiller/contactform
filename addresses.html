@@ -1,15 +1,29 @@
-<%bte.doc super="page.bte" %>
-<%bte.tpl name=pageTitle %>Contact Form Address Configuration<%/bte.tpl%>
-<%bte.tpl name=description %>Various ways to configure contact form with address to which it is allowed to send email.<%/bte.tpl%>
-<%bte.tpl name=keywords %>contact form, email addresses<%/bte.tpl%>
-<%bte.tpl name=topContent %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Contact Form Address Configuration</title>
+<meta name="description" content="Various ways to configure contact form with address to which it is allowed to send email.">
+<meta name="keywords" content="contact form, email addresses">
+<link rel="icon" href="contactform_16_16.png" type="image/png">
+</head>
+<body>
+<body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
+<a href="./"><img src="contactform.png" border=0 width=343 height=343 align=left alt="Contact Form"></a>
+<div style="padding:1cm;">
+
 <h1>Contact Form Address Configuration</h1>
 
 Contact form uses a set of alias (the %Aliases variable) to allow email to be sent.  Each alias
 has two parts: a public name, and a private emal address.  The address is never shown on the 
 contact form page or in the page source.
-<%/bte.tpl%>
-<%bte.tpl name=content %>
+
+</div>
+
+<br clear=all>
+
+<div style="padding:1cm;">
+
 
 <h2>Default Configuration</h2>
 <pre>my %Aliases = (
@@ -41,5 +55,10 @@ email to other people.
 In this configuration, the form can send email to John, Jane, Sales, or Webmaster.  Users of the
 will see a drop down menu from which they can choose one of these four options.
 
-<%/bte.tpl%>
-<%/bte.doc%>
+
+</div>
+
+<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+
+</body>
+</html>
