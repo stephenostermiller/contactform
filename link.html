@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Linking to Your Contact Form</title>
+<meta name="description" content="Creating links to a Contact Form script.">
+<meta name="keywords" content="contact form prefill, contact form link">
+<link rel="icon" href="contactform_16_16.png" type="image/png">
+</head>
+<body>
+<body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
+<a href="./"><img src="contactform.png" border=0 width=343 height=343 align=left alt="Contact Form"></a>
+<div style="padding:1cm;">
+
+<h1>Linking to Your Contact Form</h1>
+
+</div>
+
+<br clear=all>
+
+<div style="padding:1cm;">
+
+Linking to the contact form on your server is very staightforward.  My contact form 
+(on ostermiller.org) is in the root directory of the webserer, so it is simply<br>
+http://ostermiller.org/contact.pl.
+<p>
+If your contact form is in your cgi-bin directory, the link will likely look something
+like this:<br>
+http://www.example.com/cgi-bin/contact.pl
+<p>
+If you want to link to your contact form with prefilled data, there are two ways to do so.
+<h3>Additional Subject Matter</h3>
+I create multilple links to the same contact form from various places on my website.  Because
+users do not always do a good job of providing a meaningful subject I like to have some idea
+what section of my site they came from to the contact form.  I do this using the "regarding"
+parameter.  The contents of the regarding parameter appear in parenthesis after the user entered
+subject in the emails that you receive.  For example:<br>
+contact.pl?regarding=Moose+Tracks<br>
+contact.pl?regarding=Baking+Cookies<br>
+Use plusses instead of spaces so that all browsers handle the link correctly.
+<p>
+An email from a user might look like this:
+<pre>From: Joe User <joe@example.com>
+Subject: I love your site!!!! (Moose Tracks)
+
+It was the only site on the internet I could find with the information I was looking for.
+Thanks so much, and keep up the good work.</pre>
+<p>
+At this point you know they were talking about your moose tracking page rather than your cookie
+baking page.
+
+<h3>Prefilling Data</h3>
+If you desire to set the subject (or any field) for the user, it is very easy to do.  Simply, 
+put a paremeter with that field into your link.  To error messages about incomplete forms (or the
+form actually being submitted if it is complete) use the prefill parameter as well:<br>
+contact.pl?subect=Loved+the+omni&prefill<br>
+contact.pl?subect=Hated+the+omni&prefill<br>
+
+
+</div>
+
+<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+
+</body>
+</html>

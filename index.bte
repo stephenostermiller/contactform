@@ -37,8 +37,8 @@ reveal addresses that it knows.
 <li>Extract the contents of the download.</li>
 <li>Place contact.pl in your webserver's cgi-bin directory or another place that allows scripts.</li>
 <li>Edit contact.pl to change the email addresses to which email can be sent. (<a href="addresses.html">Examples</a>)</li>
-<li>Optional - Change any other parameters in contact.pl to taste.</li>
-<li>Point your web browser at contact.pl on your server.</li>
+<li>Optional - Change any other parameters in contact.pl to taste. (<a href="options.html">Details</a>)</li>
+<li>Point your web browser at contact.pl on your server. (<a href="link.html">Options</a>)</li>
 <li>Send yourself email through the web.</li>
 </ol>
 

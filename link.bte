@@ -1,0 +1,46 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Linking to Your Contact Form<%/bte.tpl%>
+<%bte.tpl name=description %>Creating links to a Contact Form script.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form prefill, contact form link<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1>Linking to Your Contact Form</h1>
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+Linking to the contact form on your server is very staightforward.  My contact form 
+(on ostermiller.org) is in the root directory of the webserer, so it is simply<br>
+http://ostermiller.org/contact.pl.
+<p>
+If your contact form is in your cgi-bin directory, the link will likely look something
+like this:<br>
+http://www.example.com/cgi-bin/contact.pl
+<p>
+If you want to link to your contact form with prefilled data, there are two ways to do so.
+<h3>Additional Subject Matter</h3>
+I create multilple links to the same contact form from various places on my website.  Because
+users do not always do a good job of providing a meaningful subject I like to have some idea
+what section of my site they came from to the contact form.  I do this using the "regarding"
+parameter.  The contents of the regarding parameter appear in parenthesis after the user entered
+subject in the emails that you receive.  For example:<br>
+contact.pl?regarding=Moose+Tracks<br>
+contact.pl?regarding=Baking+Cookies<br>
+Use plusses instead of spaces so that all browsers handle the link correctly.
+<p>
+An email from a user might look like this:
+<pre>From: Joe User <joe@example.com>
+Subject: I love your site!!!! (Moose Tracks)
+
+It was the only site on the internet I could find with the information I was looking for.
+Thanks so much, and keep up the good work.</pre>
+<p>
+At this point you know they were talking about your moose tracking page rather than your cookie
+baking page.
+
+<h3>Prefilling Data</h3>
+If you desire to set the subject (or any field) for the user, it is very easy to do.  Simply, 
+put a paremeter with that field into your link.  To error messages about incomplete forms (or the
+form actually being submitted if it is complete) use the prefill parameter as well:<br>
+contact.pl?subect=Loved+the+omni&prefill<br>
+contact.pl?subect=Hated+the+omni&prefill<br>
+
+<%/bte.tpl%>
+<%/bte.doc%>
