@@ -3,10 +3,10 @@
 <%bte.tpl name=description %>Creating links to a Contact Form script.<%/bte.tpl%>
 <%bte.tpl name=keywords %>contact form prefill, contact form link<%/bte.tpl%>
 <%bte.tpl name=topContent %>
-<h1>Linking to Your Contact Form</h1>
+<h1>Linking to Your <a href="./">Contact Form</a></h1>
 <%/bte.tpl%>
 <%bte.tpl name=content %>
-Linking to the contact form on your server is very staightforward.  My contact form 
+Linking to the <a href="./">contact form</a> on your server is very staightforward.  My contact form 
 (on ostermiller.org) is in the root directory of the webserer, so it is simply<br>
 http://ostermiller.org/contact.pl.
 <p>

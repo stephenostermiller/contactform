@@ -3,9 +3,9 @@
 <%bte.tpl name=description %>Various ways to configure contact form with address to which it is allowed to send email.<%/bte.tpl%>
 <%bte.tpl name=keywords %>contact form, email addresses<%/bte.tpl%>
 <%bte.tpl name=topContent %>
-<h1>Contact Form Address Configuration</h1>
+<h1><a href="./">Contact Form</a> Address Configuration</h1>
 
-Contact form uses a set of alias (the %Aliases variable) to allow email to be sent.  Each alias
+<a href="./">Contact form</a> uses a set of alias (the %Aliases variable) to allow email to be sent.  Each alias
 has two parts: a public name, and a private emal address.  The address is never shown on the 
 contact form page or in the page source.
 <%/bte.tpl%>
