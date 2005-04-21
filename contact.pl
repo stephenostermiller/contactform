@@ -259,7 +259,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.1.7";
+	$version = "1.1.8";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -574,7 +574,7 @@ sub inputPage {
 		foreach $key (@orderedKeys){
 			if(!defined($Form_Type{$key}) || $Form_Type{$key} ne 'hidden'){
 				if ($key eq $field_name_to){
-					$client_side_check_script .= " else if (form.$key.length == 0){\n";
+					$client_side_check_script .= " else if (form.$key.value.length == 0){\n";
 				} else {
 					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript($Form_Fields{$key})."', 'g'))){\n";
 				}

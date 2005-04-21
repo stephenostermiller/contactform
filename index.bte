@@ -43,17 +43,21 @@ reveal addresses that it knows.
 </ol>
 
 <h2>Download</h2>
-<p><a href="contactform_1_1_7.tar.gz">contactform_1_1_7.tar.gz</a></p>
+<p><a href="contactform_1_1_8.tar.gz">contactform_1_1_8.tar.gz</a></p>
 
 <h2>Example</h2>
 <p><a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Use Contact Form to contact the Contact Form author, Stephen Ostermiller</a></p>
 
 <h2>Changes</h2>
 <ul>
+<li>Version 1.1.8<ul>
+<li>Fix a javascript warning that occurred when verifying the form on the client side.</li>
+</ul></li></li>
 <li>Version 1.1.7<ul>
 <li>Uses Perl's built in safety checks: -T -w and use strict.</li>
 <li>"prefill" parameter may be used to supress error messages when passing in some other parameters prefilled.</li>
-</ul></li></li><li>Version 1.1.6<ul>
+</ul></li></li>
+<li>Version 1.1.6<ul>
 <li>Added icon linked from form.</li>
 </ul></li></li>
 <li>Version 1.1.5<ul>
