@@ -43,13 +43,16 @@ reveal addresses that it knows.
 </ol>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_1_1_8.tar.gz">contactform_1_1_8.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_1_1_9.tar.gz">contactform_1_1_9.tar.gz</a></p>
 
 <h2>Example</h2>
 <p><a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Use Contact Form to contact the Contact Form author, Stephen Ostermiller</a></p>
 
 <h2>Changes</h2>
 <ul>
+<li>Version 1.1.9<ul>
+<li>Added a CSS expression to make Internet Explorer use a max-width for the text fields.</li>
+</ul></li></li>
 <li>Version 1.1.8<ul>
 <li>Fix a javascript warning that occurred when verifying the form on the client side.</li>
 </ul></li></li>

@@ -49,7 +49,7 @@ my $input_page_head =
 "<title>Contact Us</title>
 <style>
 .error { color:red; }
-.textentry { min-width:4in; width:100%; max-width:6in; }
+.textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?'600px':'auto');}
 textarea { height:4in; }
 .required { color:green }
 </style>";
@@ -64,7 +64,7 @@ my $input_page_body_end =
 my $sent_page_head =
 "<title>Message Sent</title>
 <style>
-.sent { border:thin black ridge; padding:1cm; max-width:6in;}
+.sent { border:thin black ridge; padding:1cm;  max-width:600px; width:expression(document.body.clientWidth>600?'600px':'auto');}
 </style>";
 
 my $sent_page_body_start =
@@ -259,7 +259,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.1.8";
+	$version = "1.1.9";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
