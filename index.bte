@@ -111,7 +111,7 @@ Copyright (C) 2002-2005 <a href="http://ostermiller.org/contact.pl?regarding=Con
 <tr><td><a href="ftp://ftp.monkeys.com/pub/formmail/">Monkey's FormMail</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Modified (for security) version of Matt's FormMail, does not hide email addresses.</td></tr>
 <tr><td><a href="http://nms-cgi.sourceforge.net/">nms</a></td><td>Open source (GPL or Artistic)</td><td>Perl</td><td>A replacement for all of Matt's scripts including FormMail.  Can send directly to an SMTP server without sendmail.  Does not hide email addresses.</td></tr>
 <tr><td><a href="http://moensted.dk/formmail/">Dr. J&oslash;rgen Mash's FormMail.pl</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Another modified version of Matt's FormMail.  Does not hide email addresses.</td></tr>
-<tr><td><a href="http://www.phlyingpenguin.net/index.pl/form2mail">form2mail</a></td><td>Open source (GPL)</td><td>PHP, MySQL, SendMail</td><td>Hides email addresses in the database, has online administration.</td></tr>
+<tr><td><a href="http://www.stargeek.com/php_scripts.php?script=12&cat=blog">Stargeek's PHP email form</a></td><td>Open source, unspecified license</td><td>PHP, SendMail</td><td>Designed to hide the email address of a single individual.</td></tr>
 <tr><td><a href="http://ente.limmat.ch:8080/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
 <tr><td><a href="http://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
 </table>
