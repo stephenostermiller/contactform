@@ -14,7 +14,7 @@
 
 <h1><a href="./">Contact Form</a> Address Configuration</h1>
 
-<a href="./">Contact form</a> uses a set of alias (the %Aliases variable) to allow email to be sent.  Each alias
+<a href="./">Contact form</a> uses a set of alias (the @Aliases variable) to allow email to be sent.  Each alias
 has two parts: a public name, and a private emal address.  The address is never shown on the 
 contact form page or in the page source.
 
@@ -26,7 +26,7 @@ contact form page or in the page source.
 
 
 <h2>Default Configuration</h2>
-<pre>my %Aliases = (
+<pre>my @Aliases = (
 	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
 	#'webmaster','webmaster@yoursite.tld',
 	#'postmaster','postmaster@yoursite.tld',
@@ -37,7 +37,7 @@ send email only to the web server administrator (as defined in the web server co
 It is almost certain that you want to change this.
 
 <h2>Just One Person</h2>
-<pre>my %Aliases = (
+<pre>my @Aliases = (
 	'John Doe','johndoe@example.com',
 );</pre>
 
@@ -45,7 +45,7 @@ In this configuration, only John Doe can get email. Users will not be given a ch
 email to other people.
 
 <h2>Multiple People</h2>
-<pre>my %Aliases = (
+<pre>my @Aliases = (
 	'John Doe','johndoe@example.com',
 	'Jane Doe','janedoe@example.com',
 	'The Webmaster','webmaster@example.com',

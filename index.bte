@@ -36,20 +36,24 @@ reveal addresses that it knows.
 <li>Download the contactform archive.</li>
 <li>Extract the contents of the download.</li>
 <li>Place contact.pl in your webserver's cgi-bin directory or another place that allows scripts.</li>
-<li>Edit contact.pl to change the email addresses to which email can be sent. (<a href="http://ostermiller.org/contactform/addresses.html">Examples</a>)</li>
-<li>Optional - Change any other parameters in contact.pl to taste. (<a href="http://ostermiller.org/contactform/options.html">Details</a>)</li>
-<li>Point your web browser at contact.pl on your server. (<a href="http://ostermiller.org/contactform/link.html">Options</a>)</li>
+<li>Edit contact.pl to change the email addresses to which email can be sent. (<a href="http://ostermiller.org/contactform/addresses.html">Address examples</a>)</li>
+<li>Optional - Change any other parameters in contact.pl to taste. (<a href="http://ostermiller.org/contactform/options.html">Detailed configuration options</a>)</li>
+<li>Point your web browser at contact.pl on your server. (<a href="http://ostermiller.org/contactform/link.html">Linking and integration documentation</a>)</li>
 <li>Send yourself email through the web.</li>
 </ol>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_1_1_9.tar.gz">contactform_1_1_9.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_1_2_0.tar.gz">contactform_1_2_0.tar.gz</a></p>
 
 <h2>Example</h2>
 <p><a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Use Contact Form to contact the Contact Form author, Stephen Ostermiller</a></p>
 
 <h2>Changes</h2>
 <ul>
+<li>Version 1.2.0<ul>
+<li>Allow ordering of multiple email addresses.</li>
+<li>Fields are now ordered in the order they are specified rather than having to specify an order.</li>
+</ul></li></li>
 <li>Version 1.1.9<ul>
 <li>Added a CSS expression to make Internet Explorer use a max-width for the text fields.</li>
 </ul></li></li>

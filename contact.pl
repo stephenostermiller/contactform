@@ -35,7 +35,7 @@ $page_head);
 # form, otherwise, the user will be presented with a pulldown menu
 # of aliases to which email can be sent.
 # The addresses listed here are never visible via served web pages.
-my %Aliases = (
+my @Aliases = (
 	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
 	#'webmaster','webmaster@yoursite.tld',
 	#'postmaster','postmaster@yoursite.tld',
@@ -87,7 +87,7 @@ my $sent_page_body_end =
 # You may safely remove the subject, email, name, and message
 # from the form.	The to field should not be removed.
 
-my %Form_Fields = (
+my @Form_Fields = (
 	'to',$ONE_LINE_REQUIRED,
 	'email',$EMAIL_REQUIRED,
 	'name',$ONE_LINE_OPTIONAL,
@@ -101,26 +101,6 @@ my %Form_Fields = (
 	#'city', "^(?:[a-zA-Z ]*)\$",
 	#'state', "^(?:(?:[A-Z][A-Z])?)\$",
 	#'zip',$ZIPCODE_OPTIONAL,
-);
-
-# The order that fields will appear in web pages and email
-# Just because a field name is present here, it is not
-# nessecarily allowed.	Make sure it is also in %Form_Fields
-# If field order is not important, this list may be empty.
-my @Field_Order = (
-	'to',
-	'email',
-	'name',
-	'subject',
-	'message',
-	'regarding',
-	#'phone',
-	#'fax',
-	#'address1',
-	#'address2',
-	#'city',
-	#'state',
-	#'zip',
 );
 
 # A user friendly error message for each required
@@ -238,9 +218,10 @@ my $submit_method = 'POST';
 # You need to know Perl to and have a strong stomach to
 # modify much of anything below this line
 
-my(%SubmittedData, $mail_message);
+my(%SubmittedData, $mail_message, %AliasesMap, @AliasesOrdered, %FieldMap, @Field_Order);
 
 &parseInput();
+&createMaps();
 &sanityCheck();
 &composeEmail();
 &sendEmail();
@@ -259,7 +240,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.1.9";
+	$version = "1.2.0";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -304,6 +285,34 @@ sub initConstants {
 	$page_head='<link rel="icon" href="'.&escapeHTML($ENV{'SCRIPT_NAME'}).'/contactformicon.png" type="image/png">
 <link rel="copyright" href="http://ostermiller.org/contactform/" type="text/html">';
 
+}
+
+sub createMaps {
+    # Since hash maps are not ordered, Aliases and Form_Fields
+    # Are declared as arrays.  We need to create two data structures
+    # from each.  The first is an undered map, the second is an
+    # ordered key set.
+    %AliasesMap = @Aliases;
+    my $useAlias = 1;
+    foreach my $alias (@Aliases){
+        if ($useAlias){
+            push(@AliasesOrdered, $alias);
+            $useAlias = 0;
+        } else {
+            $useAlias = 1;
+        }
+    }
+        
+    %FieldMap = @Form_Fields;
+    my $useField = 1;
+    foreach my $field (@Form_Fields){
+        if ($useField){
+            push(@Field_Order, $field);
+            $useField = 0;
+        } else {
+            $useField = 1;
+        }
+    }
 }
 
 sub parseInput {
@@ -352,8 +361,8 @@ sub sanityCheck {
 	my @field_keys = &getOrderedFields();
 	foreach my $key (@field_keys){
 		my $required_value = "";
-		if (defined($Form_Fields{$key})){
-			$required_value = $Form_Fields{$key};
+		if (defined($FieldMap{$key})){
+			$required_value = $FieldMap{$key};
 		}
 		my $data = "";
 		if (defined($SubmittedData{$key})){
@@ -389,7 +398,7 @@ sub sanityCheck {
 		&inputPage('');
 	} else {
 		my $recipent = $SubmittedData{$field_name_to};
-		if ((!$Aliases{$recipent})){
+		if ((!$AliasesMap{$recipent})){
 			&inputPage("Your message cannot be sent to the specified recipient.")
 		}
 	}
@@ -398,7 +407,7 @@ sub sanityCheck {
 sub composeEmail {
 	my ($subject, $from, @field_keys, $key);
 
-	if ($Form_Fields{$field_name_from_email}){
+	if ($FieldMap{$field_name_from_email}){
 		$from = &safeHeader($SubmittedData{$field_name_from_email});
 	} else {
 		$from = '';
@@ -406,17 +415,17 @@ sub composeEmail {
 	if ($from !~ /$EMAIL_REQUIRED/g){
 		$from = 'nobody';
 	}
-	if ($Form_Fields{$field_name_from_name} && $SubmittedData{$field_name_from_name} ne ''){
+	if ($FieldMap{$field_name_from_name} && $SubmittedData{$field_name_from_name} ne ''){
 		$from .= " (".&safeHeaderName($SubmittedData{$field_name_from_name}).")";
 	}
 
-	if ($Form_Fields{$field_name_subject} && $SubmittedData{$field_name_subject}){
+	if ($FieldMap{$field_name_subject} && $SubmittedData{$field_name_subject}){
 		$subject = &safeHeader($SubmittedData{$field_name_subject});
 	} else {
 		$subject = "Website Form Submission";
 	}
 
-	if ($Form_Fields{$field_name_regarding} && $SubmittedData{$field_name_regarding} ne ''){
+	if ($FieldMap{$field_name_regarding} && $SubmittedData{$field_name_regarding} ne ''){
 		$subject .= " (".&safeHeader($SubmittedData{$field_name_regarding}).")";
 	}
 
@@ -448,7 +457,7 @@ sub composeEmail {
 
 sub sendEmail {
 	open(MAIL,"|$sendmail");
-	print MAIL "To: ".&safeHeader($Aliases{$SubmittedData{$field_name_to}})."\n";
+	print MAIL "To: ".&safeHeader($AliasesMap{$SubmittedData{$field_name_to}})."\n";
 	print MAIL "Content-Type: text/plain; charset=".&safeHeader($charset)."\n";
 	print MAIL "X-Mailer: ContactForm/".&safeHeader($version)." (http://ostermiller.org/contactform/)\n";
 	print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
@@ -488,7 +497,7 @@ sub inputPage {
 	if (!defined($error)){
 		$error = "";
 	}
-	my (@orderedKeys, $key, $form_html, @alias_keys, $alias_key, $script_call, $alias_selected, $client_side_check_script);
+	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
 	if ($error ne ""){
 		$error = "<div class=error>\n" . $error . "</div>\n";
@@ -515,26 +524,25 @@ sub inputPage {
 			$html_description = "<label for='$key'>$html_description</label><br>";
 		}
 		if ($key eq $field_name_to){
-			@alias_keys = keys(%Aliases);
-			if ($#alias_keys == 0){
-				$alias_key = $alias_keys[0];
-				$form_html.= "<input type=hidden name='$field_name_to' value='$alias_key'>\n";
+			if ($#AliasesOrdered == 0){
+				my $alias = $AliasesOrdered[0];
+				$form_html.= "<input type=hidden name='$field_name_to' value='$alias'>\n";
 			} else {
 				$form_html.= "<p>$required_marker $html_description<select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
-				foreach $alias_key (@alias_keys){
-					if ($alias_key eq $SubmittedData{$field_name_to}){
+				foreach my $alias (@AliasesOrdered){
+					if ($alias eq $SubmittedData{$field_name_to}){
 						$alias_selected = 'selected'
 					} else {
 						$alias_selected = '';
 					}
-						$form_html.= "<option value='$alias_key' $alias_selected>$alias_key</option>\n";
+						$form_html.= "<option value='$alias' $alias_selected>$alias</option>\n";
 				}
 				$form_html.= "</select></p>\n";
 			}
 		} else {
 			my $mark = '';
-			my $required_value = $Form_Fields{$key};
+			my $required_value = $FieldMap{$key};
 			my $data = "";
 			if (defined($SubmittedData{$key})){
 				$data = $SubmittedData{$key};
@@ -576,7 +584,7 @@ sub inputPage {
 				if ($key eq $field_name_to){
 					$client_side_check_script .= " else if (form.$key.value.length == 0){\n";
 				} else {
-					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript($Form_Fields{$key})."', 'g'))){\n";
+					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript($FieldMap{$key})."', 'g'))){\n";
 				}
 				if ($Error_Messages{$key}){
 					$client_side_check_script .= "alert('".&escapeJavaScript($Error_Messages{$key})."');\n";
@@ -678,12 +686,12 @@ sub escapeJavaScript {
 sub getOrderedFields {
 	my ($key, @field_keys, %done);
 	foreach $key (@Field_Order){
-		if (!$done{$key} && $Form_Fields{$key}){
+		if (!$done{$key} && $FieldMap{$key}){
 			push(@field_keys,$key);
 			$done{$key} = 1;
 		}
 	}
-	foreach $key (keys %Form_Fields){
+	foreach $key (keys %FieldMap){
 		if (!$done{$key}){
 			push(@field_keys,$key);
 			$done{$key} = 1;

@@ -43,7 +43,7 @@ This would be a good place for copyright notices and other footers.
 Contact form comes with standard name, address, subject and message fields.  It is very easy to add
 additional fields.  When you add additional field you need to add them to the
 <ol>
-<li>%Form_Fields - a regular expression to validate the field.  There are plenty of prebuilt regular
+<li>@Form_Fields - a regular expression to validate the field.  There are plenty of prebuilt regular
 expressions to choose from:
   <ul>
   <li>$SOMETHING - A generic required field (multiple line textarea)</li>
@@ -65,7 +65,6 @@ expressions to choose from:
   <li>If you know regular expressions you can make up your own</li>
   </ul>
 </li>
-<li>@Field_Order - To control the order in which they appear in the form.</li>
 <li>%Error_Messages - To specify the message for when the user enters something invalid.</li>
 <li>%Form_Type - text, textarea, or hidden to determine how the field will look on the form. </li>
 <li>%Field_Descriptions - For text describes the field on the form.</li>
