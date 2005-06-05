@@ -3,7 +3,7 @@
 <%bte.tpl name=description %>A web form that will send contents via email, but without allowing spammers to harvest addresses.<%/bte.tpl%>
 <%bte.tpl name=keywords %>contact form, form mail, formmail, email form, spam prevention, email gateway, web to email<%/bte.tpl%>
 <%bte.tpl name=topContent %>
-<h1>Contact Form</h1>h
+<h1>Contact Form</h1>
 A perl script that you can run on your website that will allow others to send you email 
 through a web interface.  Unlike other web to email gateways, Contact Form is designed to
 thwart spammers.  It does not allow email to be sent to unknown addresses, nor does it 
