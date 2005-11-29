@@ -28,7 +28,7 @@ reveal addresses that it knows.
 <h2>Requirements</h2>
 <ul>
 <li>A web server that can execute Perl scripts.</li>
-<li>A command line program to send electrontic mail. ("sendmail" is installed on most servers.)</li>
+<li>A command line program to send electronic mail. ("sendmail" is installed on most servers.)</li>
 </ul>
 
 <h2>Setup</h2>
