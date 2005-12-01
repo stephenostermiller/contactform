@@ -6,6 +6,12 @@
 <meta name="description" content="Various ways to configure contact form with address to which it is allowed to send email.">
 <meta name="keywords" content="contact form, email addresses">
 <link rel="icon" href="contactform_16_16.png" type="image/png">
+<style>
+a:link{text-decoration:none;}
+a:visited{text-decoration:none;}
+a:link:hover{text-decoration:underline;}
+a:visited:hover{text-decoration:underline;}
+</style>
 </head>
 <body>
 <body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
@@ -15,7 +21,7 @@
 <h1><a href="./">Contact Form</a> Address Configuration</h1>
 
 <a href="./">Contact form</a> uses a set of alias (the @Aliases variable) to allow email to be sent.  Each alias
-has two parts: a public name, and a private emal address.  The address is never shown on the 
+has two parts: a public name, and a private email address.  The address is never shown on the 
 contact form page or in the page source.
 
 </div>
@@ -25,7 +31,7 @@ contact form page or in the page source.
 <div style="padding:1cm;">
 
 
-<h2>Default Configuration</h2>
+<h2><a name=default_config>Default Configuration</a></h2>
 <pre>my @Aliases = (
 	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
 	#'webmaster','webmaster@yoursite.tld',
@@ -36,7 +42,7 @@ The two lines that start with # are commented out.  In this configuration the fo
 send email only to the web server administrator (as defined in the web server configuration).  
 It is almost certain that you want to change this.
 
-<h2>Just One Person</h2>
+<h2><a name=single_config>Just One Person</a></h2>
 <pre>my @Aliases = (
 	'John Doe','johndoe@example.com',
 );</pre>
@@ -44,7 +50,7 @@ It is almost certain that you want to change this.
 In this configuration, only John Doe can get email. Users will not be given a choice to send
 email to other people.
 
-<h2>Multiple People</h2>
+<h2><a name=multiple_config>Multiple People</a></h2>
 <pre>my @Aliases = (
 	'John Doe','johndoe@example.com',
 	'Jane Doe','janedoe@example.com',

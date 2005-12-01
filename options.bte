@@ -1,6 +1,6 @@
 <%bte.doc super="page.bte" %>
 <%bte.tpl name=pageTitle %>Contact Form Configuration Options<%/bte.tpl%>
-<%bte.tpl name=description %>Various configuration optons for Contact Form.<%/bte.tpl%>
+<%bte.tpl name=description %>Various configuration options for Contact Form.<%/bte.tpl%>
 <%bte.tpl name=keywords %>contact form configuration, contact form options<%/bte.tpl%>
 <%bte.tpl name=topContent %>
 <h1><a href="./">Contact Form</a> Configuration Options</h1>
@@ -18,25 +18,30 @@
 
 <h2><a name=look_and_feel>Change the Look and Feel</a></h2>
 
-You probably want to make the contact form feel like it is really part of the rest of your site.
-You may want your standard color scheme, links to other pages, and so on.  To do this you can change
-the $input_page_head, $input_page_body_start, and $input_page_body_end.
+<p>As of ContactForm version 1.3, the look and feel is controlled via a simple template system.  A template is simply an HTML file with four variables that get replaced with content by Contact Form.</p>
 
-<h3>$input_page_head</h3>
+<ul>
+<li>$title -- the title of the page</li>
+<li>$css -- style rules that control how the form looks</li>
+<li>$javascript -- client side validation rules</li>
+<li>$content -- the form itself</li>
+</ul>
 
-This variable gets inserted into the head section of the html document.  The default has the page
-title (Contact Us) and some style sheet information for errors, size of text boxes, and the color of 
-the required indicator.
+The default template is very simple:
 
-<h3>$input_page_body_start</h3>
-
-The default only contains an h1 tag with "Contact Us".  Links that are at the top or sides of all
-the pages on your site would go in this variable.
-
-<h3>$input_page_body_end</h3>
-
-The default contains the required field footnote and a link to the Contact Form website.  
-This would be a good place for copyright notices and other footers.
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;$title&lt;/title&gt;
+$css
+$javascript
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;$title&lt;/h1&gt;
+$content
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
 
 <h2><a name=add_fields>Add Fields</a></h2>
 
@@ -52,14 +57,14 @@ expressions to choose from:
   <li>$ONE_LINE_OPTIONAL - A generic optional field (single line text field)</li>
   <li>$ZIPCODE_REQUIRED - Required postal code.</li>
   <li>$ZIPCODE_OPTIONAL - Optional postal code.</li>
-  <li>$PHONE_REQUIRED - Requride phone nmuber.</li>
+  <li>$PHONE_REQUIRED - Required phone number.</li>
   <li>$PHONE_OPTIONAL - Optional phone number.</li>
   <li>$EMAIL_REQUIRED - For a required email address</li>
   <li>$EMAIL_OPTIONAL - For an optional email address</li>
   <li>$PRICE_REQUIRED - A required price (number with two decimal points)</li>
   <li>$PRICE_OPTIONAL - An optional price (number with two decimal points)</li>
-  <li>FLOAT_REQUIRED - A number possibly with decimal points</li>
-  <li>$FLOAT_OPTIONAL - A number possibly with decimal points (optional)</li>
+  <li>FLOAT_REQUIRED - A number, possibly with decimal points</li>
+  <li>$FLOAT_OPTIONAL - A number, possibly with decimal points (optional)</li>
   <li>$INTEGER_REQUIRED - A number without decimal points</li>
   <li>$INTEGER_OPTIONAL - A number without decimal points (optional)</li>
   <li>If you know regular expressions you can make up your own</li>
@@ -72,18 +77,18 @@ expressions to choose from:
 
 
 <h2><a name=restrict_referrer>Restrict the Referrer</a></h2>
-Changing this will prevent other sites from linking to your contact form.  You would want to consider
-this especially if some other site sets up a button that allows users to click the button to 
-immediatly send you a prefilled email - effectively spamming you with the same message over and over.
+<p>Changing this will prevent other sites from linking to your contact form.  You would want to consider this especially if some other site sets up a button that allows users to click the button to immediately send you a prefilled email - effectively spamming you with the same message over and over.</p>
+
+<p>Other email forms have hyped this as a security feature.  However this method cannot prevent a specially designed program from automatically sending email through your server.  Contact form hides email addresses makes the form a much less 
 
 <h2><a name=internationalization>Allow International Characters</a></h2>
 It would be possible to change the character set used in contact form from Latin 1 (ISO-8859-1) to 
-unicode (UTF-8) or something else that can handle characters in a wider variety of languages.  To
+Unicode (UTF-8) or something else that can handle characters in a wider variety of languages.  To
 do so simply modify the my $charset variable.
 
 <h2><a name=client_verification>Turn Off Client Side Verification</a></h2>
 Setting "my $use_client_side_verification = 0;" will turn off the javascript check in the browser
-that makes sure the form elements are valid before submisson.  Contact Form also does a server side
+that makes sure the form elements are valid before submission.  Contact Form also does a server side
 check, so this is not needed (in fact some browsers can't handle it and Contact Form doesn't make
 them do the check).  You might want to turn this off if you don't want users to be able to look
 at the source of the page and figure out what patterns you actually would accept for certain fields.

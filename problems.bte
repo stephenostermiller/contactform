@@ -1,0 +1,38 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Common Contact Form Problems<%/bte.tpl%>
+<%bte.tpl name=description %>Solutions to solve common problems deploying contact form.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form problems, internal server error<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1><a href="./">Contact Form</a> Problem Solutions</h1>
+
+<p>When Contact Form doesn't work you generally see an "Internal Server Error".  The error_log for your webserver generally has detailed information about what went wrong.  If your system administrator has given you access, looking at the error_log will generally make it blazingly obvious what the problem is.  Here are the solutions to some of the most common problems that users have reported on various servers.</p>
+
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+
+<h2><a name=file_permissions>File Permissions</a></h2>
+
+<p>The most common problems is that the webserver cannot execute the script.  You need to give the webserver read and execute permission to the script.  Contact Form comes with the permissions properly set on the file, however they can get lost, especially if the file is moved to a non-unix system.   You can use the chmod command to set the permissions to 755 on script.  Most ftp clients support chmod.  You can also call it if you have shell access to the server.  There could also be permissions problems with the directories that contain the file that need to be corrected.</p>
+
+<h2><a name=server_configuration>Web Server Configuration</a></h2>
+
+<p>Contact Form is a CGI script and it needs to be placed somewhere that the webserver allows CGI scripts.  The cgi-bin directory is generally pre-configured this way.  Depending on the webserver, you may be able to configure other directories to allow script with a .htaccess file that has the following.</p>
+<pre>
+Options ExecCGI
+AddHandler cgi-script .pl
+</pre>
+
+<h2><a name=syntax_error>Syntax Error</a></h2>
+
+<p>Contact Form should not have any syntax errors out of the box.  However, you may have edited the file and introduced some inadvertently.  Using unescaped quotes inside a quoted variable is probably the most common cause of such syntax errors.  When editing contact.pl, make sure to use \" for literal quotes if the variable is surrounded by quotes.  Some symbols such as $, % and @ may also cause problems  if unescaped in such a variable. If the variable is surrounded for single quotes, only the single quote character would need to be escaped.</p>
+
+<h2><a name=taint_mode>Too Late for Taint Mode</a></h2>
+
+<p>Contact form is configured to run in Perl's taint mode that offers some security protections.  Some web servers (especially IIS) don't deal well with taint mode.  Contact form does not rely on taint mode for security, just enables it as a precaution.  If contact form refuses to run in taint mode on your server simply edit contact.pl and remove the -T that is on the first line.</p>
+
+<h2><a name=sendmail>Sendmail Not Installed or Misconfigured</a></h2>
+
+<p>If an error occurs when sending mail, or mail never arrives, sendmail is usually the culprit.  Configuring sendmail is beyond the scope of this document, however check that /usr/lib/sendmail exists on the server.  If it doesn't, see if you have another command line program that can be used to send mail.  Check that it works by testing it from your shell's command prompt.</p>
+
+<%/bte.tpl%>
+<%/bte.doc%>

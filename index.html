@@ -6,6 +6,12 @@
 <meta name="description" content="A web form that will send contents via email, but without allowing spammers to harvest addresses.">
 <meta name="keywords" content="contact form, form mail, formmail, email form, spam prevention, email gateway, web to email">
 <link rel="icon" href="contactform_16_16.png" type="image/png">
+<style>
+a:link{text-decoration:none;}
+a:visited{text-decoration:none;}
+a:link:hover{text-decoration:underline;}
+a:visited:hover{text-decoration:underline;}
+</style>
 </head>
 <body>
 <body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
@@ -37,7 +43,58 @@ reveal addresses that it knows.
 <li>Optional client side validity checking of all data before the form is submitted.</li>
 <li>A default configuration that requires only a list of email addresses to be ready for use.</li>
 <li>A customizable interface that allows arbitrary fields.</li>
+<li>Easy to change the way it looks to integrate into your website</li>
 </ul>
+
+<div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
+<h2>FAQ</h2>
+<ul>
+<li><a href="http://ostermiller.org/contactform/addresses.html">Email Address Configuration</a>
+<ul>
+<li><a href="http://ostermiller.org/contactform/addresses.html#default_config">Default Configuration</a></li>
+<li><a href="http://ostermiller.org/contactform/addresses.html#single_config">Just One Person</a></li>
+<li><a href="http://ostermiller.org/contactform/addresses.html#multiple_config">Multiple People</a></li>
+</ul>
+</li>
+<li><a href="http://ostermiller.org/contactform/options.html">Optional Configuration</a>
+<ul>
+<li><a href="http://ostermiller.org/contactform/options.html#look_and_feel">Change the Look and Feel</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#add_fields">Add Fields</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#restrict_referrer">Restrict the Referrer</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#internationalization">Allow International Characters</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
+</ul>
+</li>
+<li><a href="http://ostermiller.org/contactform/link.html">Integrating Contact Form to Your Site</a>
+<ul>
+<li><a href="http://ostermiller.org/contactform/link.html#hidden_subject">Appending Hidden Text to Subject</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#prefill_data">Prefilling Data</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#embed">Embedding the Form in Other Pages</a></li>
+</ul>
+</li>
+<li><a href="http://ostermiller.org/contactform/problems.html">Resolving Problems</a>
+<ul>
+<li><a href="http://ostermiller.org/contactform/problems.html#file_permissions">File Permissions</a></li>
+<li><a href="http://ostermiller.org/contactform/problems.html#server_configuration">Web Server Configuration</a></li>
+<li><a href="http://ostermiller.org/contactform/problems.html#syntax_error">Syntax Error</a></li>
+<li><a href="http://ostermiller.org/contactform/problems.html#taint_mode">Too Late for Taint Mode</a></li>
+<li><a href="http://ostermiller.org/contactform/problems.html#sendmail">Sendmail Not Installed or Misconfigured</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+<h2>Setup</h2>
+<ol>
+<li>Download the contactform archive.</li>
+<li>Extract the contents of the download.</li>
+<li>Place contact.pl in your webserver's cgi-bin directory or another place that allows scripts.</li>
+<li>Edit contact.pl to change the email addresses to which email can be sent.</li>
+<li>Optional - Change any other parameters in contact.pl to taste.</li>
+<li>Point your web browser at contact.pl on your server.</li>
+<li>Send yourself email through the web.</li>
+</ol>
 
 <h2>Requirements</h2>
 <ul>
@@ -45,25 +102,18 @@ reveal addresses that it knows.
 <li>A command line program to send electronic mail. ("sendmail" is installed on most servers.)</li>
 </ul>
 
-<h2>Setup</h2>
-<ol>
-<li>Download the contactform archive.</li>
-<li>Extract the contents of the download.</li>
-<li>Place contact.pl in your webserver's cgi-bin directory or another place that allows scripts.</li>
-<li>Edit contact.pl to change the email addresses to which email can be sent. (<a href="http://ostermiller.org/contactform/addresses.html">Address examples</a>)</li>
-<li>Optional - Change any other parameters in contact.pl to taste. (<a href="http://ostermiller.org/contactform/options.html">Detailed configuration options</a>)</li>
-<li>Point your web browser at contact.pl on your server. (<a href="http://ostermiller.org/contactform/link.html">Linking and integration documentation</a>)</li>
-<li>Send yourself email through the web.</li>
-</ol>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_1_2_0.tar.gz">contactform_1_2_0.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_1_3_0.tar.gz">contactform_1_3_0.tar.gz</a></p>
 
 <h2>Example</h2>
 <p><a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Use Contact Form to contact the Contact Form author, Stephen Ostermiller</a></p>
 
 <h2>Changes</h2>
 <ul>
+<li>Version 1.3.0<ul>
+<li>Added templating ability to make look and feel customization much easier.</li>
+</ul></li></li>
 <li>Version 1.2.0<ul>
 <li>Allow ordering of multiple email addresses.</li>
 <li>Fields are now ordered in the order they are specified rather than having to specify an order.</li>
