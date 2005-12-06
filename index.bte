@@ -43,6 +43,7 @@ reveal addresses that it knows.
 <li><a href="http://ostermiller.org/contactform/options.html#restrict_referrer">Restrict the Referrer</a></li>
 <li><a href="http://ostermiller.org/contactform/options.html#internationalization">Allow International Characters</a></li>
 <li><a href="http://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#hide_pl">Hide the .pl Extension</a></li>
 </ul>
 </li>
 <li><a href="http://ostermiller.org/contactform/link.html">Integrating Contact Form to Your Site</a>
