@@ -13,8 +13,8 @@ reveal addresses that it knows.
 
 <div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
 <h2>Work Flow</h2>
-<p><a href="workflow.html"><img src="workflow_sm.png"></a></p>
-<p>Click to enlarge</p>
+<p><a href="workflow.html"><img src="workflow_sm.png" width=200 height=78 style="padding:10px;"></a></p>
+<p>Use case: <a href="workflow.html">User wants to contact you using this email form script.</a></p>
 
 </div>
 
@@ -53,15 +53,16 @@ reveal addresses that it knows.
 <li><a href="http://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/link.html">Integrating Contact Form to Your Site</a>
+<li><a href="http://ostermiller.org/contactform/link.html">Integrate Contact Form to Your Site</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/link.html#hidden_subject">Appending Hidden Text to Subject</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#prefill_data">Prefilling Data</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#embed">Embedding the Form in Other Pages</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#hidden_subject">Append Hidden Text to Subject</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#prefill_data">Prefill Data</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#embed">Embed the Form in Other Pages</a></li>
+<li><a href="http://ostermiller.org/contactform/link.html#outside_cgibin">Deploy Outside cgi-bin</a></li>
 <li><a href="http://ostermiller.org/contactform/link.html#hide_pl">Hide the .pl Extension</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/problems.html">Resolving Problems</a>
+<li><a href="http://ostermiller.org/contactform/problems.html">Problem Resolution</a>
 <ul>
 <li><a href="http://ostermiller.org/contactform/problems.html#file_permissions">File Permissions</a></li>
 <li><a href="http://ostermiller.org/contactform/problems.html#server_configuration">Web Server Configuration</a></li>
@@ -160,9 +161,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE. See the
 <a href="http://www.gnu.org/copyleft/gpl.html">GNU
 General Public License</a> for more details.</p>
-
-<p>Contact Form<br>
-Copyright (C) 2002-2005 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <h2>Other Web to Email Gateways</h2>
 <table border=1>

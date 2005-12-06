@@ -1,0 +1,28 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Contact Form Work Flow and Use Case<%/bte.tpl%>
+<%bte.tpl name=description %>How the contact email form works from the perspective of a user that want to contact you using Contact Form.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form use case, contact form work flow<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1><a href="./">Email Form</a> Use Case and Work Flow</h1>
+<p>The following diagram and use case illustrate how <a href="./">contact form</a> works from a user's perspective.</p>
+<%/bte.tpl%>
+
+<%bte.tpl name=content %>
+
+<h2>Work Flow</h2>
+<img src="workflow.png" style="padding:1cm;">
+
+<h2>Use Case</h2>
+
+<ol>
+<li>A user wants to contact you and follows a link to your contact form (contact.pl) from your website.</li>
+<li>The email form (contact.pl) gives the user a form to fill in with fields such as from, subject, name, and body.</li>
+<li>The user fills in the form and submits it back to contact.pl.</li>
+<li>Contact form validates the input and shows the user the form again with error messages if the form was not filled in completely or if it was filled in incorrectly.</li>
+<li>The user makes any need corrections or additions and submits the form.</li>
+<li>Given a complete form, contact form sends email to you.</li>
+<li>Contact form shows an email sent confirmation to the user.</li>
+</ol>
+
+<%/bte.tpl%>
+<%/bte.doc%>

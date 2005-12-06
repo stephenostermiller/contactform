@@ -37,7 +37,7 @@ http://www.example.com/cgi-bin/contact.pl
 If you want to link to your contact form with prefilled data, there are two ways to do so.
 
 
-<h2><a name=hidden_subject>Appending Hidden Text to Subject</a></h2>
+<h2><a name=hidden_subject>Append Hidden Text to Subject</a></h2>
 I create multiple links to the same contact form from various places on my website.  Because
 users do not always do a good job of providing a meaningful subject I like to have some idea
 what section of my site they came from to the contact form.  I do this using the "regarding"
@@ -58,17 +58,24 @@ At this point you know they were talking about your moose tracking page rather t
 baking page.
 
 
-<h2><a name=prefill_data>Prefilling Data</a></h2>
+<h2><a name=prefill_data>Prefill Data</a></h2>
 If you desire to set the subject (or any field) for the user, it is very easy to do.  Simply,
 put a parameter with that field into your link.  To error messages about incomplete forms (or to prevent the form actually being submitted if it is complete) use the prefill parameter as well:<br>
 contact.pl?subject=Loved+the+omni&prefill<br>
 contact.pl?subject=Hated+the+omni&prefill<br>
 
 
-<h2><a name=embed>Embedding the Form in Other Pages</a></h2>
-
+<h2><a name=embed>Embed the Form in Other Pages</a></h2>
 <p>You may want to have the form itself as part of a larger page.  To do this, you only need to copy the javascript and the form out of page source and place them on other page.  The form will then submit to the contact form page.   You can get by without the javascript if you remove the onsubmit="..." from the &lt;form&gt; tag.</p>
 
+
+<h2><a name=outside_cgibin>Deploy Outside cgi-bin</a></h2>
+<p>While a cgi-bin directory is usually already configured to run scripts, you can configure any directory to run an email form using most web servers.  Usually you create a .htaccess file in the directory in which you want to run the script with contents such as:</p>
+
+<pre>
+Options ExecCGI
+AddHandler cgi-script .pl
+</pre>
 
 <h2><a name=hide_pl>Hide the .pl Extension</a></h2>
 <p>You may not want users to see a URL that doesn't end in .html.  It is possible to hide the fact that contact form is written in perl from your visitors.  You can give contact form an arbitrary extension (or even no extension at all) if you use some simple rules in a .htaccess file on Apache.  Simply rename contact.pl to contact.html and use the following in .htaccess.  (This assumes that your webserver is configured to use .htaccess files with the AllowOverride directive.)</p>
@@ -81,9 +88,12 @@ SetHandler cgi-script
 </pre>
 
 
-</div>
+
+<p>Copyright (C) 2002-2005 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+
+</div>
 
 </body>
 </html>
