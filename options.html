@@ -102,7 +102,7 @@ expressions to choose from:
 <p>Other email forms have hyped this as a security feature.  However this method cannot prevent a specially designed program from automatically sending email through your server.  Contact form hides email addresses makes the form much less of a target for such spammers because they cannot use it to send email to just anybody.</p>
 
 <h2><a name=internationalization>Allow International Characters</a></h2>
-It would be possible to change the character set used in contact form from Latin 1 (ISO-8859-1) to 
+It would be possible to change the character set used in contact form from Latin 1 (ISO-8859-1) to
 Unicode (UTF-8) or something else that can handle characters in a wider variety of languages.  To
 do so simply modify the my $charset variable.
 
@@ -112,17 +112,6 @@ that makes sure the form elements are valid before submission.  Contact Form als
 check, so this is not needed (in fact some browsers can't handle it and Contact Form doesn't make
 them do the check).  You might want to turn this off if you don't want users to be able to look
 at the source of the page and figure out what patterns you actually would accept for certain fields.
-
-
-<h2><a name=hide_pl>Hide the .pl Extension</a></h2>
-<p>You may not want users to see a URL that doesn't end in .html.  It is possible to hide the fact that contact form is written in perl from your visitors.  You can give contact form an arbitrary extension (or even no extension at all) if you use some simple rules in a .htaccess file on Apache.  Simply rename contact.pl to contact.html and use the following in .htaccess.  (This assumes that your webserver is configured to use .htaccess files with the AllowOverride directive.)</p>
-
-<pre>
-Options ExecCGI
-&lt;files contact.html&gt;
-SetHandler cgi-script
-&lt;/files&gt;
-</pre>
 
 
 </div>

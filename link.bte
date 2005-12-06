@@ -6,7 +6,7 @@
 <h1>Linking to Your <a href="./">Contact Form</a></h1>
 <%/bte.tpl%>
 <%bte.tpl name=content %>
-Linking to the <a href="./">contact form</a> on your server is very straightforward.  My contact form 
+Linking to the <a href="./">contact form</a> on your server is very straightforward.  My contact form
 (on ostermiller.org) is in the root directory of the webserver, so it is simply<br>
 http://ostermiller.org/contact.pl.
 <p>
@@ -15,6 +15,8 @@ like this:<br>
 http://www.example.com/cgi-bin/contact.pl
 <p>
 If you want to link to your contact form with prefilled data, there are two ways to do so.
+
+
 <h2><a name=hidden_subject>Appending Hidden Text to Subject</a></h2>
 I create multiple links to the same contact form from various places on my website.  Because
 users do not always do a good job of providing a meaningful subject I like to have some idea
@@ -35,15 +37,28 @@ Thanks so much, and keep up the good work.</pre>
 At this point you know they were talking about your moose tracking page rather than your cookie
 baking page.
 
+
 <h2><a name=prefill_data>Prefilling Data</a></h2>
-If you desire to set the subject (or any field) for the user, it is very easy to do.  Simply, 
+If you desire to set the subject (or any field) for the user, it is very easy to do.  Simply,
 put a parameter with that field into your link.  To error messages about incomplete forms (or to prevent the form actually being submitted if it is complete) use the prefill parameter as well:<br>
 contact.pl?subject=Loved+the+omni&prefill<br>
 contact.pl?subject=Hated+the+omni&prefill<br>
 
+
 <h2><a name=embed>Embedding the Form in Other Pages</a></h2>
 
 <p>You may want to have the form itself as part of a larger page.  To do this, you only need to copy the javascript and the form out of page source and place them on other page.  The form will then submit to the contact form page.   You can get by without the javascript if you remove the onsubmit="..." from the &lt;form&gt; tag.</p>
+
+
+<h2><a name=hide_pl>Hide the .pl Extension</a></h2>
+<p>You may not want users to see a URL that doesn't end in .html.  It is possible to hide the fact that contact form is written in perl from your visitors.  You can give contact form an arbitrary extension (or even no extension at all) if you use some simple rules in a .htaccess file on Apache.  Simply rename contact.pl to contact.html and use the following in .htaccess.  (This assumes that your webserver is configured to use .htaccess files with the AllowOverride directive.)</p>
+
+<pre>
+Options ExecCGI
+&lt;files contact.html&gt;
+SetHandler cgi-script
+&lt;/files&gt;
+</pre>
 
 <%/bte.tpl%>
 <%/bte.doc%>
