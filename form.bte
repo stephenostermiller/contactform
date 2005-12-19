@@ -1,0 +1,15 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>$title<%/bte.tpl%>
+<%bte.tpl name=description %>Test contact form by sending a message that will be ignored.<%/bte.tpl%>
+<%bte.tpl name=keywords %>test contact form<%/bte.tpl%>
+<%bte.tpl name=headContent %>
+$css
+$javascript<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1><a href="./">Contact Form</a> Example</h1>
+<h2>$title</h2>
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+$content
+<%/bte.tpl%>
+<%/bte.doc%>
