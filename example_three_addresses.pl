@@ -132,6 +132,7 @@ my @Form_Fields = (
 	'subject',$ONE_LINE_REQUIRED,
 	'message',$SOMETHING,
 	'regarding',$ANYTHING,
+	'referrer',$ANYTHING,
 	#'phone',$PHONE_OPTIONAL,
 	#'fax',$PHONE_OPTIONAL,
 	#'address1', $ONE_LINE_OPTIONAL,
@@ -153,6 +154,7 @@ my %Error_Messages = (
 	'subject','You must enter a subject.',
 	'message','You must enter a message.',
 	'regarding','',
+	'referrer','',
 	#'phone','The phone number you entered does not appear to be valid.',
 	#'fax','The fax number you entered	does not appear to be valid.',
 	#'address1','Please enter your address.',
@@ -175,6 +177,7 @@ my %Form_Type = (
 	'message','textarea',
 	'subject','text',
 	'regarding', 'hidden',
+	'referrer', 'hidden',
 	#'phone','text',
 	#'fax','text',
 	#'address1','text',
@@ -197,6 +200,7 @@ my %Field_Descriptions = (
 	'subject','Subject:',
 	'message',$NO_DESCRIPTION,
 	'regarding',$NO_DESCRIPTION,
+	'referrer',$NO_DESCRIPTION,
 	#'phone','Phone Number:',
 	#'fax','Fax Number:',
 	#'address1','Address:',
@@ -218,6 +222,8 @@ my %Field_Descriptions = (
 	my $field_name_subject = 'subject';
 	# Put in the "Subject:" field of the email in parenthesis.
 	my $field_name_regarding = 'regarding';
+	# The original referring url.
+	my $field_name_referrer = 'referrer';
 
 # Regular expression describing urls which can host forms
 # pointing to this program.	The referral URL is generated on the
@@ -316,7 +322,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.2";
+	$version = "1.3.3";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -394,6 +400,15 @@ sub createMaps {
 			$useField = 0;
 		} else {
 			$useField = 1;
+		}
+	}
+	
+	# Put the referrer header into the map if it is not there already
+	if ($FieldMap{$field_name_referrer} && ! exists $SubmittedData{$field_name_referrer}){
+		if (defined $ENV{'HTTP_REFERER'}){
+			$SubmittedData{$field_name_referrer} = $ENV{'HTTP_REFERER'};
+		} else {
+			$SubmittedData{$field_name_referrer} = "-";
 		}
 	}
 }
@@ -521,7 +536,7 @@ sub composeEmail {
 	foreach $key (@field_keys){
 		if ($key ne $field_name_to && $key ne $field_name_subject &&
 			$key ne $field_name_from_name && $key ne $field_name_from_email &&
-			$key ne $field_name_regarding){
+			$key ne $field_name_regarding && $key ne $field_name_referrer){
 			my $mail_description = $Field_Descriptions{$key};
 			if ($mail_description eq ''){
 				$mail_description = $key.":"
@@ -552,6 +567,7 @@ sub sendEmail {
 	print MAIL "X-Remote-User: ".&safeHeader($ENV{'REMOTE_USER'})."\n";
 	print MAIL "X-HTTP-User-Agent: ".&safeHeader($ENV{'HTTP_USER_AGENT'})."\n";
 	print MAIL "X-HTTP-Referer: ".&safeHeader($ENV{'HTTP_REFERER'})."\n";
+	print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
 	print MAIL $mail_message;
 	close (MAIL);
 }
@@ -683,10 +699,10 @@ sub inputPage {
 					$client_side_check_script .= "alert('".&escapeJavaScript($Error_Messages{$key})."');\n";
 				} else {
 					$client_side_check_script .= "alert(The field '".$key."' does not appear to be valid.);\n";
-				}                
-                if (defined($Form_Type{$key})){
-				    $client_side_check_script .= "form.$key.select();\n";
-                }
+				}				
+				if (defined($Form_Type{$key})){
+					$client_side_check_script .= "form.$key.select();\n";
+				}
 				$client_side_check_script .= "form.$key.focus();\n";
 				$client_side_check_script .= "return false;\n";
 				$client_side_check_script .= "}";
