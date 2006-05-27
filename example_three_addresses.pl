@@ -239,6 +239,12 @@ my %Field_Descriptions = (
 	#my $allowedReferers = '^http[s]?\\:\\/\\/((yoursite\\.tld)|(127\\.0\\.0\\.1))\\/';
 	# This form can only be used from a specific page.
 	#my $allowedReferers = '^http[s]?\\:\\/\\/yoursite\\.tld\\/directory\\/page\\.html\\$';
+    
+# Regular expressions for text that is not allowed in any fields
+my %disallowed_text = (
+    "\\<[ \\r\\n\\t]*[Aa][ \\r\\n\\t]","You appear to be trying to include HTML formatted links.  Links should not be formatted like this.",
+    "\\[[ \\r\\n\\t]*[Uu][Rr][Ll][ \\r\\n\\t]*\\=","You appear to be trying to include message board formatted links.  Links should not be formatted like this.",
+);
 
 # The character set for the web site.
 my $charset = 'ISO-8859-1';
@@ -322,7 +328,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.3";
+	$version = "1.3.4";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -479,6 +485,14 @@ sub sanityCheck {
 		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
+        
+        if ($SubmittedData{$key}){
+            foreach my $disallow_check (keys(%disallowed_text)){
+                if ($SubmittedData{$key} =~ /$disallow_check/){
+                    $missing_field_list_html .= "<li>" . &escapeHTML($disallowed_text{$disallow_check}) . "</li>\n";
+                }
+            }
+        }
 	}
 	if (!($some_required_field_present)){
 		&inputPage();
