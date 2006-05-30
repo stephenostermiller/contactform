@@ -406,7 +406,7 @@ sub createMaps {
 			$useField = 1;
 		}
 	}
-	
+
 	# Put the referrer header into the map if it is not there already
 	if ($FieldMap{$field_name_referrer} && ! exists $SubmittedData{$field_name_referrer}){
 		if (defined $ENV{'HTTP_REFERER'}){
@@ -458,8 +458,8 @@ sub sanityCheck {
 	}
 
 	my $some_required_field_present = 0;
-    my $errorCount = 0;
-    my %errorHash = ();
+	my $errorCount = 0;
+	my %errorHash = ();
 
 	my @field_keys = &getOrderedFields();
 	foreach my $key (@field_keys){
@@ -476,44 +476,45 @@ sub sanityCheck {
 			$form_type = $Form_Type{$key};
 		}
 		if ($data !~ /$required_value/g){
-            $errorCount++;
-            if (!defined $errorHash{$key}){
-                $errorHash{$key} = "";
-            }
+			$errorCount++;
+			if (!defined $errorHash{$key}){
+				$errorHash{$key} = "";
+			}
 			if ($Error_Messages{$key}){
 				$errorHash{$key} .= "<span class=error>" . &escapeHTML($Error_Messages{$key}) . "</span> ";
 			} else {
 				$errorHash{$key} .= "<span class=error>The field '" . &escapeHTML($key) . "' does not appear to be valid.</span> ";
 			}
-		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
+		}
+		if (defined($SubmittedData{$key}) && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
-        
-        if ($SubmittedData{$key}){
-            foreach my $disallow_check (keys(%disallowed_text)){ 
-                if (!defined $errorHash{$key}){
-                    $errorHash{$key} = "";
-                }
-                if ($SubmittedData{$key} =~ /$disallow_check/){                               
-                    $errorCount++;              
-                    $errorHash{$key} .= "<span class=error>" . &escapeHTML($disallowed_text{$disallow_check}) . "</span> ";
-                }
-            }
-        }
+
+		if ($SubmittedData{$key}){
+			foreach my $disallow_check (keys(%disallowed_text)){
+				if (!defined $errorHash{$key}){
+					$errorHash{$key} = "";
+				}
+				if ($SubmittedData{$key} =~ /$disallow_check/){
+					$errorCount++;
+					$errorHash{$key} .= "<span class=error>" . &escapeHTML($disallowed_text{$disallow_check}) . "</span> ";
+				}
+			}
+		}
 	}
 	if (!($some_required_field_present)){
 		&inputPage();
 	}
-    
+
 	if ($errorCount > 0){
-        my $errorMessage = "";
-        if(!defined($SubmittedData{"prefill"})){
-            if ($errorCount == 1){
-	            $errorMessage = "Please correct the error to continue.";
-            } else {
-	            $errorMessage = "Please correct all errors to continue.";
-            }
-        }
+		my $errorMessage = "";
+		if(!defined($SubmittedData{"prefill"})){
+			if ($errorCount == 1){
+				$errorMessage = "Please correct the error to continue.";
+			} else {
+				$errorMessage = "Please correct all errors to continue.";
+			}
+		}
 		&inputPage($errorMessage, \%errorHash);
 	}
 
@@ -630,10 +631,10 @@ sub inputPage {
 	if (!defined($error)){
 		$error = "";
 	}
-    my %FieldErrorsHash = ();
-    if (defined($fieldErrors)){
-        %FieldErrorsHash = %$fieldErrors;
-    }
+	my %FieldErrorsHash = ();
+	if (defined($fieldErrors)){
+		%FieldErrorsHash = %$fieldErrors;
+	}
 	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
 	if ($error ne ""){
@@ -660,16 +661,44 @@ sub inputPage {
 		} else {
 			$html_description = "<label for='$key'>$html_description</label>";
 		}
-        my $fieldErrorMessage = "";
-        if (defined $FieldErrorsHash{$key}){
-            $fieldErrorMessage = $FieldErrorsHash{$key}
-        }
+		my $fieldErrorMessage = "";
+		if (defined $FieldErrorsHash{$key}){
+			$fieldErrorMessage = $FieldErrorsHash{$key}
+		}
+		my $mark = '';
+		my $required_value = $FieldMap{$key};
+		my $data = "";
+		if (defined($SubmittedData{$key})){
+			$data = $SubmittedData{$key};
+		}
+		my $fieldText = "";
+		if (($data !~ /$required_value/g) && $html_description ne ''){
+			if (length($fieldText) > 0){
+				$fieldText .= " ";
+			}
+			$fieldText .= "$required_marker";
+		}
+		if (length($html_description) > 0){
+			if (length($fieldText) > 0){
+				$fieldText .= " ";
+			}
+			$fieldText .= $html_description;
+		}
+		if (length($fieldErrorMessage) > 0){
+			if (length($fieldText) > 0){
+				$fieldText .= " ";
+			}
+			$fieldText .= $fieldErrorMessage;
+		}
+		if (length($fieldText) > 0){
+			$fieldText .= "<br>\n";
+		}
 		if ($key eq $field_name_to){
 			if ($#AliasesOrdered == 0){
 				my $alias = $AliasesOrdered[0];
 				$form_html.= "<input type=hidden name='$field_name_to' value='$alias'>\n";
 			} else {
-				$form_html.= "<p>$required_marker $html_description<select id='$key' name='$field_name_to'>\n";
+				$form_html.= "<p>$fieldText<select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
 				foreach my $alias (@AliasesOrdered){
 					if ($alias eq $SubmittedData{$field_name_to}){
@@ -681,42 +710,12 @@ sub inputPage {
 				}
 				$form_html.= "</select></p>\n";
 			}
+		} elsif ($Form_Type{$key} eq 'textarea'){
+			$form_html.="<p>$fieldText<textarea id='$key' class=textentry wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></p>\n";
+		} elsif ($Form_Type{$key} eq 'hidden'){
+			$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
 		} else {
-			my $mark = '';
-			my $required_value = $FieldMap{$key};
-			my $data = "";
-			if (defined($SubmittedData{$key})){
-				$data = $SubmittedData{$key};
-			}
-            my $fieldText = "";
-			if (($data !~ /$required_value/g) && $html_description ne ''){
-                if (length($fieldText) > 0){
-                    $fieldText .= " ";
-                }
-				$fieldText .= "$required_marker";
-			}
-            if (length($html_description) > 0){
-                if (length($fieldText) > 0){
-                    $fieldText .= " ";
-                }
-                $fieldText .= $html_description;                
-            }            
-            if (length($fieldErrorMessage) > 0){
-                if (length($fieldText) > 0){
-                    $fieldText .= " ";
-                }
-                $fieldText .= $fieldErrorMessage;                
-            }
-            if (length($fieldText) > 0){
-                $fieldText .= "<br>\n";
-            }
-			if ($Form_Type{$key} eq 'textarea'){
-				$form_html.="<p>$fieldText<textarea id='$key' class=textentry wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></p>\n";
-			} elsif ($Form_Type{$key} eq 'hidden'){
-				$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
-			} else {
-				$form_html.="<p>$fieldText<input id='$key' class=textentry type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></p>\n";
-			}
+			$form_html.="<p>$fieldText<input id='$key' class=textentry type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></p>\n";
 		}
 	}
 
@@ -751,7 +750,7 @@ sub inputPage {
 					$client_side_check_script .= "alert('".&escapeJavaScript($Error_Messages{$key})."');\n";
 				} else {
 					$client_side_check_script .= "alert(The field '".$key."' does not appear to be valid.);\n";
-				}				
+				}
 				if (defined($Form_Type{$key})){
 					$client_side_check_script .= "form.$key.select();\n";
 				}
