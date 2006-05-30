@@ -20,7 +20,7 @@
 
 <h2><a name=no_message>No message</a></h2>
 
-<p>The <a href="http://ostermiller.org/contactform/example_one_address.pl?to=Nobody&amp;email=email@domain.tld&amp;name=my+name&amp;subject=my+subject&amp;message=">subject of the message</a> must be specified.</a></p>
+<p>The <a href="http://ostermiller.org/contactform/example_one_address.pl?to=Nobody&amp;email=email@domain.tld&amp;name=my+name&amp;subject=my+subject&amp;message=">body of the message</a> must be specified.</a></p>
 
 <h2><a name=no_recipient>Recipient not specified</a></h2>
 
