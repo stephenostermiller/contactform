@@ -12,6 +12,7 @@
 <li><a href="#restrict_referrer">Restrict the referrer</a></li>
 <li><a href="#internationalization">Allow international characters</a></li>
 <li><a href="#client_verification">Turn off client side verification</a></li>
+<li><a href="#select_fields">Drop down select lists</a></li>
 </ul>
 <%/bte.tpl%>
 <%bte.tpl name=content %>
@@ -93,5 +94,8 @@ check, so this is not needed (in fact some browsers can't handle it and Contact 
 them do the check).  You might want to turn this off if you don't want users to be able to look
 at the source of the page and figure out what patterns you actually would accept for certain fields.
 
+
+<h2><a name=select_fields>Drop Down Select Lists</a></h2>
+Contactform now has the ability to do drop down lists.  To set up a selection field and its options, you need to do two things.  First, in the Form_Type variable, set the field to "select".  Second, in the Form_Fields variable set the regular expression for the field to be a pipe separated ('|') list of options.  The "state" field is done for you as an example.  The 50 states are given as options and the user can select their state from a pull down list.  If your options have spaces in them, they should be enclosed in parenthesis like so: "(Option one)|(Option two)|(Option three)".  Punctuation is not supported in options, stick to only letters, numbers, and spaces.
 <%/bte.tpl%>
 <%/bte.doc%>

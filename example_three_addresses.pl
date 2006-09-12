@@ -111,7 +111,7 @@ my $page_template_file = "form.html";
 # link to contact form somewhere else, write a blog entry about
 # contact form, post in a forum about contact form, or otherwise
 # spread the word.
-my $contact_form_link = "<p align=right><a href=\"http://ostermiller.org/contactform/\">Contact Form $version</a></p>";
+my $contact_form_link = "<p class=\"contactform cf_message\" id=\"cf_version\"><a class=\"contactform cf_link\" href=\"http://ostermiller.org/contactform/\">Contact Form $version</a></p>";
 
 # A list of required form variables, along with a regular
 # expression that describes what a valid submission looks like.
@@ -138,7 +138,7 @@ my @Form_Fields = (
 	#'address1', $ONE_LINE_OPTIONAL,
 	#'address2', $ONE_LINE_OPTIONAL,
 	#'city', "^(?:[a-zA-Z ]*)\$",
-	#'state', "^(?:(?:[A-Z][A-Z])?)\$",
+	#'state', "^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)",
 	#'zip',$ZIPCODE_OPTIONAL,
 );
 
@@ -160,12 +160,13 @@ my %Error_Messages = (
 	#'address1','Please enter your address.',
 	#'address2','Please enter your address.',
 	#'city','Your city does not appear to be valid.',
-	#'state','Please use the two digit abbreviation for your state.',
+	#'state','Please choose your state.',
 	#'zip','Your zipcode does not appear to be valid.',
 );
 
 # Type of input in web pages for each field.
-# Currently supported are 'text', 'hidden', and 'textarea'
+# Currently supported are 'text', 'hidden', 'select',
+# and 'textarea'
 # Just because a field name is present here, it is not
 # nessecarily allowed.	Make sure it is also in @Form_Fields
 # If there is no type, 'text' is assumed.
@@ -183,7 +184,7 @@ my %Form_Type = (
 	#'address1','text',
 	#'address2','text',
 	#'city','text',
-	#'state','text',
+	#'state','select',
 	#'zip','text',
 );
 
@@ -265,22 +266,25 @@ my $use_client_side_verification = 1;
 my $submit_method = 'POST';
 
 # Placed next to form elements that must be filled in
-my $required_marker = '<span class=required>*</span>';
-my $required_marker_note = "<p>$required_marker denotes a required field.</p>";
+my $required_marker = '<span class="contactform cf_required">*</span>';
+my $required_marker_note = "<p class=\"contactform cf_message\" id=\"cf_requiredexplain\">$required_marker denotes a required field.</p>";
 
 # Style rules for the input page.
 my $input_page_css =
 '<style>
-.error { color:red; }
-.textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
-textarea { height:4in; }
-.required { color:green }
+.cf_error { color:red; }
+.cf_textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+textarea.contactform { height:4in; }
+.cf_required { color:green; }
+#cf_version { text-align:right; }
+.cf_field { margin-bottom:0.5cm; }
 </style>';
 
 # Style rules for thank you page
 my $sent_page_css =
 '<style>
-.sent { border:thin black ridge; padding:1cm;  max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+.cf_sent { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+#cf_version { text-align:right; }
 </style>';
 
 # Link to favicon, placed in the head after the JavaScript
@@ -328,7 +332,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.5";
+	$version = "1.3.6";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -374,7 +378,7 @@ sub initConstants {
 sub loadTemplate(){
 	if ($page_template_file ne ""){
 		if (!open(TEMPLATE, "<$page_template_file")){
-			$template_error = "<div class=error>The template file could not be opened.</div>\n";
+			$template_error = '<div class="contactform cf_error cf_message">The template file could not be opened.</div>\n';
 			return;
 		}
 		$page_template = join("", <TEMPLATE>);
@@ -483,12 +487,11 @@ sub sanityCheck {
 				$errorHash{$key} = "";
 			}
 			if ($Error_Messages{$key}){
-				$errorHash{$key} .= "<span class=error>" . &escapeHTML($Error_Messages{$key}) . "</span> ";
+				$errorHash{$key} .= '<span class="contactform cf_error cf_fielderror">' . &escapeHTML($Error_Messages{$key}) . "</span> ";
 			} else {
-				$errorHash{$key} .= "<span class=error>The field '" . &escapeHTML($key) . "' does not appear to be valid.</span> ";
+				$errorHash{$key} .= "<span class=\"contactform cf_error cf_fielderror\">The field '" . &escapeHTML($key) . "' does not appear to be valid.</span> ";
 			}
-		}
-		if (defined($SubmittedData{$key}) && $form_type ne 'hidden'){
+		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
 
@@ -499,7 +502,7 @@ sub sanityCheck {
 				}
 				if ($SubmittedData{$key} =~ /$disallow_check/){
 					$errorCount++;
-					$errorHash{$key} .= "<span class=error>" . &escapeHTML($disallowed_text{$disallow_check}) . "</span> ";
+					$errorHash{$key} .= "<span class=\"contactform cf_error cf_fielderror\">" . &escapeHTML($disallowed_text{$disallow_check}) . "</span> ";
 				}
 			}
 		}
@@ -618,7 +621,7 @@ sub sentPage {
 		$sent_page_title,
 		$sent_page_css,
 		$javascript,
-		$sent_page_text.$message
+		"$sent_page_text<div class=\"contactform cf_sent\">$message</div>"
 	);
 }
 
@@ -640,7 +643,7 @@ sub inputPage {
 	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
 	if ($error ne ""){
-		$error = "<div class=error>\n" . $error . "</div>\n";
+		$error = "<div class=\"contactform cf_error cf_message\">\n" . $error . "</div>\n";
 	}
 	$script_call = '';
 	if ($use_client_side_verification){
@@ -651,7 +654,7 @@ sub inputPage {
 		$submit_method = "POST";
 	}
 
-	$form_html="<form action=\"".&escapeHTML($ENV{'SCRIPT_NAME'})."\" method=$submit_method $script_call>\n";
+	$form_html="<form class=contactform id=cf_form action=\"".&escapeHTML($ENV{'SCRIPT_NAME'})."\" method=$submit_method $script_call>\n";
 	@orderedKeys = &getOrderedFields();
 	foreach $key (@orderedKeys){
 		my $html_description = $Field_Descriptions{$key};
@@ -661,46 +664,18 @@ sub inputPage {
 		if ($html_description eq $NO_DESCRIPTION){
 			$html_description = '';
 		} else {
-			$html_description = "<label for='$key'>$html_description</label>";
+			$html_description = "<label class=\"contactform cf_fieldlabel\" for='$key'>$html_description</label>";
 		}
 		my $fieldErrorMessage = "";
 		if (defined $FieldErrorsHash{$key}){
 			$fieldErrorMessage = $FieldErrorsHash{$key}
-		}
-		my $mark = '';
-		my $required_value = $FieldMap{$key};
-		my $data = "";
-		if (defined($SubmittedData{$key})){
-			$data = $SubmittedData{$key};
-		}
-		my $fieldText = "";
-		if (($data !~ /$required_value/g) && $html_description ne ''){
-			if (length($fieldText) > 0){
-				$fieldText .= " ";
-			}
-			$fieldText .= "$required_marker";
-		}
-		if (length($html_description) > 0){
-			if (length($fieldText) > 0){
-				$fieldText .= " ";
-			}
-			$fieldText .= $html_description;
-		}
-		if (length($fieldErrorMessage) > 0){
-			if (length($fieldText) > 0){
-				$fieldText .= " ";
-			}
-			$fieldText .= $fieldErrorMessage;
-		}
-		if (length($fieldText) > 0){
-			$fieldText .= "<br>\n";
 		}
 		if ($key eq $field_name_to){
 			if ($#AliasesOrdered == 0){
 				my $alias = $AliasesOrdered[0];
 				$form_html.= "<input type=hidden name='$field_name_to' value='$alias'>\n";
 			} else {
-				$form_html.= "<p>$fieldText<select id='$key' name='$field_name_to'>\n";
+				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description<br>\n<select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
 				foreach my $alias (@AliasesOrdered){
 					if ($alias eq $SubmittedData{$field_name_to}){
@@ -710,18 +685,65 @@ sub inputPage {
 					}
 						$form_html.= "<option value='$alias' $alias_selected>$alias</option>\n";
 				}
-				$form_html.= "</select></p>\n";
+				$form_html.= "</select></div>\n";
 			}
-		} elsif ($Form_Type{$key} eq 'textarea'){
-			$form_html.="<p>$fieldText<textarea id='$key' class=textentry wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></p>\n";
-		} elsif ($Form_Type{$key} eq 'hidden'){
-			$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
 		} else {
-			$form_html.="<p>$fieldText<input id='$key' class=textentry type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></p>\n";
+			my $mark = '';
+			my $required_value = $FieldMap{$key};
+			my $data = "";
+			if (defined($SubmittedData{$key})){
+				$data = $SubmittedData{$key};
+			}
+			my $fieldText = "";
+			if (($data !~ /$required_value/g) && $html_description ne ''){
+				if (length($fieldText) > 0){
+					$fieldText .= " ";
+				}
+				$fieldText .= "$required_marker";
+			}
+			if (length($html_description) > 0){
+				if (length($fieldText) > 0){
+					$fieldText .= " ";
+				}
+				$fieldText .= $html_description;
+			}
+			if (length($fieldErrorMessage) > 0){
+				if (length($fieldText) > 0){
+					$fieldText .= " ";
+				}
+				$fieldText .= $fieldErrorMessage;
+			}
+			if (length($fieldText) > 0){
+				$fieldText .= "<br>\n";
+			}
+			if ($Form_Type{$key} eq 'select'){
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<select id='$key' class=\"contactform cf_select\" name='$key'>";
+				$form_html.="<option value=\"\"></option>";
+				my $selectvalue = $FieldMap{$key};
+				$selectvalue =~ s/^[\^\(\?\:]+//g;
+				$selectvalue =~ s/[\)\$]+$//g;
+				my @selectvalues = split(/\|/, $selectvalue);
+				foreach my $selectval (@selectvalues){
+					$selectval =~ s/^[\(\?\:]+//g;
+					$selectval =~ s/[\)]+$//g;
+					my $selected="";
+					if ($selectval eq $SubmittedData{$key}){
+						$selected = " selected";
+					}
+					$form_html.="<option value=\"$selectval\"$selected>$selectval</option>";
+				}
+				$form_html.="</select></div>\n";
+			} elsif ($Form_Type{$key} eq 'textarea'){
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></div>\n";
+			} elsif ($Form_Type{$key} eq 'hidden'){
+				$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
+			} else {
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></div>\n";
+			}
 		}
 	}
 
-	$form_html.="<input type=submit value=Send>\n";
+	$form_html.="<input class=\"contactform\" id=cf_submit type=submit value=Send>\n";
 	$form_html.="$required_marker_note\n";
 	$form_html.="</form>";
 
@@ -742,9 +764,20 @@ sub inputPage {
 		$client_side_check_script .= "return true;\n";
 		$client_side_check_script .= "}";
 		foreach $key (@orderedKeys){
-			if(!defined($Form_Type{$key}) || $Form_Type{$key} ne 'hidden'){
-				if ($key eq $field_name_to){
-					$client_side_check_script .= " else if (form.$key.value.length == 0){\n";
+			my $formType = $Form_Type{$key};
+			if (!defined($formType)){
+				$formType="text";
+			}
+			if ($key eq $field_name_to){
+				if ($#AliasesOrdered > 0){
+					$formType="select";
+				} else {
+					$formType="hidden";
+				}
+			}
+			if($formType ne 'hidden'){
+				if ($key eq $field_name_to or $formType eq "select"){
+					$client_side_check_script .= " else if (form.$key.selectedIndex == 0){\n";
 				} else {
 					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript($FieldMap{$key})."', 'g'))){\n";
 				}
@@ -753,7 +786,7 @@ sub inputPage {
 				} else {
 					$client_side_check_script .= "alert(The field '".$key."' does not appear to be valid.);\n";
 				}
-				if (defined($Form_Type{$key})){
+				if ($formType eq "text" or $formType eq "textarea"){
 					$client_side_check_script .= "form.$key.select();\n";
 				}
 				$client_side_check_script .= "form.$key.focus();\n";

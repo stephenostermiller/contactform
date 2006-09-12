@@ -1,0 +1,42 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Contact Form and Spam<%/bte.tpl%>
+<%bte.tpl name=description %>Ways to combat spam with Contact Form.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form spam<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1><a href="./">Contact Form</a> Configuration Options</h1>
+
+<a href="./">Contact form</a> and spam:
+<ul>
+<li><a href="#contact_form_spam">My contact form is being spammed</a></li>
+<li><a href="#disallow_links">Disallow links</a></li>
+<li><a href="#add_anti_spam_fields">Add anti-spam fields</a></li>
+<li><a href="#captchas">Captchas</a></li>
+</ul>
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+
+<h2><a name=contact_form_spam>My Contact Form is Being Spammed</a></h2>
+
+<p>Unfortunately, spammers have written programs that find forms on the web, and automatically fill them out with spam messages.  These spam bots seem to target pretty much all forms on the world wide web indisciminantly.  Their main target appears to be pages that allow them to post comments touting products and spreading links.  Contact forms are caught in the cross fire.  The following are techniques to help stop the spam.</p>
+
+<h2><a name=disallow_links>Disallow Links</a></h2>
+<p>Because most of the contact form spam is aimed at spreading links, any easy way to get rid of it is to disallow all links in messages.  The default configuration of contact form does not allow html or bulliten board formatted links already.  Additional configuration could be added that would disallow pretty much any links:</p>
+
+<code><pre>
+my %disallowed_text = (
+	"[Hh][Tt][Tt][Pp]|[Hh][Tt][Mm][Ll]|[Ww][Ww][Ww]","Please remove links from your message to continue.",
+);
+</pre></code>
+
+<h2><a name=add_anti_spam_fields>Add Anti-Spam Fields</a></h2>
+
+<p>Most of the spammers that send you messages through your contact form are not targeted at your site.  Their spam bots are written to work with a large number of sites across the internet.  As such, they are relatively easy to fool.  The best way to fool them is to add an extra question to the contact form that the user has to answer to prove that they are human.  Such a question would be "What fruit that starts with the letter 'A'?".  All humans should be able to answer "Apple" but the spam bots just aren't that smart.</p>
+
+<p>In fact, the bots are generally so generic that asking for any additional required fields (especially a couple required fields) will thwart them.  Just add a couple questions to your form to avoid most problems.</p>
+
+<h2><a name=captchas>Captchas</a></h2>
+
+<p>Contact Form does not currently support captchas.  Captchas usually present an image of some obscured letters that you have to identify.  A captcha would be better at keeping out bots because the question would be different for every user.  A bot targeted at your site could easily be programmed to answer your special question, but would have a harder time solving captchas.  Contact Form does not implement captchas because they would introduce a library dependency and other configuration that would make the form hard to install.  Additionally they are hard for some users, especially blind users, to use.  Furthermore, most of the spam problems for contact forms can be solved using the previously mentioned tactics.</p>
+
+<%/bte.tpl%>
+<%/bte.doc%>

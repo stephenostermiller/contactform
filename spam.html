@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Contact Form and Spam</title>
+<meta name="description" content="Ways to combat spam with Contact Form.">
+<meta name="keywords" content="contact form spam">
+<link rel="icon" href="contactform_16_16.png" type="image/png">
+<style>
+a:link{text-decoration:none;}
+a:visited{text-decoration:none;}
+a:link:hover{text-decoration:underline;}
+a:visited:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<body style="bording:none;padding:0cm;margin:0cm;background-color:white;">
+<a href="./"><img src="contactform.png" border=0 width=343 height=343 align=left alt="Contact Form"></a>
+<div style="padding:1cm;">
+
+<h1><a href="./">Contact Form</a> Configuration Options</h1>
+
+<a href="./">Contact form</a> and spam:
+<ul>
+<li><a href="#contact_form_spam">My contact form is being spammed</a></li>
+<li><a href="#disallow_links">Disallow links</a></li>
+<li><a href="#add_anti_spam_fields">Add anti-spam fields</a></li>
+<li><a href="#captchas">Captchas</a></li>
+</ul>
+
+<div style="padding-top:1cm;">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2385172974335864";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "text";
+google_ad_channel ="";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+
+<br clear=all>
+
+<div style="padding:1cm;">
+
+
+<h2><a name=contact_form_spam>My Contact Form is Being Spammed</a></h2>
+
+<p>Unfortunately, spammers have written programs that find forms on the web, and automatically fill them out with spam messages.  These spam bots seem to target pretty much all forms on the world wide web indisciminantly.  Their main target appears to be pages that allow them to post comments touting products and spreading links.  Contact forms are caught in the cross fire.  The following are techniques to help stop the spam.</p>
+
+<h2><a name=disallow_links>Disallow Links</a></h2>
+<p>Because most of the contact form spam is aimed at spreading links, any easy way to get rid of it is to disallow all links in messages.  The default configuration of contact form does not allow html or bulliten board formatted links already.  Additional configuration could be added that would disallow pretty much any links:</p>
+
+<code><pre>
+my %disallowed_text = (
+	"[Hh][Tt][Tt][Pp]|[Hh][Tt][Mm][Ll]|[Ww][Ww][Ww]","Please remove links from your message to continue.",
+);
+</pre></code>
+
+<h2><a name=add_anti_spam_fields>Add Anti-Spam Fields</a></h2>
+
+<p>Most of the spammers that send you messages through your contact form are not targeted at your site.  Their spam bots are written to work with a large number of sites across the internet.  As such, they are relatively easy to fool.  The best way to fool them is to add an extra question to the contact form that the user has to answer to prove that they are human.  Such a question would be "What fruit that starts with the letter 'A'?".  All humans should be able to answer "Apple" but the spam bots just aren't that smart.</p>
+
+<p>In fact, the bots are generally so generic that asking for any additional required fields (especially a couple required fields) will thwart them.  Just add a couple questions to your form to avoid most problems.</p>
+
+<h2><a name=captchas>Captchas</a></h2>
+
+<p>Contact Form does not currently support captchas.  Captchas usually present an image of some obscured letters that you have to identify.  A captcha would be better at keeping out bots because the question would be different for every user.  A bot targeted at your site could easily be programmed to answer your special question, but would have a harder time solving captchas.  Contact Form does not implement captchas because they would introduce a library dependency and other configuration that would make the form hard to install.  Additionally they are hard for some users, especially blind users, to use.  Furthermore, most of the spam problems for contact forms can be solved using the previously mentioned tactics.</p>
+
+
+
+<p>Copyright (C) 2002-2006 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+
+<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+
+</div>
+
+</body>
+</html>
