@@ -330,7 +330,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.6";
+	$version = "1.3.7";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -374,6 +374,7 @@ sub initConstants {
 }
 
 sub loadTemplate(){
+    $template_error = "";
 	if ($page_template_file ne ""){
 		if (!open(TEMPLATE, "<$page_template_file")){
 			$template_error = '<div class="contactform cf_error cf_message">The template file could not be opened.</div>\n';

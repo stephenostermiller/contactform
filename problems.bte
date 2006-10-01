@@ -34,5 +34,11 @@ AddHandler cgi-script .pl
 
 <p>If an error occurs when sending mail, or mail never arrives, sendmail is usually the culprit.  Configuring sendmail is beyond the scope of this document, however check that /usr/lib/sendmail exists on the server.  If it doesn't, see if you have another command line program that can be used to send mail.  Check that it works by testing it from your shell's command prompt.</p>
 
+<h2><a name=selinux>Security Enhanced Linux</a></h2>
+
+<p>Security Enhanced Linux (SELinux) locks down permissions.  To run contact form on SELinux, you will need to open up sendmail so that contact form can use it:</p>        
+
+<p><pre>restorecon -v  /usr/sbin/sendmail*</pre></p>
+
 <%/bte.tpl%>
 <%/bte.doc%>
