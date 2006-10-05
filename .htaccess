@@ -3,3 +3,4 @@ redirect seeother /contactform/contactform_1_1.tar.gz http://ostermiller.org/con
 redirect seeother /contactform/contactform_1_1_1.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
 redirect seeother /contactform/contactform_1_1_2.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
 redirect seeother /contactform/contactform_1_1_3.tar.gz http://ostermiller.org/contactform/contactform_1_1_4.tar.gz
+redirect permanent /contactform/options.htmll http://ostermiller.org/contactform/options.html
