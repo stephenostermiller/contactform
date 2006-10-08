@@ -679,7 +679,7 @@ sub inputPage {
 				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description<br>\n<select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
 				foreach my $alias (@AliasesOrdered){
-					if ($alias eq $SubmittedData{$field_name_to}){
+					if (defined $SubmittedData{$field_name_to} and $alias eq $SubmittedData{$field_name_to}){
 						$alias_selected = 'selected'
 					} else {
 						$alias_selected = '';
