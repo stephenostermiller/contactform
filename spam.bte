@@ -28,11 +28,13 @@ my %disallowed_text = (
 );
 </pre></code>
 
+<h2><a name=preview>Require Preview</a></h2>
+
+<p>Requiring that users preview their message before sending can thwart many spam bots that are not able to go through the multiple step preview process.  Required preview is a feature that is now enabled in Contact From by default.</p>
+
 <h2><a name=add_anti_spam_fields>Add Anti-Spam Fields</a></h2>
 
 <p>Most of the spammers that send you messages through your contact form are not targeted at your site.  Their spam bots are written to work with a large number of sites across the internet.  As such, they are relatively easy to fool.  The best way to fool them is to add an extra question to the contact form that the user has to answer to prove that they are human.  Such a question would be "What fruit that starts with the letter 'A'?".  All humans should be able to answer "Apple" but the spam bots just aren't that smart.</p>
-
-<p>In fact, the bots are generally so generic that asking for any additional required fields (especially a couple required fields) will thwart them.  Just add a couple questions to your form to avoid most problems.</p>
 
 <h2><a name=captchas>Captchas</a></h2>
 

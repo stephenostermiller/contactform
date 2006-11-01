@@ -5,7 +5,7 @@ use strict;
 # Contact Form is a Perl script that you can run on your website that will
 # allow others to send you email through a web interface.
 # See: http://ostermiller.org/contactform/
-# Copyright (C) 2002-2005 Stephen Ostermiller
+# Copyright (C) 2002-2006 Stephen Ostermiller
 # http://ostermiller.org/contact.pl?regarding=Contact+Form
 #
 # This program is free software; you can redistribute it and/or modify
@@ -43,12 +43,12 @@ my @Aliases = (
 # Modify the following to control how the HTML pages look
 
 # Page titles for the input and thank your pages
-my $input_page_title = 'Form Test';
-my $sent_page_title = 'Message Accepted';
+my $input_page_title = 'Contact Us';
+my $sent_page_title = 'Message Sent';
 
 # Extra text (may be html formatted) that will be placed on
 # the page before the the form
-my $input_page_text = '<p>Fill out the form below to test contact form.
+my $input_page_text = '<p class="contactform cf_message" id="cf_filloutformmessage">Fill out the form below to test contact form.
 <span style="color:red;">All messages submitted here will be discarded.</span>
 Feel free to play with this form as much as you would like, it is here to
 demonstrate how Contact Form works.
@@ -57,14 +57,16 @@ the contact link at the bottom of the page.</p>
 <p>This contact form has three customizations:</p>
 <ol>
 <li>The recipient list been sent to three email addresses that ignore all incoming messages.</li>
+<li>Required preview has been disabled.</li>
 <li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
 <li>This message is set in the $input_page_text variable.</li>
 </ol>';
-my $sent_page_text = '<p>The message you entered was correctly formatted and normally would
+my $sent_page_text = '<p class="contactform cf_message" id="cf_thankyoumessage">The message you entered was correctly formatted and normally would
 have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
 This Contact Form was configured to send email to an address that does not exist so
 that you could test Contact Form. If you really need to contact Stephen
 (the Contact Form author) please use the contact link at the bottom of the page.</p>';
+my $preview_page_text = '<p class="contactform cf_message" id="cf_previewmessage">Please review your message before sending it. Changes can be made below.</p>';
 
 # Page structure -- the look and feel of the page
 # This variable may be either changed directly, or if the
@@ -86,8 +88,8 @@ my $page_template =
 $css
 $javascript
 </head>
-<body>
-<h1>$title</h1>
+<body class="contactform cf_body" id="cf_body">
+<h1 class="contactform cf_header" id="cf_titleheader">$title</h1>
 $content
 </body>
 </html>
@@ -225,6 +227,8 @@ my %Field_Descriptions = (
 	my $field_name_regarding = 'regarding';
 	# The original referring url.
 	my $field_name_referrer = 'referrer';
+	# The submit/preview action
+	my $field_name_submit = 'do';
 
 # Regular expression describing urls which can host forms
 # pointing to this program.	The referral URL is generated on the
@@ -246,6 +250,11 @@ my %disallowed_text = (
 	"\\<[ \\r\\n\\t]*[Aa][ \\r\\n\\t]","You appear to be trying to include HTML formatted links.  Links should not be formatted like this.",
 	"\\[[ \\r\\n\\t]*[Uu][Rr][Ll][ \\r\\n\\t]*\\=","You appear to be trying to include message board formatted links.  Links should not be formatted like this.",
 );
+
+# Whether or not users are required to preview
+# their message before sending.
+# Set to 0 to disable, 1 to enable.
+my $require_preview = 0;
 
 # The character set for the web site.
 my $charset = 'ISO-8859-1';
@@ -278,6 +287,7 @@ textarea.contactform { height:4in; }
 .cf_required { color:green; }
 #cf_version { text-align:right; }
 .cf_field { margin-bottom:0.5cm; }
+.cf_preview { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");margin-bottom:1cm;}
 </style>';
 
 # Style rules for thank you page
@@ -316,6 +326,7 @@ my(%SubmittedData, $mail_message, %AliasesMap, @AliasesOrdered, %FieldMap, @Fiel
 &createMaps();
 &sanityCheck();
 &composeEmail();
+&previewMessage();
 &sendEmail();
 &sentPage();
 
@@ -332,7 +343,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.7";
+	$version = "1.3.8";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -376,7 +387,7 @@ sub initConstants {
 }
 
 sub loadTemplate(){
-    $template_error = "";
+	$template_error = "";
 	if ($page_template_file ne ""){
 		if (!open(TEMPLATE, "<$page_template_file")){
 			$template_error = '<div class="contactform cf_error cf_message">The template file could not be opened.</div>\n';
@@ -509,23 +520,23 @@ sub sanityCheck {
 		}
 	}
 	if (!($some_required_field_present)){
-		&inputPage();
+		&inputPage('', $input_page_text);
 	}
 
 	if ($errorCount > 0){
 		my $errorMessage = "";
 		if(!defined($SubmittedData{"prefill"})){
 			if ($errorCount == 1){
-				$errorMessage = "Please correct the error to continue.";
+				$errorMessage = "<p>Please correct the error to continue.</p>";
 			} else {
-				$errorMessage = "Please correct all errors to continue.";
+				$errorMessage = "<p>Please correct all errors to continue.</p>";
 			}
 		}
-		&inputPage($errorMessage, \%errorHash);
+		&inputPage($errorMessage, "", \%errorHash);
 	}
 
 	if ((!$SubmittedData{$field_name_to}) || $SubmittedData{$field_name_to} eq ""){
-		&inputPage('');
+		&inputPage('', $input_page_text);
 	} else {
 		my $recipent = $SubmittedData{$field_name_to};
 		if ((!$AliasesMap{$recipent})){
@@ -546,7 +557,7 @@ sub composeEmail {
 		$from = 'nobody';
 	}
 	if ($FieldMap{$field_name_from_name} && $SubmittedData{$field_name_from_name} ne ''){
-		$from .= " (".&safeHeaderName($SubmittedData{$field_name_from_name}).")";
+		$from = &safeHeaderName($SubmittedData{$field_name_from_name})." <$from>";
 	}
 
 	if ($FieldMap{$field_name_subject} && $SubmittedData{$field_name_subject}){
@@ -604,6 +615,23 @@ sub sendEmail {
 	close (MAIL);
 }
 
+sub previewMessage() {
+	if (!$require_preview){
+		return;
+	}
+	if (defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Send"){
+		return;
+	}
+
+	my ($message);
+	$message = &textToHTML("To: $SubmittedData{$field_name_to}\n".$mail_message);
+
+	&inputPage(
+		'',
+		"$preview_page_text<div class=\"contactform cf_preview\">$message</div>"
+	);
+}
+
 sub sentPage {
 	my ($message);
 	$message = &textToHTML("To: $SubmittedData{$field_name_to}\n".$mail_message);
@@ -633,13 +661,16 @@ sub redirect {
 }
 
 sub inputPage {
-	my ($error, $fieldErrors) = @_;
+	my ($error, $preview, $fieldErrors) = @_;
 	if (!defined($error)){
 		$error = "";
 	}
 	my %FieldErrorsHash = ();
 	if (defined($fieldErrors)){
 		%FieldErrorsHash = %$fieldErrors;
+	}
+	if (!defined($preview)){
+		$preview = "";
 	}
 	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
@@ -743,8 +774,12 @@ sub inputPage {
 			}
 		}
 	}
-
-	$form_html.="<input class=\"contactform\" id=cf_submit type=submit value=Send>\n";
+	if ($require_preview){
+		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Preview>\n";
+	}
+	if (!$require_preview or ($error eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
+		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Send>\n";
+	}
 	$form_html.="$required_marker_note\n";
 	$form_html.="</form>";
 
@@ -806,7 +841,7 @@ sub inputPage {
 		$input_page_title,
 		$input_page_css,
 		$client_side_check_script,
-		$input_page_text.$error.$form_html
+		$preview.$error.$form_html
 	);
 }
 
