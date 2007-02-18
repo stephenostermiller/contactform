@@ -41,7 +41,8 @@ reveal addresses that it knows.
 <ul>
 <li><a href="http://ostermiller.org/contactform/addresses.html#default_config">Default Configuration</a></li>
 <li><a href="http://ostermiller.org/contactform/addresses.html#single_config">Just One Person</a></li>
-<li><a href="http://ostermiller.org/contactform/addresses.html#multiple_config">Multiple People</a></li>
+<li><a href="http://ostermiller.org/contactform/addresses.html#multiple_config">Choice of Multiple People</a></li>
+<li><a href="http://ostermiller.org/contactform/addresses.html#list_config">List of Addresses</a></li>
 </ul>
 </li>
 <li><a href="http://ostermiller.org/contactform/options.html">Optional Configuration</a>
@@ -113,7 +114,7 @@ reveal addresses that it knows.
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_1_3_8.tar.gz">contactform_1_3_8.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_1_3_9.tar.gz">contactform_1_3_9.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
@@ -123,16 +124,20 @@ reveal addresses that it knows.
 
 <h2>Changes</h2>
 <ul>
+<li>Version 1.3.9<ul>
+<li>Allow emails to be sent to an entire list of people at once.</li>
+<li>New preview mode available in which preview is allowed but not required.</li>
+</ul></li></li>
 <li>Version 1.3.8<ul>
-<li>Added a "preview" feature such that users must review their message before sending (enabled by default but may be turned off)</li> 
-<li>Changed the format of the from line from "email (name)" to "name &lt;email&gt;" which seems to be more standard</li> 
+<li>Added a "preview" feature such that users must review their message before sending (enabled by default but may be turned off)</li>
+<li>Changed the format of the from line from "email (name)" to "name &lt;email&gt;" which seems to be more standard</li>
 </ul></li></li>
 <li>Version 1.3.7<ul>
-<li>Fixed an "uninitialized value in concatenation" warning from perl.</li> 
+<li>Fixed an "uninitialized value in concatenation" warning from perl.</li>
 </ul></li></li>
 <li>Version 1.3.6<ul>
 <li>Contact form look and feel can be better controlled via cascading style sheets (CSS).</li>
-<li>Support for drop down select fields</li> 
+<li>Support for drop down select fields</li>
 </ul></li></li>
 <li>Version 1.3.5<ul>
 <li>Error messages are now in context -- an error message for a field will appear directly above that field.</li>

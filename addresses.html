@@ -68,7 +68,7 @@ It is almost certain that you want to change this.
 In this configuration, only John Doe can get email. Users will not be given a choice to send
 email to other people.
 
-<h2><a name=multiple_config>Multiple People</a></h2>
+<h2><a name=multiple_config>Choice of Multiple People</a></h2>
 <pre>my @Aliases = (
 	'John Doe','johndoe@example.com',
 	'Jane Doe','janedoe@example.com',
@@ -78,6 +78,13 @@ email to other people.
 
 In this configuration, the form can send email to John, Jane, Sales, or Webmaster.  Users of the
 will see a drop down menu from which they can choose one of these four options.
+
+<h2><a name=list_config>List of Addresses</a></h2>
+<pre>my @Aliases = (
+	'support','johndoe@example.com,janedoe@example.com',
+);</pre>
+
+A single alias can support a comma separated list of addresses.  In this case, an email to support will be sent to both John and Jane.
 
 
 

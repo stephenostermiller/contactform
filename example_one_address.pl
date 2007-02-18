@@ -63,7 +63,7 @@ have been sent.  However, <span style="color:red;">your message was sent to nobo
 This Contact Form was configured to send email to an address that does not exist so
 that you could test Contact Form. If you really need to contact Stephen
 (the Contact Form author) please use the contact link at the bottom of the page.</p>';
-my $preview_page_text = '<p class="contactform cf_message" id="cf_previewmessage">Please review your message before sending it. 
+my $preview_page_text = '<p class="contactform cf_message" id="cf_previewmessage">Please review your message before sending it.
 Changes can be made below.
 <span style="color:red;">All messages submitted here will be discarded.</span>
 </p>';
@@ -343,7 +343,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.8";
+	$version = "1.3.9";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -597,26 +597,29 @@ sub composeEmail {
 }
 
 sub sendEmail {
-	open(MAIL,"|$sendmail");
-	print MAIL "To: ".&safeHeader($AliasesMap{$SubmittedData{$field_name_to}})."\n";
-	print MAIL "Content-Type: text/plain; charset=".&safeHeader($charset)."\n";
-	print MAIL "X-Mailer: ContactForm/".&safeHeader($version)." (http://ostermiller.org/contactform/)\n";
-	print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
-	print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
-	print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
-	print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
-	print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
-	print MAIL "X-Remote-Addr: ".&safeHeader($ENV{'REMOTE_ADDR'})."\n";
-	print MAIL "X-Remote-User: ".&safeHeader($ENV{'REMOTE_USER'})."\n";
-	print MAIL "X-HTTP-User-Agent: ".&safeHeader($ENV{'HTTP_USER_AGENT'})."\n";
-	print MAIL "X-HTTP-Referer: ".&safeHeader($ENV{'HTTP_REFERER'})."\n";
-	print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
-	print MAIL $mail_message;
-	close (MAIL);
+	my @to_address_list = split(/,/,$AliasesMap{$SubmittedData{$field_name_to}});
+	foreach my $to_address (@to_address_list){
+		open(MAIL,"|$sendmail");
+		print MAIL "To: ".&safeHeader($to_address)."\n";
+		print MAIL "Content-Type: text/plain; charset=".&safeHeader($charset)."\n";
+		print MAIL "X-Mailer: ContactForm/".&safeHeader($version)." (http://ostermiller.org/contactform/)\n";
+		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
+		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
+		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
+		print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
+		print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
+		print MAIL "X-Remote-Addr: ".&safeHeader($ENV{'REMOTE_ADDR'})."\n";
+		print MAIL "X-Remote-User: ".&safeHeader($ENV{'REMOTE_USER'})."\n";
+		print MAIL "X-HTTP-User-Agent: ".&safeHeader($ENV{'HTTP_USER_AGENT'})."\n";
+		print MAIL "X-HTTP-Referer: ".&safeHeader($ENV{'HTTP_REFERER'})."\n";
+		print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
+		print MAIL $mail_message;
+		close (MAIL);
+	}
 }
 
 sub previewMessage() {
-	if (!$require_preview){
+	if ($require_preview == 0){
 		return;
 	}
 	if (defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Send"){
@@ -774,10 +777,10 @@ sub inputPage {
 			}
 		}
 	}
-	if ($require_preview){
+	if ($require_preview == 1 or $require_preview == 2){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Preview>\n";
 	}
-	if (!$require_preview or ($error eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
+	if ($require_preview == 0 or $require_preview == 2 or ($error eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Send>\n";
 	}
 	$form_html.="$required_marker_note\n";
