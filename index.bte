@@ -92,7 +92,12 @@ reveal addresses that it knows.
 <li><a href="http://ostermiller.org/contactform/spam.html#captchas">Captchas</a></li>
 </ul>
 </li>
-
+<li><a href="http://ostermiller.org/contactform/bugs.html">Bugs and Features</a>
+<ul>
+<li><a href="http://ostermiller.org/contactform/bugs.html#open">Open Issues</a></li>
+<li><a href="http://ostermiller.org/contactform/bugs.html#new">Submit Issues</a></li>
+</ul>
+</li>
 </ul>
 </div>
 

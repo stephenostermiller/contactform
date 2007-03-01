@@ -7,6 +7,8 @@
 
 <p>When Contact Form doesn't work you generally see an "Internal Server Error".  The error_log for your webserver generally has detailed information about what went wrong.  If your system administrator has given you access, looking at the error_log will generally make it blazingly obvious what the problem is.  Here are the solutions to some of the most common problems that users have reported on various servers.</p>
 
+<p>For problems, bugs, and feature requests not addressed here, <a href="bugs.html">please see the bugs page</a>.</p>
+
 <%/bte.tpl%>
 <%bte.tpl name=content %>
 

@@ -1,0 +1,22 @@
+<%bte.doc super="page.bte" %>
+<%bte.tpl name=pageTitle %>Bugs and Feature Requests for Contact Form<%/bte.tpl%>
+<%bte.tpl name=description %>Open issues and submitting new problems or feature requests for Contact Form.<%/bte.tpl%>
+<%bte.tpl name=keywords %>contact form bugs<%/bte.tpl%>
+<%bte.tpl name=topContent %>
+<h1><a href="./">Contact Form</a> Bugs and Features</h1>
+
+<p>Bugs and features for the emailing contact form are tracked using bugzilla software.  There are also <a href="problems.html">solutions to common problems</a> when setting up or configuring contact form or your website.<p>
+
+<%/bte.tpl%>
+<%bte.tpl name=content %>
+
+<h2><a name=open>Open Issues</a></h2>
+
+<p><a href="http://bugzilla.ostermiller.com/buglist.cgi?query_format=specific&order=relevance+desc&bug_status=__open__&product=ContactForm&content=">Review open bugs and feature requests</a>.</p>
+
+<h2><a name=new>New Issues</a></h2>
+
+<p><a href="http://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">Submit a new issue</a>, or <a href="http://ostermiller.org/contact.pl">contact Stephen</a>.</p>
+
+<%/bte.tpl%>
+<%/bte.doc%>
