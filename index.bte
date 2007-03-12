@@ -119,7 +119,7 @@ reveal addresses that it knows.
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_1_3_9.tar.gz">contactform_1_3_9.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_2_00_00.tar.gz">contactform_2_00_00.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
@@ -129,6 +129,15 @@ reveal addresses that it knows.
 
 <h2>Changes</h2>
 <ul>
+<li>Version 2.00.00<ul>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=91">Group configuration parameters better - one entry with multiple properties per field</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=90">Support radio buttons for selects</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=89">Allow better control of field description placement</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=88">Allow selected default value in drop down list</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=87">Allow droplists to be optional</a></li>
+<li>Fixed Perl warnings when using selects</li>
+<li>Don't allow cgi fields such as name, email, and subject to be used in generated emails if they have been removed from the configuration.</li>
+</ul></li></li>
 <li>Version 1.3.9<ul>
 <li>Allow emails to be sent to an entire list of people at once.</li>
 <li>New preview mode available in which preview is allowed but not required.</li>

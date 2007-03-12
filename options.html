@@ -85,35 +85,42 @@ $content
 <h2><a name=add_fields>Add Fields</a></h2>
 
 Contact form comes with standard name, address, subject and message fields.  It is very easy to add
-additional fields.  When you add additional field you need to add them to the
-<ol>
-<li>@Form_Fields - a regular expression to validate the field.  There are plenty of prebuilt regular
-expressions to choose from:
-  <ul>
-  <li>$SOMETHING - A generic required field (multiple line textarea)</li>
-  <li>$ANYTHING - A generic optional field (multiple line textarea)</li>
-  <li>$ONE_LINE_REQUIRED - A generic required field (single line text field)</li>
-  <li>$ONE_LINE_OPTIONAL - A generic optional field (single line text field)</li>
-  <li>$ZIPCODE_REQUIRED - Required postal code.</li>
-  <li>$ZIPCODE_OPTIONAL - Optional postal code.</li>
-  <li>$PHONE_REQUIRED - Required phone number.</li>
-  <li>$PHONE_OPTIONAL - Optional phone number.</li>
-  <li>$EMAIL_REQUIRED - For a required email address</li>
-  <li>$EMAIL_OPTIONAL - For an optional email address</li>
-  <li>$PRICE_REQUIRED - A required price (number with two decimal points)</li>
-  <li>$PRICE_OPTIONAL - An optional price (number with two decimal points)</li>
-  <li>FLOAT_REQUIRED - A number, possibly with decimal points</li>
-  <li>$FLOAT_OPTIONAL - A number, possibly with decimal points (optional)</li>
-  <li>$INTEGER_REQUIRED - A number without decimal points</li>
-  <li>$INTEGER_OPTIONAL - A number without decimal points (optional)</li>
-  <li>If you know regular expressions you can make up your own</li>
-  </ul>
-</li>
-<li>%Error_Messages - To specify the message for when the user enters something invalid.</li>
-<li>%Form_Type - text, textarea, or hidden to determine how the field will look on the form. </li>
-<li>%Field_Descriptions - For text describes the field on the form.</li>
-</ol>
+additional fields.  There are several unused examples included in the contact form configuration. When you add additional field you need to add them to the @FormFields list.
 
+<pre>
+    'phone', {
+        # A regular expression describing a properly formatted field.
+        # Uses on of the included pre-canned types as enumerated below
+        'required' => $PHONE_OPTIONAL,
+        # What to display to the user when the field is not filled in correctly
+        'error' => 'The phone number you entered does not appear to be valid.',
+        # Type of the field, this will display as a free form entry text box
+        # Other types such as selects, text areas, and radio buttons are available
+        'type' => 'text',
+        # Text to display next to the field for the user
+        'description' => 'Phone Number:',
+    },
+</pre>
+There are plenty of prebuilt regular expressions to choose from:
+<ul>
+<li>$SOMETHING - A generic required field (multiple line textarea)</li>
+<li>$ANYTHING - A generic optional field (multiple line textarea)</li>
+<li>$ONE_LINE_REQUIRED - A generic required field (single line text field)</li>
+<li>$ONE_LINE_OPTIONAL - A generic optional field (single line text field)</li>
+<li>$ZIPCODE_REQUIRED - Required postal code.</li>
+<li>$ZIPCODE_OPTIONAL - Optional postal code.</li>
+<li>$PHONE_REQUIRED - Required phone number.</li>
+<li>$PHONE_OPTIONAL - Optional phone number.</li>
+<li>$EMAIL_REQUIRED - For a required email address</li>
+<li>$EMAIL_OPTIONAL - For an optional email address</li>
+<li>$PRICE_REQUIRED - A required price (number with two decimal points)</li>
+<li>$PRICE_OPTIONAL - An optional price (number with two decimal points)</li>
+<li>FLOAT_REQUIRED - A number, possibly with decimal points</li>
+<li>$FLOAT_OPTIONAL - A number, possibly with decimal points (optional)</li>
+<li>$INTEGER_REQUIRED - A number without decimal points</li>
+<li>$INTEGER_OPTIONAL - A number without decimal points (optional)</li>
+<li>If you know regular expressions you can make up your own</li>
+</ul>
 
 <h2><a name=restrict_referrer>Restrict the Referrer</a></h2>
 <p>Changing this will prevent other sites from linking to your contact form.  You would want to consider this especially if some other site sets up a button that allows users to click the button to immediately send you a prefilled email - effectively spamming you with the same message over and over.</p>
@@ -137,7 +144,7 @@ at the source of the page and figure out what patterns you actually would accept
 Contactform now has the ability to do drop down lists.  To set up a selection field and its options, you need to do two things.  First, in the Form_Type variable, set the field to "select".  Second, in the Form_Fields variable set the regular expression for the field to be a pipe separated ('|') list of options.  The "state" field is done for you as an example.  The 50 states are given as options and the user can select their state from a pull down list.  If your options have spaces in them, they should be enclosed in parenthesis like so: "(Option one)|(Option two)|(Option three)".  Punctuation is not supported in options, stick to only letters, numbers, and spaces.
 
 
-<p>Copyright (C) 2002-2006 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+<p>Copyright (C) 2002-2007 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
 

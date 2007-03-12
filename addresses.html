@@ -52,11 +52,13 @@ google_color_text = "000000";
 <h2><a name=default_config>Default Configuration</a></h2>
 <pre>my @Aliases = (
 	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
+	# The following aliases are commented out examples, remove the leading # sign to use them
 	#'webmaster','webmaster@yoursite.tld',
 	#'postmaster','postmaster@yoursite.tld',
+	#'two people','webmaster@yoursite.tld,postmaster@yoursite.tld',
 );</pre>
 
-The two lines that start with # are commented out.  In this configuration the form will
+The lines that start with # are commented out.  In this configuration the form will
 send email only to the web server administrator (as defined in the web server configuration).  
 It is almost certain that you want to change this.
 
@@ -88,7 +90,7 @@ A single alias can support a comma separated list of addresses.  In this case, a
 
 
 
-<p>Copyright (C) 2002-2006 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+<p>Copyright (C) 2002-2007 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
 

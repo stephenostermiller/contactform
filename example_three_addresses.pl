@@ -5,7 +5,7 @@ use strict;
 # Contact Form is a Perl script that you can run on your website that will
 # allow others to send you email through a web interface.
 # See: http://ostermiller.org/contactform/
-# Copyright (C) 2002-2006 Stephen Ostermiller
+# Copyright (C) 2002-2007 Stephen Ostermiller
 # http://ostermiller.org/contact.pl?regarding=Contact+Form
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@ use strict;
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # See copying.txt for details.
@@ -103,7 +103,8 @@ $content
 # my $page_template_file = "/home/me/contact.template";
 # If this file is set, the file will be read every time this script
 # is called, not the most efficient, but very convenient.
-# The temlate file must be in the same format as page_template.
+# The temlate file must be in the same format as the page_template
+# variable above
 my $page_template_file = "form.html";
 
 # Link back to contact form.
@@ -115,124 +116,218 @@ my $page_template_file = "form.html";
 # spread the word.
 my $contact_form_link = "<p class=\"contactform cf_message\" id=\"cf_version\"><a class=\"contactform cf_link\" href=\"http://ostermiller.org/contactform/\">Contact Form $version</a></p>";
 
-# A list of required form variables, along with a regular
-# expression that describes what a valid submission looks like.
-# If a field is not in this list, it will not be put in email.
+# FormFields is the list of questions the user is expected
+# to answer. The questions will appear in the same order as
+# they are ordered here. You may safely remove the subject,
+# email, name, and message from the form. The to field should
+# not be removed. The name of each field should contain only
+# letters, numbers, and underscore.  Spaces or symbols should
+# not be used.  Each has several attributes that control the
+# display of the question to the user.
+#
+# "required"
+# a regular expression that describes what a valid submission looks
+# like.  By default, any entry at all is allowed.
 # Consider using the following pre-defined regular expressions:
 # $SOMETHING, $ANYTHING, $ONE_LINE_REQUIRED, $ONE_LINE_OPTIONAL,
 # $ZIPCODE_REQUIRED, $ZIPCODE_OPTIONAL, $PHONE_REQUIRED,
 # $PHONE_OPTIONAL, $EMAIL_REQUIRED, $EMAIL_OPTIONAL, $PRICE_REQUIRED,
 # $PRICE_OPTIONAL, $FLOAT_REQUIRED, $FLOAT_OPTIONAL,
 # $INTEGER_REQUIRED, $INTEGER_OPTIONAL
-# You may safely remove the subject, email, name, and message
-# from the form.	The to field should not be removed.
-
-my @Form_Fields = (
-	'to',$ONE_LINE_REQUIRED,
-	'email',$EMAIL_REQUIRED,
-	'name',$ONE_LINE_OPTIONAL,
-	'subject',$ONE_LINE_REQUIRED,
-	'message',$SOMETHING,
-	'regarding',$ANYTHING,
-	'referrer',$ANYTHING,
-	#'phone',$PHONE_OPTIONAL,
-	#'fax',$PHONE_OPTIONAL,
-	#'address1', $ONE_LINE_OPTIONAL,
-	#'address2', $ONE_LINE_OPTIONAL,
-	#'city', "^(?:[a-zA-Z ]*)\$",
-	#'state', "^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)",
-	#'zip',$ZIPCODE_OPTIONAL,
-);
-
+#
+# "error"
 # A user friendly error message for each required
 # element that a user gets wrong.
-# Just because a field name is present here, it is not
-# nessecarily allowed.	Make sure it is also in @Form_Fields
-# If there is no error message, a default is used.
-my %Error_Messages = (
-	'to','You must specify a recipient.',
-	'email','The email address you entered does not appear to be valid.',
-	'name','You must enter your name.',
-	'subject','You must enter a subject.',
-	'message','You must enter a message.',
-	'regarding','',
-	'referrer','',
-	#'phone','The phone number you entered does not appear to be valid.',
-	#'fax','The fax number you entered	does not appear to be valid.',
-	#'address1','Please enter your address.',
-	#'address2','Please enter your address.',
-	#'city','Your city does not appear to be valid.',
-	#'state','Please choose your state.',
-	#'zip','Your zipcode does not appear to be valid.',
-);
-
+#
+# "type"
 # Type of input in web pages for each field.
-# Currently supported are 'text', 'hidden', 'select',
-# and 'textarea'
-# Just because a field name is present here, it is not
-# nessecarily allowed.	Make sure it is also in @Form_Fields
+# Currently supported are 'text', 'hidden', 'radio',
+# 'select', and 'textarea'
 # If there is no type, 'text' is assumed.
-# Setting this for the to field will have no effect since
+# Setting the type for the to field will have no effect since
 # the to field is handled specially.
-my %Form_Type = (
-	'email','text',
-	'name','text',
-	'message','textarea',
-	'subject','text',
-	'regarding', 'hidden',
-	'referrer', 'hidden',
-	#'phone','text',
-	#'fax','text',
-	#'address1','text',
-	#'address2','text',
-	#'city','text',
-	#'state','select',
-	#'zip','text',
-);
-
+#
+# "description"
 # Description to appear next to entry forms and in
 # the email or $NO_DESCRIPTION for none
-# Just because a field name is present here, it is not
-# nessecarily allowed.	Make sure it is also in @Form_Fields
 # If no description is given the field name followed
-# by a colon is used.
-my %Field_Descriptions = (
-	'to','To:',
-	'email','Your email address:',
-	'name','Your name:',
-	'subject','Subject:',
-	'message',$NO_DESCRIPTION,
-	'regarding',$NO_DESCRIPTION,
-	'referrer',$NO_DESCRIPTION,
-	#'phone','Phone Number:',
-	#'fax','Fax Number:',
-	#'address1','Address:',
-	#'address2',$NO_DESCRIPTION,
-	#'city','City:',
-	#'state','State:',
-	#'zip','Zipcode:',
+# by a colon is used
+#
+# "selected"
+# For fields of type "select", or "radio" indicates
+# the default selection
+#
+# "special"
+# Any special purpose for which the field is used.
+# Must be one of "to", "from", "name", "subject",
+# "regarding", or "referrer"
+#
+my @FormFields = (
+	'to', {
+		'required' => $ONE_LINE_REQUIRED,
+		'error' => 'You must specify a recipient.',
+		'description' => 'To:',
+		# Alias of the address put in the "To:" field of the email.
+		'special' => 'to',
+	},
+	'email', {
+		'required' => $EMAIL_REQUIRED,
+		'error' => 'The email address you entered does not appear to be valid.',
+		'type' => 'text',
+		'description' => 'Your email address:',
+		# Put in the "From:" field of the email as the email of the person it is from
+		'special' => 'from',
+	},
+	'name', {
+		'required' => $ONE_LINE_OPTIONAL,
+		'error' => 'You must enter your name.',
+		'type' => 'text',
+		'description' => 'Your name:',
+		# Put in the "From:" field of the email as the name of the person it is from
+		'special' => 'name',
+	},
+	'subject', {
+		'required' => $ONE_LINE_REQUIRED,
+		'error' => 'You must enter a subject.',
+		'type' => 'text',
+		'description' => 'Subject:',
+		# Put in the "Subject:" field of the email.
+		'special' => 'subject',
+	},
+	'message', {
+		'required' => $SOMETHING,
+		'error' => 'You must enter a message.',
+		'type' => 'textarea',
+		'description' => $NO_DESCRIPTION,
+	},
+	'regarding', {
+		'required' => $ANYTHING,
+		'error' => '',
+		'type' => 'hidden',
+		'description' => $NO_DESCRIPTION,
+		# Put in the "Subject:" field of the email in parenthesis.
+		'special' => 'regarding',
+	},
+	'referrer', {
+		'required' => $ANYTHING,
+		'error' => '',
+		'type' => 'hidden',
+		'description' => $NO_DESCRIPTION,
+		# The original referring url.
+		'special' => 'referrer',
+	},
+	# The following fields are disabled examples, remove the 'enabled' => 0 line to use them
+	'phone', {
+		'required' => $PHONE_OPTIONAL,
+		'error' => 'The phone number you entered does not appear to be valid.',
+		'type' => 'text',
+		'description' => 'Phone Number:',
+		'enabled' => 0,
+	},
+	'fax', {
+		'required' => $PHONE_OPTIONAL,
+		'error' => 'The fax number you entered does not appear to be valid.',
+		'type' => 'text',
+		'description' => 'Fax Number:',
+		'enabled' => 0,
+	},
+	'address1', {
+		'required' => $ONE_LINE_OPTIONAL,
+		'error' => 'Please enter your address.',
+		'type' => 'text',
+		'description' => 'Address:',
+		'enabled' => 0,
+	},
+	'address2', {
+		'required' => $ONE_LINE_OPTIONAL,
+		'error' => 'Please enter your address.',
+		'type' => 'text',
+		'description' => $NO_DESCRIPTION,
+		'enabled' => 0,
+	},
+	'city', {
+		'required' => '^(?:[a-zA-Z ]*)$',
+		'error' => 'Your city does not appear to be valid.',
+		'type' => 'text',
+		'description' => 'City:',
+		'enabled' => 0,
+	},
+	'state', {
+		'required' => '^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)$',
+		'error' => 'Please choose your state.',
+		'type' => 'select',
+		'description' => 'State:',
+		'enabled' => 0,
+	},
+	'zip', {
+		'required' => $ZIPCODE_OPTIONAL,
+		'error' => 'Your zipcode does not appear to be valid.',
+		'type' => 'text',
+		'description' => 'Zipcode:',
+		'enabled' => 0,
+	},
+	'most_basic_question', {
+		# uses the default values for required, error, type, and description
+		'enabled' => 0,
+	},
+	'color', {
+		# A required select drop down
+		'type' => 'select',
+		'required' => '^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$',
+		'error' => 'Please choose a color.',
+		'description' => 'Choose a color:',
+		'enabled' => 0,
+	},
+	'vegetable', {
+		# An optional select drop down
+		'type' => 'select',
+		'required' => '^(?:|Corn|Peas|Beans|Carrots|Broccoli)$',
+		'error' => 'Please choose a valid vegetable.',
+		'description' => 'Which (if any) is your favorite vegetable:',
+		'enabled' => 0,
+	},
+	'letter', {
+		# A select drop down with a pre-filled option
+		'type' => 'select',
+		'required' => '^(?:A|B|C|D)$',
+		'error' => 'Please choose on of the four letters.',
+		'description' => 'Choose a letter (C is selected by default):',
+		'selected' => 'C',
+		'enabled' => 0,
+	},
+	'yes_no', {
+		# required radio buttons
+		'type' => 'radio',
+		'required' => '^(?:yes|no)$',
+		'error' => 'Please answer the yes/no question',
+		'description' => 'Yes or no:',
+		'enabled' => 0,
+	},
+	'true_false', {
+		# radio buttons with a prefilled option
+		'type' => 'radio',
+		'required' => '^(?:true|false)$',
+		'error' => 'Please answer the true/false question',
+		'description' => 'True or false (false is selected by default):',
+		'selected' => 'false',
+		'enabled' => 0,
+	},
+	'vegetable2', {
+		# optional radio buttons
+		'type' => 'radio',
+		'required' => '^(?:|Lettuce|Tomato|Brussel Sprouts)$',
+		'error' => 'Please choose a valid vegetable.',
+		'description' => 'Which (if any) is your favorite vegetable:',
+		'enabled' => 0,
+	},
 );
 
-# The names of the fields that are inserted into special places
-# in the email can be changed by changing these values.
-	# Alias of the address put in the "To:" field of the email.
-	my $field_name_to = 'to';
-	# Put in the "From:" field of the email.
-	my $field_name_from_email = 'email';
-	# Put in the "From:" field of the email in parenthesis.
-	my $field_name_from_name = 'name';
-	# Put in the "Subject:" field of the email.
-	my $field_name_subject = 'subject';
-	# Put in the "Subject:" field of the email in parenthesis.
-	my $field_name_regarding = 'regarding';
-	# The original referring url.
-	my $field_name_referrer = 'referrer';
-	# The submit/preview action
-	my $field_name_submit = 'do';
+# The name of the field for submit/preview action
+my $field_name_submit = 'do';
 
 # Regular expression describing urls which can host forms
-# pointing to this program.	The referral URL is generated on the
-# client side by the browser.	Therefore it useless to prevent
+# pointing to this program. The referral URL is generated on the
+# client side by the browser. Therefore it useless to prevent
 # unauthorized submission by mail software robots. You can
 # prevent somebody from reliably hosting, on another server,
 # a form pointing to this email software.
@@ -253,8 +348,10 @@ my %disallowed_text = (
 
 # Whether or not users are required to preview
 # their message before sending.
-# Set to 0 to disable, 1 to enable.
-my $require_preview = 0;
+# 0 -- preview disabled (allows users to send mail the fastest)
+# 1 -- preview required (best for spam prevention)
+# 2 -- preview available, but not required  (most choice for users)
+my $require_preview = 1;
 
 # The character set for the web site.
 my $charset = 'ISO-8859-1';
@@ -279,6 +376,8 @@ my $required_marker = '<span class="contactform cf_required">*</span>';
 my $required_marker_note = "<p class=\"contactform cf_message\" id=\"cf_requiredexplain\">$required_marker denotes a required field.</p>";
 
 # Style rules for the input page.
+# to put question and answer on the same line use:
+# .cf_userentry, .cf_radioselection { display:inline; margin-left:0.25cm; }
 my $input_page_css =
 '<style>
 .cf_error { color:red; }
@@ -312,14 +411,17 @@ my $redirect_url_sent = "";
 # Show the sent confirmation for this many seconds before redirecting
 # after the message has been sent if the redirect_url_sent has been defined.
 # If zero is specified, the message sent confirmation will not
-# be shown at all (you can redirect to your own)
+# be shown at all (you can redirect to your own thank you)
 my $redirect_delay_sent = 15;
 
 #=====================================================================
 # You need to know Perl to and have a strong stomach to
 # modify much of anything below this line
 
-my(%SubmittedData, $mail_message, %AliasesMap, @AliasesOrdered, %FieldMap, @Field_Order, $template_error);
+my(%SubmittedData, $mail_message, %AliasesMap, @AliasesOrdered,
+%FieldMap, @Field_Order, $template_error, $field_name_to,
+$field_name_from_email, $field_name_from_name, $field_name_subject,
+$field_name_regarding, $field_name_referrer);
 
 &loadTemplate();
 &parseInput();
@@ -343,7 +445,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "1.3.9";
+	$version = "2.00.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -414,19 +516,38 @@ sub createMaps {
 		}
 	}
 
-	%FieldMap = @Form_Fields;
-	my $useField = 1;
-	foreach my $field (@Form_Fields){
-		if ($useField){
-			push(@Field_Order, $field);
-			$useField = 0;
-		} else {
-			$useField = 1;
+	$field_name_to = '';
+	$field_name_from_email = '';
+	$field_name_from_name = '';
+	$field_name_subject = '';
+	$field_name_regarding = '';
+	$field_name_referrer = '';
+
+	%FieldMap = @FormFields;
+	foreach my $key (@FormFields){
+		if ($FieldMap{$key} and (! defined ${$FieldMap{$key}}{"enabled"} or ${$FieldMap{$key}}{"enabled"} != 0)){
+			push(@Field_Order, $key);
+			if (defined ${$FieldMap{$key}}{"special"}){
+				my $special = ${$FieldMap{$key}}{"special"};
+				if ($special eq "to"){
+					$field_name_to = $key;
+				} elsif ($special eq "from"){
+					$field_name_from_email = $key;
+				} elsif ($special eq "name"){
+					$field_name_from_name = $key;
+				} elsif ($special eq "subject"){
+					$field_name_subject = $key;
+				} elsif ($special eq "regarding"){
+					$field_name_regarding = $key;
+				} elsif ($special eq "referrer"){
+					$field_name_referrer = $key;
+				}
+			}
 		}
 	}
 
 	# Put the referrer header into the map if it is not there already
-	if ($FieldMap{$field_name_referrer} && ! exists $SubmittedData{$field_name_referrer}){
+	if ($field_name_referrer ne "" and $FieldMap{$field_name_referrer} and ! exists $SubmittedData{$field_name_referrer}){
 		if (defined $ENV{'HTTP_REFERER'}){
 			$SubmittedData{$field_name_referrer} = $ENV{'HTTP_REFERER'};
 		} else {
@@ -468,6 +589,53 @@ sub parseInput {
 	}
 }
 
+sub getRequired {
+	my ($key) = @_;
+	if (defined ${$FieldMap{$key}}{"required"}){
+		return ${$FieldMap{$key}}{"required"};
+	} elsif (&getType($key) eq "select" || &getType($key) eq "radio"){
+		return "";
+	} else {
+		return $ANYTHING;
+	}
+}
+
+sub getError {
+	my ($key) = @_;
+	if (defined ${$FieldMap{$key}}{"error"}){
+		return ${$FieldMap{$key}}{"error"};
+	} else {
+		return "The field '$key' does not appear to be valid.";
+	}
+}
+
+sub getType {
+	my ($key) = @_;
+	if (defined ${$FieldMap{$key}}{"type"}){
+		return ${$FieldMap{$key}}{"type"};
+	} else {
+		return "text";
+	}
+}
+
+sub getSelected {
+	my ($key) = @_;
+	if (defined ${$FieldMap{$key}}{"selected"}){
+		return ${$FieldMap{$key}}{"selected"};
+	} else {
+		return undef;
+	}
+}
+
+sub getDescription {
+	my ($key) = @_;
+	if (defined ${$FieldMap{$key}}{"description"}){
+		return ${$FieldMap{$key}}{"description"};
+	} else {
+		"$key:";
+	}
+}
+
 sub sanityCheck {
 
 	# Check the referrer
@@ -481,28 +649,20 @@ sub sanityCheck {
 
 	my @field_keys = &getOrderedFields();
 	foreach my $key (@field_keys){
-		my $required_value = "";
-		if (defined($FieldMap{$key})){
-			$required_value = $FieldMap{$key};
-		}
+		my $required_value = &getRequired($key);
 		my $data = "";
 		if (defined($SubmittedData{$key})){
 			$data = $SubmittedData{$key};
 		}
-		my $form_type = "";
-		if (defined($Form_Type{$key})){
-			$form_type = $Form_Type{$key};
-		}
+		my $form_type = &getType($key);
 		if ($data !~ /$required_value/g){
 			$errorCount++;
 			if (!defined $errorHash{$key}){
 				$errorHash{$key} = "";
 			}
-			if ($Error_Messages{$key}){
-				$errorHash{$key} .= '<span class="contactform cf_error cf_fielderror">' . &escapeHTML($Error_Messages{$key}) . "</span> ";
-			} else {
-				$errorHash{$key} .= "<span class=\"contactform cf_error cf_fielderror\">The field '" . &escapeHTML($key) . "' does not appear to be valid.</span> ";
-			}
+		    if($data ne "" or !defined($SubmittedData{"prefill"})){
+			    $errorHash{$key} .= '<span class="contactform cf_error cf_fielderror">' . &escapeHTML(&getError($key)) . "</span> ";
+            }
 		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
@@ -548,7 +708,7 @@ sub sanityCheck {
 sub composeEmail {
 	my ($subject, $from, @field_keys, $key);
 
-	if ($FieldMap{$field_name_from_email}){
+	if ($field_name_from_email ne '' and $FieldMap{$field_name_from_email}){
 		$from = &safeHeader($SubmittedData{$field_name_from_email});
 	} else {
 		$from = '';
@@ -556,17 +716,17 @@ sub composeEmail {
 	if ($from !~ /$EMAIL_REQUIRED/g){
 		$from = 'nobody';
 	}
-	if ($FieldMap{$field_name_from_name} && $SubmittedData{$field_name_from_name} ne ''){
+	if ($field_name_from_name ne "" and $FieldMap{$field_name_from_name} and $SubmittedData{$field_name_from_name} ne ''){
 		$from = &safeHeaderName($SubmittedData{$field_name_from_name})." <$from>";
 	}
 
-	if ($FieldMap{$field_name_subject} && $SubmittedData{$field_name_subject}){
+	if ($field_name_subject ne "" and $FieldMap{$field_name_subject} and $SubmittedData{$field_name_subject}){
 		$subject = &safeHeader($SubmittedData{$field_name_subject});
 	} else {
 		$subject = "Website Form Submission";
 	}
 
-	if ($FieldMap{$field_name_regarding} && $SubmittedData{$field_name_regarding} ne ''){
+	if ($field_name_regarding ne "" and $FieldMap{$field_name_regarding} and $SubmittedData{$field_name_regarding} ne ''){
 		$subject .= " (".&safeHeader($SubmittedData{$field_name_regarding}).")";
 	}
 
@@ -580,10 +740,7 @@ sub composeEmail {
 		if ($key ne $field_name_to && $key ne $field_name_subject &&
 			$key ne $field_name_from_name && $key ne $field_name_from_email &&
 			$key ne $field_name_regarding && $key ne $field_name_referrer){
-			my $mail_description = $Field_Descriptions{$key};
-			if ($mail_description eq ''){
-				$mail_description = $key.":"
-			}
+			my $mail_description = &getDescription($key);
 			if ($mail_description eq $NO_DESCRIPTION){
 				$mail_description = "";
 			} else {
@@ -612,7 +769,9 @@ sub sendEmail {
 		print MAIL "X-Remote-User: ".&safeHeader($ENV{'REMOTE_USER'})."\n";
 		print MAIL "X-HTTP-User-Agent: ".&safeHeader($ENV{'HTTP_USER_AGENT'})."\n";
 		print MAIL "X-HTTP-Referer: ".&safeHeader($ENV{'HTTP_REFERER'})."\n";
-		print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
+		if ($field_name_referrer ne ""){
+			print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
+		}
 		print MAIL $mail_message;
 		close (MAIL);
 	}
@@ -692,10 +851,7 @@ sub inputPage {
 	$form_html="<form class=contactform id=cf_form action=\"".&escapeHTML($ENV{'SCRIPT_NAME'})."\" method=$submit_method $script_call>\n";
 	@orderedKeys = &getOrderedFields();
 	foreach $key (@orderedKeys){
-		my $html_description = $Field_Descriptions{$key};
-		if ($html_description eq ''){
-			$html_description = $key.":"
-		}
+		my $html_description = &getDescription($key);
 		if ($html_description eq $NO_DESCRIPTION){
 			$html_description = '';
 		} else {
@@ -710,7 +866,7 @@ sub inputPage {
 				my $alias = $AliasesOrdered[0];
 				$form_html.= "<input type=hidden name='$field_name_to' value='$alias'>\n";
 			} else {
-				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description<br>\n<select id='$key' name='$field_name_to'>\n";
+				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description\n<div class=\"contactform cf_userentry\"><select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
 				foreach my $alias (@AliasesOrdered){
 					if (defined $SubmittedData{$field_name_to} and $alias eq $SubmittedData{$field_name_to}){
@@ -720,11 +876,11 @@ sub inputPage {
 					}
 						$form_html.= "<option value='$alias' $alias_selected>$alias</option>\n";
 				}
-				$form_html.= "</select></div>\n";
+				$form_html.= "</select></div></div>\n";
 			}
 		} else {
 			my $mark = '';
-			my $required_value = $FieldMap{$key};
+			my $required_value = &getRequired($key);
 			my $data = "";
 			if (defined($SubmittedData{$key})){
 				$data = $SubmittedData{$key};
@@ -748,32 +904,59 @@ sub inputPage {
 				}
 				$fieldText .= $fieldErrorMessage;
 			}
-			if (length($fieldText) > 0){
-				$fieldText .= "<br>\n";
-			}
-			if ($Form_Type{$key} eq 'select'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<select id='$key' class=\"contactform cf_select\" name='$key'>";
-				$form_html.="<option value=\"\"></option>";
-				my $selectvalue = $FieldMap{$key};
+			my $form_type=&getType($key);
+			if ($form_type eq 'select'){
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><select id='$key' class=\"contactform cf_select\" name='$key'>";
+				my $required = &getRequired($key);
+				if ("" !~ /$required/ and !&getSelected($key)){
+					$form_html.="<option value=\"\"></option>";
+				}
+				my $selectvalue = $required;
 				$selectvalue =~ s/^[\^\(\?\:]+//g;
 				$selectvalue =~ s/[\)\$]+$//g;
 				my @selectvalues = split(/\|/, $selectvalue);
 				foreach my $selectval (@selectvalues){
 					$selectval =~ s/^[\(\?\:]+//g;
 					$selectval =~ s/[\)]+$//g;
+					$selectval = &escapeHTML($selectval);
 					my $selected="";
-					if ($selectval eq $SubmittedData{$key}){
+					if ($SubmittedData{$key} and $selectval eq $SubmittedData{$key}){
+						$selected = " selected";
+					} elsif (!$SubmittedData{$key} and &getSelected($key) and &getSelected($key) eq $selectval){
 						$selected = " selected";
 					}
 					$form_html.="<option value=\"$selectval\"$selected>$selectval</option>";
 				}
-				$form_html.="</select></div>\n";
-			} elsif ($Form_Type{$key} eq 'textarea'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></div>\n";
-			} elsif ($Form_Type{$key} eq 'hidden'){
+				$form_html.="</select></div></div>\n";
+			} elsif ($form_type eq 'radio'){
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><span id='$key' class=\"contactform cf_radio\">";
+  				my $selectvalue = &getRequired($key);
+				$selectvalue =~ s/^[\^\(\?\:]+//g;
+				$selectvalue =~ s/[\)\$]+$//g;
+				my @selectvalues = split(/\|/, $selectvalue);
+				my $radionum=0;
+				foreach my $selectval (@selectvalues){
+					$selectval =~ s/^[\(\?\:]+//g;
+					$selectval =~ s/[\)]+$//g;
+					$selectval = &escapeHTML($selectval);
+					if ($selectval ne ""){
+						my $selected="";
+						if ($SubmittedData{$key} and $selectval eq $SubmittedData{$key}){
+							$selected = " checked";
+						} elsif (!$SubmittedData{$key} and &getSelected($key) and &getSelected($key) eq $selectval){
+							$selected = " checked";
+						}
+						$form_html.="<div class=\"contactform cf_radioselection\"><input type=\"radio\" name=\"$key\" id=\"$key$radionum\" value=\"$selectval\"$selected><label for=\"$key$radionum\">$selectval</label></div>";
+						$radionum++;
+					}
+				}
+				$form_html.="</span></div></div>\n";
+			} elsif ($form_type eq 'textarea'){
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></div></div>\n";
+			} elsif ($form_type eq 'hidden'){
 				$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
 			} else {
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></div>\n";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></div></div>\n";
 			}
 		}
 	}
@@ -789,6 +972,12 @@ sub inputPage {
 	$client_side_check_script = "";
 	if ($use_client_side_verification){
 		$client_side_check_script .= "<script language=javascript type='text/javascript'><!--\n";
+		$client_side_check_script .= "function radioSelected(r){\n";
+		$client_side_check_script .= "for (i=0;i<r.length;i++) {\n";
+		$client_side_check_script .= "if (r[i].checked)return true;\n";
+		$client_side_check_script .= "}\n";
+		$client_side_check_script .= "return false;\n";
+		$client_side_check_script .= "}\n";
 		$client_side_check_script .= "function checkForm(form){\n";
 		$client_side_check_script .= "var major = parseInt(navigator.appVersion);\n";
 		$client_side_check_script .= "var agent = navigator.userAgent.toLowerCase();\n";
@@ -803,7 +992,7 @@ sub inputPage {
 		$client_side_check_script .= "return true;\n";
 		$client_side_check_script .= "}";
 		foreach $key (@orderedKeys){
-			my $formType = $Form_Type{$key};
+			my $formType = &getType($key);
 			if (!defined($formType)){
 				$formType="text";
 			}
@@ -815,20 +1004,30 @@ sub inputPage {
 				}
 			}
 			if($formType ne 'hidden'){
-				if ($key eq $field_name_to or $formType eq "select"){
-					$client_side_check_script .= " else if (form.$key.selectedIndex == 0){\n";
+				if ($formType eq "select"){
+					my $required = &getRequired($key);
+					if ("" !~ /$required/ and !&getSelected($key)){
+						$client_side_check_script .= " else if (form.$key.selectedIndex == 0){\n";
+					} else {
+						$client_side_check_script .= " else if (false){\n";
+					}
+				} elsif ($formType eq "radio"){
+					my $required = &getRequired($key);
+					if ("" !~ /$required/ and !&getSelected($key)){
+						$client_side_check_script .= " else if (!radioSelected(form.$key)){\n";
+					} else {
+						$client_side_check_script .= " else if (false){\n";
+					}
 				} else {
-					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript($FieldMap{$key})."', 'g'))){\n";
+					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript(&getRequired($key))."', 'g'))){\n";
 				}
-				if ($Error_Messages{$key}){
-					$client_side_check_script .= "alert('".&escapeJavaScript($Error_Messages{$key})."');\n";
-				} else {
-					$client_side_check_script .= "alert(The field '".$key."' does not appear to be valid.);\n";
-				}
+				$client_side_check_script .= "alert('".&escapeJavaScript(&getError($key))."');\n";
 				if ($formType eq "text" or $formType eq "textarea"){
 					$client_side_check_script .= "form.$key.select();\n";
 				}
-				$client_side_check_script .= "form.$key.focus();\n";
+				if ($formType ne "radio"){
+					$client_side_check_script .= "form.$key.focus();\n";
+				}
 				$client_side_check_script .= "return false;\n";
 				$client_side_check_script .= "}";
 			}
@@ -929,20 +1128,7 @@ sub escapeJavaScript {
 }
 
 sub getOrderedFields {
-	my ($key, @field_keys, %done);
-	foreach $key (@Field_Order){
-		if (!$done{$key} && $FieldMap{$key}){
-			push(@field_keys,$key);
-			$done{$key} = 1;
-		}
-	}
-	foreach $key (keys %FieldMap){
-		if (!$done{$key}){
-			push(@field_keys,$key);
-			$done{$key} = 1;
-		}
-	}
-	return @field_keys;
+	return @Field_Order;
 }
 
 sub contactformicon {
