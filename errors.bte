@@ -28,7 +28,7 @@
 
 <h2><a name=html_link>HTML link</a></h2>
 
-<p>Some spammers send their link to all the contact froms that the spammer can find to boost traffic to the links.  To prevent this common contact form spam, the default configuration <a href="http://ostermiller.org/contactform/example_one_address.pl?to=Nobody&amp;email=email@domain.tld&amp;name=my+name&amp;subject=my+subject&amp;message=&lt;a href=&quot;http://spamsite.tld/&quot&gt;spam link&lt;a&gt;">does now allow HTML formatted links</a>.</p>
+<p>Some spammers send their link to all the contact forms that the spammer can find to boost traffic to the links.  To prevent this common contact form spam, the default configuration <a href="http://ostermiller.org/contactform/example_one_address.pl?to=Nobody&amp;email=email@domain.tld&amp;name=my+name&amp;subject=my+subject&amp;message=&lt;a href=&quot;http://spamsite.tld/&quot&gt;spam link&lt;a&gt;">does now allow HTML formatted links</a>.</p>
 
 
 
