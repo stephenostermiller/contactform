@@ -445,7 +445,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "2.00.00";
+	$version = "2.00.01";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -543,6 +543,9 @@ sub createMaps {
 					$field_name_referrer = $key;
 				}
 			}
+			if (defined ${$FieldMap{$key}}{"default"}){
+                ${$FieldMap{$key}}{"selected"} = ${$FieldMap{$key}}{"default"};
+			}
 		}
 	}
 
@@ -611,6 +614,13 @@ sub getError {
 
 sub getType {
 	my ($key) = @_;
+    if ($key eq $field_name_to){
+		if ($#AliasesOrdered > 0){
+			 return "select";
+		} else {
+			return "hidden";
+		}
+	}
 	if (defined ${$FieldMap{$key}}{"type"}){
 		return ${$FieldMap{$key}}{"type"};
 	} else {
@@ -636,6 +646,17 @@ sub getDescription {
 	}
 }
 
+sub getSelection {
+	my ($key) = @_;
+	if (defined($SubmittedData{$key})){
+		return $SubmittedData{$key};
+	}
+    if (&getSelected($key)){
+        return &getSelected($key);
+    }
+    return "";
+}
+
 sub sanityCheck {
 
 	# Check the referrer
@@ -650,32 +671,22 @@ sub sanityCheck {
 	my @field_keys = &getOrderedFields();
 	foreach my $key (@field_keys){
 		my $required_value = &getRequired($key);
-		my $data = "";
-		if (defined($SubmittedData{$key})){
-			$data = $SubmittedData{$key};
-		}
+		my $data = &getSelection($key);
 		my $form_type = &getType($key);
+		$errorHash{$key} = "";
 		if ($data !~ /$required_value/g){
-			$errorCount++;
-			if (!defined $errorHash{$key}){
-				$errorHash{$key} = "";
-			}
 		    if($data ne "" or !defined($SubmittedData{"prefill"})){
-			    $errorHash{$key} .= '<span class="contactform cf_error cf_fielderror">' . &escapeHTML(&getError($key)) . "</span> ";
+                $errorCount++;
+			    $errorHash{$key} = &getError($key);
             }
 		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
 
-		if ($SubmittedData{$key}){
-			foreach my $disallow_check (keys(%disallowed_text)){
-				if (!defined $errorHash{$key}){
-					$errorHash{$key} = "";
-				}
-				if ($SubmittedData{$key} =~ /$disallow_check/){
-					$errorCount++;
-					$errorHash{$key} .= "<span class=\"contactform cf_error cf_fielderror\">" . &escapeHTML($disallowed_text{$disallow_check}) . "</span> ";
-				}
+		foreach my $disallow_check (keys(%disallowed_text)){
+			if ($data =~ /$disallow_check/){
+				$errorCount++;
+				$errorHash{$key} .= $disallowed_text{$disallow_check};
 			}
 		}
 	}
@@ -685,12 +696,10 @@ sub sanityCheck {
 
 	if ($errorCount > 0){
 		my $errorMessage = "";
-		if(!defined($SubmittedData{"prefill"})){
-			if ($errorCount == 1){
-				$errorMessage = "<p>Please correct the error to continue.</p>";
-			} else {
-				$errorMessage = "<p>Please correct all errors to continue.</p>";
-			}
+		if ($errorCount == 1){
+			$errorMessage = "<p>Please correct the error to continue.</p>";
+		} else {
+			$errorMessage = "<p>Please correct all errors to continue.</p>";
 		}
 		&inputPage($errorMessage, "", \%errorHash);
 	}
@@ -709,25 +718,25 @@ sub composeEmail {
 	my ($subject, $from, @field_keys, $key);
 
 	if ($field_name_from_email ne '' and $FieldMap{$field_name_from_email}){
-		$from = &safeHeader($SubmittedData{$field_name_from_email});
+		$from = &safeHeader(&getSelection($field_name_from_email));
 	} else {
 		$from = '';
 	}
 	if ($from !~ /$EMAIL_REQUIRED/g){
 		$from = 'nobody';
 	}
-	if ($field_name_from_name ne "" and $FieldMap{$field_name_from_name} and $SubmittedData{$field_name_from_name} ne ''){
-		$from = &safeHeaderName($SubmittedData{$field_name_from_name})." <$from>";
+	if ($field_name_from_name ne "" and $FieldMap{$field_name_from_name} and &getSelection($field_name_from_name) ne ''){
+		$from = &safeHeaderName(&getSelection($field_name_from_name))." <$from>";
 	}
 
-	if ($field_name_subject ne "" and $FieldMap{$field_name_subject} and $SubmittedData{$field_name_subject}){
-		$subject = &safeHeader($SubmittedData{$field_name_subject});
+	if ($field_name_subject ne "" and $FieldMap{$field_name_subject} and &getSelection($field_name_subject)){
+		$subject = &safeHeader(&getSelection($field_name_subject));
 	} else {
 		$subject = "Website Form Submission";
 	}
 
-	if ($field_name_regarding ne "" and $FieldMap{$field_name_regarding} and $SubmittedData{$field_name_regarding} ne ''){
-		$subject .= " (".&safeHeader($SubmittedData{$field_name_regarding}).")";
+	if ($field_name_regarding ne "" and $FieldMap{$field_name_regarding} and &getSelection($field_name_regarding) ne ''){
+		$subject .= " (".&safeHeader(&getSelection($field_name_regarding)).")";
 	}
 
 
@@ -747,14 +756,14 @@ sub composeEmail {
 				$mail_description .= "\n";
 			}
 			$mail_message .= $mail_description;
-			$mail_message .= "$SubmittedData{$key}\n";
+			$mail_message .= &getSelection($key)."\n";
 			$mail_message .= "\n";
 		}
 	}
 }
 
 sub sendEmail {
-	my @to_address_list = split(/,/,$AliasesMap{$SubmittedData{$field_name_to}});
+	my @to_address_list = split(/,/,$AliasesMap{&getSelection($field_name_to)});
 	foreach my $to_address (@to_address_list){
 		open(MAIL,"|$sendmail");
 		print MAIL "To: ".&safeHeader($to_address)."\n";
@@ -770,7 +779,7 @@ sub sendEmail {
 		print MAIL "X-HTTP-User-Agent: ".&safeHeader($ENV{'HTTP_USER_AGENT'})."\n";
 		print MAIL "X-HTTP-Referer: ".&safeHeader($ENV{'HTTP_REFERER'})."\n";
 		if ($field_name_referrer ne ""){
-			print MAIL "X-First-HTTP-Referer: ".&safeHeader($SubmittedData{$field_name_referrer})."\n";
+			print MAIL "X-First-HTTP-Referer: ".&safeHeader(&getSelection($field_name_referrer))."\n";
 		}
 		print MAIL $mail_message;
 		close (MAIL);
@@ -786,7 +795,7 @@ sub previewMessage() {
 	}
 
 	my ($message);
-	$message = &textToHTML("To: $SubmittedData{$field_name_to}\n".$mail_message);
+	$message = &textToHTML("To: ".&getSelection($field_name_to)."\n".$mail_message);
 
 	&inputPage(
 		'',
@@ -796,7 +805,7 @@ sub previewMessage() {
 
 sub sentPage {
 	my ($message);
-	$message = &textToHTML("To: $SubmittedData{$field_name_to}\n".$mail_message);
+	$message = &textToHTML("To: ".&getSelection($field_name_to)."\n".$mail_message);
 
 	my $javascript = ""; # No javascript
 
@@ -824,8 +833,10 @@ sub redirect {
 
 sub inputPage {
 	my ($error, $preview, $fieldErrors) = @_;
+    my $haserror = 1;
 	if (!defined($error)){
 		$error = "";
+        $haserror = 0;
 	}
 	my %FieldErrorsHash = ();
 	if (defined($fieldErrors)){
@@ -836,12 +847,14 @@ sub inputPage {
 	}
 	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
+    my $errorStyle=" style=\"display:none;\"";
 	if ($error ne ""){
-		$error = "<div class=\"contactform cf_error cf_message\">\n" . $error . "</div>\n";
+        $errorStyle="";
 	}
+	$error = "<div id=cf_global_error$errorStyle class=\"contactform cf_error cf_message\">\n" . $error . "</div>\n";
 	$script_call = '';
 	if ($use_client_side_verification){
-		$script_call="onSubmit='return checkForm(this);'";
+		$script_call="onSubmit='return cfCheckForm(this);'";
 	}
 
 	if ($submit_method ne "GET"){
@@ -858,15 +871,18 @@ sub inputPage {
 			$html_description = "<label class=\"contactform cf_fieldlabel\" for='$key'>$html_description</label>";
 		}
 		my $fieldErrorMessage = "";
-		if (defined $FieldErrorsHash{$key}){
-			$fieldErrorMessage = $FieldErrorsHash{$key}
+        my $errorStyle=" style=\"display:none;\"";
+		if (defined $FieldErrorsHash{$key} and $FieldErrorsHash{$key} ne ""){
+			$fieldErrorMessage = $FieldErrorsHash{$key};
+            $errorStyle = "";
 		}
+        $fieldErrorMessage= "<span id=cf_error_$key$errorStyle class=\"contactform cf_error cf_fielderror\">".&escapeHTML($fieldErrorMessage)."</span>";
 		if ($key eq $field_name_to){
 			if ($#AliasesOrdered == 0){
 				my $alias = $AliasesOrdered[0];
-				$form_html.= "<input type=hidden name='$field_name_to' value='$alias'>\n";
+				$form_html.= "$fieldErrorMessage <input type=hidden name='$field_name_to' value='$alias'>\n";
 			} else {
-				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description\n<div class=\"contactform cf_userentry\"><select id='$key' name='$field_name_to'>\n";
+				$form_html.= "<div class=\"contactform cf_field\">$required_marker $html_description $fieldErrorMessage\n<div class=\"contactform cf_userentry\"><select id='$key' name='$field_name_to'>\n";
 				$form_html.= "<option value=''></option>\n";
 				foreach my $alias (@AliasesOrdered){
 					if (defined $SubmittedData{$field_name_to} and $alias eq $SubmittedData{$field_name_to}){
@@ -881,10 +897,7 @@ sub inputPage {
 		} else {
 			my $mark = '';
 			my $required_value = &getRequired($key);
-			my $data = "";
-			if (defined($SubmittedData{$key})){
-				$data = $SubmittedData{$key};
-			}
+			my $data = &getSelection($key);
 			my $fieldText = "";
 			if (($data !~ /$required_value/g) && $html_description ne ''){
 				if (length($fieldText) > 0){
@@ -920,9 +933,7 @@ sub inputPage {
 					$selectval =~ s/[\)]+$//g;
 					$selectval = &escapeHTML($selectval);
 					my $selected="";
-					if ($SubmittedData{$key} and $selectval eq $SubmittedData{$key}){
-						$selected = " selected";
-					} elsif (!$SubmittedData{$key} and &getSelected($key) and &getSelected($key) eq $selectval){
+					if ($selectval eq $data){
 						$selected = " selected";
 					}
 					$form_html.="<option value=\"$selectval\"$selected>$selectval</option>";
@@ -941,9 +952,7 @@ sub inputPage {
 					$selectval = &escapeHTML($selectval);
 					if ($selectval ne ""){
 						my $selected="";
-						if ($SubmittedData{$key} and $selectval eq $SubmittedData{$key}){
-							$selected = " checked";
-						} elsif (!$SubmittedData{$key} and &getSelected($key) and &getSelected($key) eq $selectval){
+						if ($selectval eq $data){
 							$selected = " checked";
 						}
 						$form_html.="<div class=\"contactform cf_radioselection\"><input type=\"radio\" name=\"$key\" id=\"$key$radionum\" value=\"$selectval\"$selected><label for=\"$key$radionum\">$selectval</label></div>";
@@ -952,18 +961,18 @@ sub inputPage {
 				}
 				$form_html.="</span></div></div>\n";
 			} elsif ($form_type eq 'textarea'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($SubmittedData{$key})."</textarea></div></div>\n";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($data)."</textarea></div></div>\n";
 			} elsif ($form_type eq 'hidden'){
-				$form_html.="<input type=hidden name='$key' value='".&escapeHTML($SubmittedData{$key})."'>\n";
+				$form_html.="$fieldErrorMessage <input type=hidden name='$key' value='".&escapeHTML($data)."'>\n";
 			} else {
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($SubmittedData{$key})."'></div></div>\n";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($data)."'></div></div>\n";
 			}
 		}
 	}
 	if ($require_preview == 1 or $require_preview == 2){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Preview>\n";
 	}
-	if ($require_preview == 0 or $require_preview == 2 or ($error eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
+	if ($require_preview == 0 or $require_preview == 2 or (!$haserror eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Send>\n";
 	}
 	$form_html.="$required_marker_note\n";
@@ -972,15 +981,28 @@ sub inputPage {
 	$client_side_check_script = "";
 	if ($use_client_side_verification){
 		$client_side_check_script .= "<script language=javascript type='text/javascript'><!--\n";
-		$client_side_check_script .= "function radioSelected(r){\n";
+		$client_side_check_script .= "function cfRadioSelected(r){\n";
 		$client_side_check_script .= "for (i=0;i<r.length;i++) {\n";
 		$client_side_check_script .= "if (r[i].checked)return true;\n";
 		$client_side_check_script .= "}\n";
 		$client_side_check_script .= "return false;\n";
 		$client_side_check_script .= "}\n";
-		$client_side_check_script .= "function checkForm(form){\n";
+		$client_side_check_script .= "function cfErrorOn(k,d,m,s,f,b){\n";
+        $client_side_check_script .= "var df=document.getElementById(d);\n";
+		$client_side_check_script .= "df.innerHTML=m;\n";
+		$client_side_check_script .= "df.style.display=b;\n";
+		$client_side_check_script .= "if(s)k.select();\n";
+		$client_side_check_script .= "if(f)k.focus();\n";
+		$client_side_check_script .= "}\n";
+		$client_side_check_script .= "function cfErrorOff(d){\n";
+        $client_side_check_script .= "var f=document.getElementById(d);\n";
+		$client_side_check_script .= "f.innerHTML='';\n";
+		$client_side_check_script .= "f.style.display='none';\n";
+		$client_side_check_script .= "}\n";
+		$client_side_check_script .= "function cfCheckForm(form){\n";
 		$client_side_check_script .= "var major = parseInt(navigator.appVersion);\n";
 		$client_side_check_script .= "var agent = navigator.userAgent.toLowerCase();\n";
+		$client_side_check_script .= "var ec=0;\n";
 		$client_side_check_script .= "if (agent.indexOf('mozilla')==0 && major<=4 && agent.indexOf('msie')!=-1){\n";
 		$client_side_check_script .= "// Internet Explorer 4 and earlier.\n";
 		$client_side_check_script .= "return true;\n";
@@ -990,49 +1012,55 @@ sub inputPage {
 		$client_side_check_script .= "} else if (agent.indexOf('opera')!=-1){\n";
 		$client_side_check_script .= "// Opera doesn't seem to do regular expressions properly.\n";
 		$client_side_check_script .= "return true;\n";
-		$client_side_check_script .= "}";
-		foreach $key (@orderedKeys){
+		$client_side_check_script .= "}\n";
+		foreach $key (reverse(@orderedKeys)){
 			my $formType = &getType($key);
-			if (!defined($formType)){
-				$formType="text";
-			}
-			if ($key eq $field_name_to){
-				if ($#AliasesOrdered > 0){
-					$formType="select";
+            my $check = "";
+			if($formType eq 'hidden'){
+                $check = "";
+            } elsif ($formType eq "select"){
+				my $required = &getRequired($key);
+				if ("" !~ /$required/ and !&getSelected($key)){
+					$check = "form.$key.selectedIndex == 0";
 				} else {
-					$formType="hidden";
+                    $check = "";
 				}
-			}
-			if($formType ne 'hidden'){
-				if ($formType eq "select"){
-					my $required = &getRequired($key);
-					if ("" !~ /$required/ and !&getSelected($key)){
-						$client_side_check_script .= " else if (form.$key.selectedIndex == 0){\n";
-					} else {
-						$client_side_check_script .= " else if (false){\n";
-					}
-				} elsif ($formType eq "radio"){
-					my $required = &getRequired($key);
-					if ("" !~ /$required/ and !&getSelected($key)){
-						$client_side_check_script .= " else if (!radioSelected(form.$key)){\n";
-					} else {
-						$client_side_check_script .= " else if (false){\n";
-					}
+			} elsif ($formType eq "radio"){
+				my $required = &getRequired($key);
+				if ("" !~ /$required/ and !&getSelected($key)){
+					$check = "!cfRadioSelected(form.$key)"
 				} else {
-					$client_side_check_script .= " else if (!form.$key.value.match(new RegExp('".&escapeJavaScript(&getRequired($key))."', 'g'))){\n";
+					$check = "";
 				}
-				$client_side_check_script .= "alert('".&escapeJavaScript(&getError($key))."');\n";
-				if ($formType eq "text" or $formType eq "textarea"){
-					$client_side_check_script .= "form.$key.select();\n";
-				}
+			} else {
+			    $check = "!form.$key.value.match(new RegExp('".&escapeJavaScript(&getRequired($key))."', 'g'))";
+			}
+			if ($check ne ""){
+                my $dofocus = "false";
 				if ($formType ne "radio"){
-					$client_side_check_script .= "form.$key.focus();\n";
-				}
-				$client_side_check_script .= "return false;\n";
-				$client_side_check_script .= "}";
-			}
+                    $dofocus = "true";
+                }
+                my $doselect = "false";
+				if ($formType eq "text" or $formType eq "textarea"){
+                    $doselect = "true";
+                }
+                $client_side_check_script .= "if ($check){\n";
+                $client_side_check_script .= "cfErrorOn(form.$key,'cf_error_$key','".&escapeJavaScript(&getError($key))."',$doselect,$dofocus,'inline');\n";
+				$client_side_check_script .= "ec++;\n";
+				$client_side_check_script .= "} else {\n";
+                $client_side_check_script .= "cfErrorOff('cf_error_$key');\n";
+				$client_side_check_script .= "}\n";
+			} else {
+                $client_side_check_script .= "cfErrorOff('cf_error_$key');\n";
+            }
 		}
-		$client_side_check_script .= " else {\n";
+		$client_side_check_script .= "\n";
+		$client_side_check_script .= "if(ec>0){\n";
+        $client_side_check_script .= "cfErrorOn('','cf_global_error','Please correct '+(ec==1?'the error':'all errors')+' to continue.',false,false,'block');\n";
+        $client_side_check_script .= "scroll(0,0);";
+		$client_side_check_script .= "return false;\n";
+		$client_side_check_script .= "} else {\n";
+        $client_side_check_script .= "cfErrorOff('cf_global_error');\n";
 		$client_side_check_script .= "return true;\n";
 		$client_side_check_script .= "}\n";
 		$client_side_check_script .= "}\n";
