@@ -445,7 +445,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "2.00.01";
+	$version = "2.00.02";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1124,6 +1124,7 @@ sub escapeHTML {
 	$value =~ s/</\&lt;/g;
 	$value =~ s/>/\&gt;/g;
 	$value =~ s/"/\&quot;/g;
+	$value =~ s/'/\&apos;/g;
 	return $value;
 }
 
