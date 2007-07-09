@@ -74,6 +74,10 @@ my %disallowed_text = (
 
 <p>Most of the spammers that send you messages through your contact form are not targeted at your site.  Their spam bots are written to work with a large number of sites across the internet.  As such, they are relatively easy to fool.  The best way to fool them is to add an extra question to the contact form that the user has to answer to prove that they are human.  Such a question would be "What fruit that starts with the letter 'A'?".  All humans should be able to answer "Apple" but the spam bots just aren't that smart.</p>
 
+<h2><a name=trap>Bot Trap Field</a></h2>
+
+<p>Contact form comes with a field that is not visible to users (via CSS style) and is designed to be blank.  Automated submission robots will often try to fill out all the fields.  Doing so will prevent submission when they try to fill in this trap field.  This field is created with a type "trap" in the contact form configuration.</p>
+
 <h2><a name=captchas>Captchas</a></h2>
 
 <p>Contact Form does not currently support captchas.  Captchas usually present an image of some obscured letters that you have to identify.  A captcha would be better at keeping out bots because the question would be different for every user.  A bot targeted at your site could easily be programmed to answer your special question, but would have a harder time solving captchas.  Contact Form does not implement captchas because they would introduce a library dependency and other configuration that would make the form hard to install.  Additionally they are hard for some users, especially blind users, to use.  Furthermore, most of the spam problems for contact forms can be solved using the previously mentioned tactics.</p>
