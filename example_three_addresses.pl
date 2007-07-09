@@ -25,7 +25,8 @@ $DOMAIN, $LOCALPART, $EMAIL, $PHONE_DIGIT, $PHONE, $ZIPCODE, $PRICE, $FLOAT,
 $INTEGER, $SOMETHING, $ANYTHING, $ONE_LINE_REQUIRED, $ONE_LINE_OPTIONAL,
 $ZIPCODE_REQUIRED, $ZIPCODE_OPTIONAL, $PHONE_REQUIRED, $PHONE_OPTIONAL,
 $EMAIL_REQUIRED, $EMAIL_OPTIONAL, $PRICE_REQUIRED, $PRICE_OPTIONAL,
-$FLOAT_REQUIRED, $FLOAT_OPTIONAL, $INTEGER_REQUIRED, $INTEGER_OPTIONAL);
+$FLOAT_REQUIRED, $FLOAT_OPTIONAL, $INTEGER_REQUIRED, $INTEGER_OPTIONAL, 
+$BLANK);
 &initConstants();
 
 # List of email address to which mail can be sent.
@@ -178,6 +179,15 @@ my @FormFields = (
 		# Put in the "From:" field of the email as the email of the person it is from
 		'special' => 'from',
 	},
+    'confirm', {
+        # This is a field designed to thwart automated submissions
+        # This field is not visible to the user.
+        # Bots may attempt to fill it in which will prevent submission.
+		'required' => $BLANK,
+		'error' => 'This field should be left blank',
+		'type' => 'trap',
+		'description' => 'Leave blank:',
+    },
 	'name', {
 		'required' => $ONE_LINE_OPTIONAL,
 		'error' => 'You must enter your name.',
@@ -386,6 +396,7 @@ textarea.contactform { height:4in; }
 .cf_required { color:green; }
 #cf_version { text-align:right; }
 .cf_field { margin-bottom:0.5cm; }
+.cf_nt { display:none; }
 .cf_preview { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");margin-bottom:1cm;}
 </style>';
 
@@ -445,7 +456,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "2.00.02";
+	$version = "2.01.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -486,6 +497,7 @@ sub initConstants {
 	$FLOAT_OPTIONAL = "^(?:" . $FLOAT . "?)\$";
 	$INTEGER_REQUIRED = "^" . $INTEGER . "\$";
 	$INTEGER_OPTIONAL = "^(?:" . $INTEGER . "?)\$";
+    $BLANK = "^\$";
 }
 
 sub loadTemplate(){
@@ -964,6 +976,8 @@ sub inputPage {
 				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($data)."</textarea></div></div>\n";
 			} elsif ($form_type eq 'hidden'){
 				$form_html.="$fieldErrorMessage <input type=hidden name='$key' value='".&escapeHTML($data)."'>\n";
+			} elsif ($form_type eq 'trap'){
+				$form_html.="<div class=\"contactform cf_field cf_nt\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($data)."'></div></div>\n";
 			} else {
 				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($data)."'></div></div>\n";
 			}
