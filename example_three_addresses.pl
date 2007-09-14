@@ -456,7 +456,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "2.01.00";
+	$version = "2.01.01";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -658,6 +658,11 @@ sub getDescription {
 	}
 }
 
+sub isDefined(){
+	my ($key) = @_;
+	return defined($SubmittedData{$key});
+}
+
 sub getSelection {
 	my ($key) = @_;
 	if (defined($SubmittedData{$key})){
@@ -691,7 +696,7 @@ sub sanityCheck {
                 $errorCount++;
 			    $errorHash{$key} = &getError($key);
             }
-		} elsif ($SubmittedData{$key} && $form_type ne 'hidden'){
+		} elsif (&isDefined($key) && $form_type ne 'hidden'){
 			$some_required_field_present = 1;
 		}
 
@@ -705,6 +710,13 @@ sub sanityCheck {
 	if (!($some_required_field_present)){
 		&inputPage('', $input_page_text);
 	}
+    
+	foreach my $key (@field_keys){
+        if (&getType($key) eq "trap" and !&isDefined($key)){
+			$errorCount++;
+			$errorHash{$key} .=  &getError($key);
+        }
+    }
 
 	if ($errorCount > 0){
 		my $errorMessage = "";
@@ -760,7 +772,8 @@ sub composeEmail {
 	foreach $key (@field_keys){
 		if ($key ne $field_name_to && $key ne $field_name_subject &&
 			$key ne $field_name_from_name && $key ne $field_name_from_email &&
-			$key ne $field_name_regarding && $key ne $field_name_referrer){
+			$key ne $field_name_regarding && $key ne $field_name_referrer &&
+            &getType($key) ne "trap"){
 			my $mail_description = &getDescription($key);
 			if ($mail_description eq $NO_DESCRIPTION){
 				$mail_description = "";
@@ -846,7 +859,7 @@ sub redirect {
 sub inputPage {
 	my ($error, $preview, $fieldErrors) = @_;
     my $haserror = 1;
-	if (!defined($error)){
+	if (!defined($error) or $error eq ""){
 		$error = "";
         $haserror = 0;
 	}
@@ -986,7 +999,7 @@ sub inputPage {
 	if ($require_preview == 1 or $require_preview == 2){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Preview>\n";
 	}
-	if ($require_preview == 0 or $require_preview == 2 or (!$haserror eq "" and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
+	if ($require_preview == 0 or $require_preview == 2 or (!$haserror and defined $SubmittedData{$field_name_submit} and $SubmittedData{$field_name_submit} eq "Preview")){
 		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=$field_name_submit value=Send>\n";
 	}
 	$form_html.="$required_marker_note\n";
@@ -1016,17 +1029,17 @@ sub inputPage {
 		$client_side_check_script .= "function cfCheckForm(form){\n";
 		$client_side_check_script .= "var major = parseInt(navigator.appVersion);\n";
 		$client_side_check_script .= "var agent = navigator.userAgent.toLowerCase();\n";
-		$client_side_check_script .= "var ec=0;\n";
-		$client_side_check_script .= "if (agent.indexOf('mozilla')==0 && major<=4 && agent.indexOf('msie')!=-1){\n";
-		$client_side_check_script .= "// Internet Explorer 4 and earlier.\n";
-		$client_side_check_script .= "return true;\n";
-		$client_side_check_script .= "} else if (agent.indexOf('mozilla')==0 && major<=4){\n";
-		$client_side_check_script .= "// Netscape 4 and earlier.\n";
+		$client_side_check_script .= "if (agent.indexOf('msie')!=-1){\n";
+        $client_side_check_script .= "major = parseFloat(agent.split('msie')[1]);\n";
+		$client_side_check_script .= "}\n";
+		$client_side_check_script .= "if (agent.indexOf('mozilla')==0 && major<=4){\n";
+		$client_side_check_script .= "// Internet Explorer 4 or Netscape 4 and earlier.\n";
 		$client_side_check_script .= "return true;\n";
 		$client_side_check_script .= "} else if (agent.indexOf('opera')!=-1){\n";
 		$client_side_check_script .= "// Opera doesn't seem to do regular expressions properly.\n";
 		$client_side_check_script .= "return true;\n";
 		$client_side_check_script .= "}\n";
+		$client_side_check_script .= "var ec=0;\n";
 		foreach $key (reverse(@orderedKeys)){
 			my $formType = &getType($key);
             my $check = "";
@@ -1138,7 +1151,7 @@ sub escapeHTML {
 	$value =~ s/</\&lt;/g;
 	$value =~ s/>/\&gt;/g;
 	$value =~ s/"/\&quot;/g;
-	$value =~ s/'/\&apos;/g;
+	$value =~ s/'/\&#39;/g;
 	return $value;
 }
 
