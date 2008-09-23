@@ -42,7 +42,7 @@ my %disallowed_text = (
 
 <h2><a name=captchas>Captchas</a></h2>
 
-<p>Contact Form does not currently support captchas.  Captchas usually present an image of some obscured letters that you have to identify.  A captcha would be better at keeping out bots because the question would be different for every user.  A bot targeted at your site could easily be programmed to answer your special question, but would have a harder time solving captchas.  Contact Form does not implement captchas because they would introduce a library dependency and other configuration that would make the form hard to install.  Additionally they are hard for some users, especially blind users, to use.  Furthermore, most of the spam problems for contact forms can be solved using the previously mentioned tactics.</p>
+<p>Contact Form supports captchas from <a href="http://recaptcha.net/">reCAPTCHA</a>.  To use captchas with the contact form: sign up for an account on reCAPTCHA; generate a public and private reCAPTCHA key for your domain; put the keys in the contact form configuration.</p>
 
 <%/bte.tpl%>
 <%/bte.doc%>

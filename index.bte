@@ -52,7 +52,8 @@ reveal addresses that it knows.
 <li><a href="http://ostermiller.org/contactform/options.html#restrict_referrer">Restrict the Referrer</a></li>
 <li><a href="http://ostermiller.org/contactform/options.html#internationalization">Allow International Characters</a></li>
 <li><a href="http://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#select_fields">Drop down select lists</a></li></ul>
+<li><a href="http://ostermiller.org/contactform/options.html#select_fields">Drop down select lists</a></li>
+<li><a href="http://ostermiller.org/contactform/options.html#xml_configuration">External XML File Configuration</a></li></ul>
 </li>
 <li><a href="http://ostermiller.org/contactform/link.html">Integrate Contact Form to Your Site</a>
 <ul>
@@ -117,6 +118,8 @@ reveal addresses that it knows.
 <ul>
 <li>A web server that can execute Perl scripts.</li>
 <li>A command line program to send electronic mail. ("sendmail" is installed on most servers.)</li>
+<li>If captchas are used, the Captcha::reCAPTCHA perl module must be installed</li>
+<li>If external XML file configuration is used, the XML::Simple perl module must be installed</li>
 </ul>
 
 <h2>Download</h2>
@@ -130,6 +133,12 @@ reveal addresses that it knows.
 
 <h2>Changes</h2>
 <ul>
+<li>Version 3.00.00<ul>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=3">Add captchas to contactform</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=23">Allow addresses and other configuration to be specified from an external file</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=102">Regex for phone numbers with required area code and not required area code</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=229">Prefill parameter does not completely suppress error message</a></li>
+</ul></li></li>
 <li>Version 2.01.01<ul>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=198">Client side error checking fails in internet explorer 6, falls through to server site error checking</a></li>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=199">Send button appears even when there are preview errors with javascript disabled</a></li>
