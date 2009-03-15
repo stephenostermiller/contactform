@@ -38,5 +38,7 @@
 
 <Setting name="page_template_file">form.html</Setting>
 
+<Setting name="require_preview">2</Setting>
+
 </ContactFormConfiguration>
 
