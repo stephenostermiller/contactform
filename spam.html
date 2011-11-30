@@ -28,24 +28,6 @@ a:visited:hover{text-decoration:underline;}
 <li><a href="#captchas">Captchas</a></li>
 </ul>
 
-<div style="padding-top:1cm;">
-<script type="text/javascript"><!--
-google_ad_client = "pub-2385172974335864";
-google_ad_width = 468;
-google_ad_height = 60;
-google_ad_format = "468x60_as";
-google_ad_type = "text";
-google_ad_channel ="";
-google_color_border = "336699";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "008000";
-google_color_text = "000000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</div>
 </div>
 
 <br clear=all>
@@ -61,7 +43,7 @@ google_color_text = "000000";
 <p>Because most of the contact form spam is aimed at spreading links, any easy way to get rid of it is to disallow all links in messages.  The default configuration of contact form does not allow html or bulliten board formatted links already.  Additional configuration could be added that would disallow pretty much any links:</p>
 
 <code><pre>
-my %disallowed_text = (
+$disallowed_text = (
 	"[Hh][Tt][Tt][Pp]|[Hh][Tt][Mm][Ll]|[Ww][Ww][Ww]","Please remove links from your message to continue.",
 );
 </pre></code>
@@ -84,7 +66,7 @@ my %disallowed_text = (
 
 
 
-<p>Copyright (C) 2002-2007 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+<p>Copyright (C) 2002-2011 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
 

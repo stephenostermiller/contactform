@@ -5,13 +5,13 @@ use strict;
 # Contact Form is a Perl script that you can run on your website that will
 # allow others to send you email through a web interface.
 # See: http://ostermiller.org/contactform/
-# Copyright (C) 2002-2008 Stephen Ostermiller
+# Copyright (C) 2002-2011 Stephen Ostermiller
 # http://ostermiller.org/contact.pl?regarding=Contact+Form
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
+# (at your option) any later versicon.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,11 +20,11 @@ use strict;
 #
 # See copying.txt for details.
 
-my(%SubmittedData, $mail_message, %AliasesMap, @AliasesOrdered,
-%FieldMap, @Field_Order, $template_error, $field_name_to,
+my($SubmittedData, $mail_message, $AliasesMap, $AliasesOrdered,
+$FieldMap, @Field_Order, $template_error, $field_name_to,
 $field_name_from_email, $field_name_from_name, $field_name_subject,
 $field_name_regarding, $field_name_referrer, $NO_DESCRIPTION,
-$version, $LETTER, $DIGIT, $DOSEOL, $EOL, $LETTER_DIGIT,
+$VERSION, $LETTER, $DIGIT, $DOSEOL, $EOL, $LETTER_DIGIT,
 $LETTER_DIGIT_HYPHEN, $HEX_DIGIT, $QUOTEDSTRING, $ATOM, $SUBDOMAIN, $WORD,
 $DOMAIN, $LOCALPART, $EMAIL, $PHONE_DIGIT, $PHONE, $ZIPCODE, $PRICE, $FLOAT,
 $INTEGER, $SOMETHING, $ANYTHING, $ONE_LINE_REQUIRED, $ONE_LINE_OPTIONAL,
@@ -32,46 +32,52 @@ $ZIPCODE_REQUIRED, $ZIPCODE_OPTIONAL, $PHONE_REQUIRED, $PHONE_OPTIONAL,
 $EMAIL_REQUIRED, $EMAIL_OPTIONAL, $PRICE_REQUIRED, $PRICE_OPTIONAL,
 $FLOAT_REQUIRED, $FLOAT_OPTIONAL, $INTEGER_REQUIRED, $INTEGER_OPTIONAL,
 $BLANK, $PHONE_NO_AREA_CODE_OPTIONAL, $PHONE_NO_AREA_CODE_REQUIRED,
-$PHONE_NO_AREA_CODE, @Aliases, $captcha,
-@FormFields,
-%disallowed_text
+$PHONE_NO_AREA_CODE, $Aliases, $captcha, $FormFields, $disallowed_text,
+$translations, $settings,$captchaResult,$userLangs
 );
 
 sub settings(){
-	my %settings = ();
 
 	# If the configuration file is set, then anything in the configuration
 	# file over rides settings directly in this file.
 	# It is recommended that the configuration file live outside of
 	# webserver document root and it should be accessed by absolute path
-	# here.  For example: configuration_file = "/etc/contact_form.conf"
-	$settings{'configuration_file'} = "example_one_address.xml";
+	# here.  For example: $settings->{'configuration_file'} = "/etc/contact_form.conf"
+	$settings->{'configuration_file'} = 'example_one_address.xml';
 
 	# List of email address to which mail can be sent.
+	#
 	# Mail cannot be sent to any email address which is not on this list.
 	# If a single address is listed, it will be a hidden value on the
 	# form, otherwise, the user will be presented with a pulldown menu
 	# of aliases to which email can be sent.
 	# The addresses listed here are never visible via served web pages.
-	@Aliases = (
-		'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
-		# The following aliases are commented out examples, remove the leading # sign to use them
-		#'webmaster','webmaster@yoursite.tld',
-		#'postmaster','postmaster@yoursite.tld',
+	#
+	# Both the names and the addresses here can be (but don't have to be)
+	# translated. You might want to translate names for functional duties
+	# such as 'webmaster' or 'customer support'.  You might want to put in
+	# translations for the email addresses when different people or teams
+	# would want to recieve the email in a different language.
+	$Aliases = [
+		'contact_administrator_name', 'contact_administrator_email',
+
+		#### The following aliases are commented out examples, remove the leading # sign to use them
+
+		## A simple example of mail sent to John Smith
+		#'John Smith','john@yoursite.tld',
+
+		## Here both the name and the email are translated.
+		## Translations can be edited in the translations section.
+		#'contact_customer_support_name','contact_customer_support_email',
+
+		## Just the name is translated
+		#'contact_postmaster_name','postmaster@yoursite.tld',
+
+		## A mailing list with multiple addresses separated by commas
 		#'two people','webmaster@yoursite.tld,postmaster@yoursite.tld',
-	);
+	];
 
 	# Modify the following to control how the HTML pages look
-
-	# Page titles for the input and thank your pages
-	$settings{'input_page_title'} = 'Contact Us';
-	$settings{'sent_page_title'} = 'Message Sent';
-
-	# Extra text (may be html formatted) that will be placed on
-	# the page before the the form
-	$settings{'input_page_text'} = '<p class="contactform cf_message" id="cf_filloutformmessage">Fill out the form below to send your comments.</p>';
-	$settings{'sent_page_text'} = '<p class="contactform cf_message" id="cf_thankyoumessage">Thank you for your comments!</p>';
-	$settings{'preview_page_text'} = '<p class="contactform cf_message" id="cf_previewmessage">Please review your message before sending it. Changes can be made below.</p>';
 
 	# Page structure -- the look and feel of the page
 	# This variable may be either changed directly, or if the
@@ -86,7 +92,9 @@ sub settings(){
 	# be omitted and replaced with your own elements to better
 	# suit your taste.  The form will not work properly if either
 	# the javascript or content variables are removed or duplicated.
-	$settings{'page_template'} =
+	# This may be a translation key for providing different templates
+	# for different languages.
+	$settings->{'page_template'} =
 	'<html>
 	<head>
 	<title>$title</title>
@@ -103,23 +111,22 @@ sub settings(){
 	# if the template file is set, the page_template variable
 	# is ignored and the template is loaded from the named file.
 	# for example:
-	# my $page_template_file = "mytemplate.html";
+	# $settings->{'page_template_file'} = "mytemplate.html";
 	# or
-	# my $page_template_file = "/home/me/contact.template";
+	# $settings->{'page_template_file'} = "/home/me/contact.template";
 	# If this file is set, the file will be read every time this script
 	# is called, not the most efficient, but very convenient.
 	# The template file must be in the same format as the page_template
 	# variable above
-	$settings{'page_template_file'} = "";
+	$settings->{'page_template_file'} = '';
 
-	# Link back to contact form.
-	# You may remove the link by setting this variable to the empty string:
-	# my $contact_form_link = "";
-	# If you do remove it, please tell your friends about contact form,
+	# Whether or not to show a link to the contact form website.
+	# Set to 0 to disable.
+	# If you do remove the link, please tell your friends about contact form,
 	# link to contact form somewhere else, write a blog entry about
 	# contact form, post in a forum about contact form, or otherwise
 	# spread the word.
-	$settings{'contact_form_link'} = "<p class=\"contactform cf_message\" id=\"cf_version\"><a class=\"contactform cf_link\" href=\"http://ostermiller.org/contactform/\">Contact Form $version</a></p>";
+	$settings->{'show_contact_form_link'} = 1;
 
 	# FormFields is the list of questions the user is expected
 	# to answer. The questions will appear in the same order as
@@ -168,19 +175,19 @@ sub settings(){
 	# Must be one of "to", "from", "name", "subject",
 	# "regarding", or "referrer"
 	#
-	@FormFields = (
+	$FormFields = [
 		'to', {
 			'required' => $ONE_LINE_REQUIRED,
-			'error' => 'You must specify a recipient.',
-			'description' => 'To:',
+			'error' => 'field_to_error.',
+			'description' => 'field_to_description',
 			# Alias of the address put in the "To:" field of the email.
 			'special' => 'to',
 		},
 		'email', {
 			'required' => $EMAIL_REQUIRED,
-			'error' => 'The email address you entered does not appear to be valid.',
+			'error' => 'field_email_error',
 			'type' => 'text',
-			'description' => 'Your email address:',
+			'description' => 'field_email_description',
 			# Put in the "From:" field of the email as the email of the person it is from
 			'special' => 'from',
 		},
@@ -189,29 +196,29 @@ sub settings(){
 			# This field is not visible to the user.
 			# Bots may attempt to fill it in which will prevent submission.
 			'required' => $BLANK,
-			'error' => 'This field should be left blank',
+			'error' => 'field_trap_error',
 			'type' => 'trap',
-			'description' => 'Leave blank:',
+			'description' => 'field_trap_description',
 		},
 		'name', {
 			'required' => $ONE_LINE_OPTIONAL,
-			'error' => 'You must enter your name.',
+			'error' => 'field_name_error',
 			'type' => 'text',
-			'description' => 'Your name:',
+			'description' => 'field_name_description',
 			# Put in the "From:" field of the email as the name of the person it is from
 			'special' => 'name',
 		},
 		'subject', {
 			'required' => $ONE_LINE_REQUIRED,
-			'error' => 'You must enter a subject.',
+			'error' => 'field_subject_error',
 			'type' => 'text',
-			'description' => 'Subject:',
+			'description' => 'field_subject_description',
 			# Put in the "Subject:" field of the email.
 			'special' => 'subject',
 		},
 		'message', {
 			'required' => $SOMETHING,
-			'error' => 'You must enter a message.',
+			'error' => 'field_message_error',
 			'type' => 'textarea',
 			'description' => $NO_DESCRIPTION,
 		},
@@ -231,54 +238,54 @@ sub settings(){
 			# The original referring url.
 			'special' => 'referrer',
 		},
-		# The following fields are disabled examples, remove the 'enabled' => 0 line to use them
+		# The following fields are disabled examples, remove the 'enabled' => 1 line to use them
 		'phone', {
 			'required' => $PHONE_OPTIONAL,
-			'error' => 'The phone number you entered does not appear to be valid.',
+			'error' => 'field_phone_error',
 			'type' => 'text',
-			'description' => 'Phone Number:',
+			'description' => 'field_phone_description',
 			'enabled' => 0,
 		},
 		'fax', {
 			'required' => $PHONE_OPTIONAL,
-			'error' => 'The fax number you entered does not appear to be valid.',
+			'error' => 'field_fax_error',
 			'type' => 'text',
-			'description' => 'Fax Number:',
+			'description' => 'field_fax_description',
 			'enabled' => 0,
 		},
 		'address1', {
 			'required' => $ONE_LINE_OPTIONAL,
-			'error' => 'Please enter your address.',
+			'error' => 'field_address_error',
 			'type' => 'text',
-			'description' => 'Address:',
+			'description' => 'field_address_description',
 			'enabled' => 0,
 		},
 		'address2', {
 			'required' => $ONE_LINE_OPTIONAL,
-			'error' => 'Please enter your address.',
+			'error' => 'field_address_error',
 			'type' => 'text',
 			'description' => $NO_DESCRIPTION,
 			'enabled' => 0,
 		},
 		'city', {
 			'required' => '^(?:[a-zA-Z ]*)$',
-			'error' => 'Your city does not appear to be valid.',
+			'error' => 'field_city_error',
 			'type' => 'text',
-			'description' => 'City:',
+			'description' => 'field_city_description',
 			'enabled' => 0,
 		},
 		'state', {
 			'required' => '^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)$',
-			'error' => 'Please choose your state.',
+			'error' => 'field_state_error',
 			'type' => 'select',
-			'description' => 'State:',
+			'description' => 'field_state_description',
 			'enabled' => 0,
 		},
 		'zip', {
 			'required' => $ZIPCODE_OPTIONAL,
-			'error' => 'Your zipcode does not appear to be valid.',
+			'error' => 'field_zip_error',
 			'type' => 'text',
-			'description' => 'Zipcode:',
+			'description' => 'field_zip_description',
 			'enabled' => 0,
 		},
 		'most_basic_question', {
@@ -288,63 +295,63 @@ sub settings(){
 		'color', {
 			# A required select drop down
 			'type' => 'select',
-			'required' => '^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$',
-			'error' => 'Please choose a color.',
-			'description' => 'Choose a color:',
+			'required' => 'field_color_required',
+			'error' => 'field_color_error',
+			'description' => 'field_color_description',
 			'enabled' => 0,
 		},
 		'vegetable', {
 			# An optional select drop down
 			'type' => 'select',
-			'required' => '^(?:|Corn|Peas|Beans|Carrots|Broccoli)$',
-			'error' => 'Please choose a valid vegetable.',
-			'description' => 'Which (if any) is your favorite vegetable:',
+			'required' => 'field_vegetable_required',
+			'error' => 'field_vegetable_description',
+			'description' => 'field_vegetable_description',
 			'enabled' => 0,
 		},
 		'letter', {
 			# A select drop down with a pre-filled option
 			'type' => 'select',
-			'required' => '^(?:A|B|C|D)$',
-			'error' => 'Please choose on of the four letters.',
-			'description' => 'Choose a letter (C is selected by default):',
-			'selected' => 'C',
+			'required' => 'field_letter_required',
+			'error' => 'field_letter_error',
+			'description' => 'field_letter_description',
+			'selected' => 'field_letter_selected',
 			'enabled' => 0,
 		},
 		'yes_no', {
 			# required radio buttons
 			'type' => 'radio',
-			'required' => '^(?:yes|no)$',
-			'error' => 'Please answer the yes/no question',
-			'description' => 'Yes or no:',
+			'required' => 'field_yes_no_required',
+			'error' => 'field_yes_no_error',
+			'description' => 'field_yes_no_description',
 			'enabled' => 0,
 		},
 		'true_false', {
 			# radio buttons with a prefilled option
 			'type' => 'radio',
-			'required' => '^(?:true|false)$',
-			'error' => 'Please answer the true/false question',
-			'description' => 'True or false (false is selected by default):',
-			'selected' => 'false',
+			'required' => 'field_true_false_required',
+			'error' => 'field_true_false_error',
+			'description' => 'field_true_false_description',
+			'selected' => 'field_true_false_selected',
 			'enabled' => 0,
 		},
 		'vegetable2', {
 			# optional radio buttons
 			'type' => 'radio',
-			'required' => '^(?:|Lettuce|Tomato|Brussel Sprouts)$',
-			'error' => 'Please choose a valid vegetable.',
-			'description' => 'Which (if any) is your favorite vegetable:',
+			'required' => 'field_vegetable2_required',
+			'error' => 'field_vegetable_error',
+			'description' => 'field_vegetable_description',
 			'enabled' => 0,
 		},
 		'about', {
 			# prefilled
 			'type' => 'text',
 			'required' => $ANYTHING,
-			'error' => 'Please enter what this message is about.',
-			'description' => 'What is this message about:',
-			'default' => 'Email',
+			'error' => 'field_about_error',
+			'description' => 'field_about_description',
+			'default' => 'field_about_default',
 			'enabled' => 0,
 		},
-	);
+	];
 
 	# Captcha settings -- Displays distorted text that the user
 	# must type in to prove that they are human.
@@ -353,11 +360,11 @@ sub settings(){
 	# Your server must have the Captcha::reCAPTCHA library installed.
 	# To install it, talk to your admin or use the command line:
 	# cpan install 'Captcha::reCAPTCHA'
-	$settings{'recaptcha_public_key'} = '';
-	$settings{'recaptcha_private_key'} = '';
+	$settings->{'recaptcha_public_key'} = '';
+	$settings->{'recaptcha_private_key'} = '';
 
 	# The name of the field for submit/preview action
-	$settings{'field_name_submit'} = 'do';
+	$settings->{'field_name_submit'} = 'do';
 
 	# Regular expression describing urls which can host forms
 	# pointing to this program. The referral URL is generated on the
@@ -367,30 +374,39 @@ sub settings(){
 	# a form pointing to this email software.
 	# Consider the following options:
 	# This form can be used from any site at all: .*
-	# This form can only be used from pages on yoursite.tld: ^http[s]?\\:\\/\\/yoursite\\.tld\\/
-	# This form can only be used from pages on the domain or ip address: ^http[s]?\\:\\/\\/((yoursite\\.tld)|(127\\.0\\.0\\.1))\\/'
-	# This form can only be used from a specific page: ^http[s]?\\:\\/\\/yoursite\\.tld\\/directory\\/page\\.html\\$'
-	$settings{'allowedReferers'} = ".*";
+	# This form can only be used from pages on yoursite.tld: ^http[s]?\:\/\/yoursite\.tld\/
+	# This form can only be used from pages on the domain or ip address: ^http[s]?\:\/\/((yoursite\.tld)|(127\.0\.0\.1))\/
+	# This form can only be used from a specific page: ^http[s]?\:\/\/yoursite\.tld\/directory\/page\.html\$
+	$settings->{'allowedReferers'} = '.*';
 
-	# Regular expressions for text that is not allowed in any fields
-	%disallowed_text = (
-		"\\<[ \\r\\n\\t]*[Aa][ \\r\\n\\t]","You appear to be trying to include HTML formatted links.  Links should not be formatted like this.",
-		"\\[[ \\r\\n\\t]*[Uu][Rr][Ll][ \\r\\n\\t]*\\=","You appear to be trying to include message board formatted links.  Links should not be formatted like this.",
-	);
+	# Regular expressions for text that is not allowed in any fields.
+	# Messages may be translation keys.
+	$disallowed_text = {
+		"\\<[ \\r\\n\\t]*[Aa][ \\r\\n\\t]","error_disallow_html_formatted_links",
+		"\\[[ \\r\\n\\t]*[Uu][Rr][Ll][ \\r\\n\\t]*\\=","error_disallow_board_formatted_links",
+	};
 
 	# Whether or not users are required to preview
 	# their message before sending.
 	# 0 -- preview disabled (allows users to send mail the fastest)
 	# 1 -- preview required (best for spam prevention)
 	# 2 -- preview available, but not required  (most choice for users)
-	$settings{'require_preview'} = 1;
+	$settings->{'require_preview'} = 2;
+
+	# Whether or not to include the "To: <alias>" field in the email body.
+	# This is usually desired when there are multiple recipients so that
+	# each recipient can tell that the email was sent to multiple people.
+	# yes -- always include the to field
+	# multiple -- include the to field only when there are multiple recipients
+	# no -- do not include the to field
+	$settings->{'show_to_in_message'} = 'multiple';
 
 	# The character set for the contact page.
-	$settings{'charset'} = 'ISO-8859-1';
+	$settings->{'charset'} = 'UTF-8';
 
 	# Command line program used to send email
 	# '/usr/lib/sendmail -i -t' almost always works fine
-	$settings{'sendmail'} = '/usr/lib/sendmail -i -t';
+	$settings->{'sendmail'} = '/usr/lib/sendmail -i -t';
 
 	# Whether or not to include javascript that checks the form
 	# before it is submitted.
@@ -398,22 +414,33 @@ sub settings(){
 	# complexity of the page, and could alert hackers to the
 	# regular expressions you are using for verification.
 	# Set to 0 to disable, 1 to enable.
-	$settings{'use_client_side_verification'} = 1;
+	$settings->{'use_client_side_verification'} = 1;
 
 	# This should be either 'POST' or 'GET'
-	$settings{'submit_method'} = 'POST';
+	$settings->{'submit_method'} = 'POST';
 
 	# Placed next to form elements that must be filled in
-	$settings{'required_marker'} = '<span class="contactform cf_required">*</span>';
-	$settings{'required_marker_note'} = "<p class=\"contactform cf_message\" id=\"cf_requiredexplain\">".$settings{'required_marker'}." denotes a required field.</p>";
+	# The required marker can be set to a translation key
+	# such that translated text for something like "REQUIRED"
+	# is shown to users rather than an asterisk.
+	$settings->{'required_marker'} = '<span class="contactform cf_required">*</span>';
+
+	# Text that should always go at the beginning of the subject
+	# of emails that this contact form sends out.  This could be
+	# useful as a signal for filtering email or seeing which emails
+	# come in through contact form when scanning your inbox.
+	# eg $settings->{'subject_prepend'} = '[WEB]';
+	# This may be (but does not have to be) set to a translation key.
+	$settings->{'subject_prepend'} = '';
 
 	# Style rules for the input page.
 	# to put question and answer on the same line use:
 	# .cf_userentry, .cf_radioselection { display:inline; margin-left:0.25cm; }
-	$settings{'input_page_css'} =
+	$settings->{'input_page_css'} =
 	'<style>
 	.cf_error { color:red; }
 	.cf_textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+	.cf_instructions { margin-bottom:1em; }
 	textarea.contactform { height:4in; }
 	.cf_required { color:green; }
 	#cf_version { text-align:right; }
@@ -421,43 +448,260 @@ sub settings(){
 	.cf_field { margin-bottom:0.5cm; }
 	.cf_nt { display:none; }
 	.cf_preview { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");margin-bottom:1cm;}
-	</style>';
+	</style>
+	';
 
 	# Style rules for thank you page
-	$settings{'sent_page_css'} =
+	$settings->{'sent_page_css'} =
 	'<style>
+	.cf_thankyou { margin-bottom:1em; }
 	.cf_sent { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
 	#cf_version { text-align:right; }
 	</style>';
 
 	# Link to favicon, placed in the head after the JavaScript
-	$settings{'icon_link'}='<link rel="icon" href="'.&escapeHTML($ENV{'SCRIPT_NAME'}).'/contactformicon.png" type="image/png">';
+	$settings->{'icon_link'}='<link rel="icon" href="'.&escapeHTML($ENV{'SCRIPT_NAME'}).'/contactformicon.png" type="image/png">';
 
 	# Form copyright header placed in the head after the JavaScript
-	$settings{'copyright_link'} = '<link rel="copyright" href="http://ostermiller.org/contactform/" type="text/html">';
+	$settings->{'copyright_link'} = '<link rel="copyright" href="http://ostermiller.org/contactform/" type="text/html">';
 
 	# Redirect to this url after the message has been sent
 	# By default there is no redirect.  The url must
 	# be fully qualified (must start with http://)
-	# Example: my $redirect_url_sent = "http://example.com/";
-	$settings{'redirect_url_sent'} = "";
+	# Example: $settings->{'redirect_url_sent'} = "http://example.com/";
+	# This may be set to a translation key for redirecting to different
+	# urls in different languages.
+	$settings->{'redirect_url_sent'} = "";
 
 	# Show the sent confirmation for this many seconds before redirecting
 	# after the message has been sent if the redirect_url_sent has been defined.
 	# If zero is specified, the message sent confirmation will not
 	# be shown at all (you can redirect to your own thank you)
-	$settings{'redirect_delay_sent'} = 15;
+	$settings->{'redirect_delay_sent'} = 15;
 
-	return %settings;
+	# The language to display to the user if the users preferred
+	# language cannot be determined.
+	$settings->{'default_language'} = '';
+
+	# A list of allowed languages separated by spaces.
+	# eg $settings->{'allowed_languages'} = 'en en_US fr de';
+	# Contact form will only be shown in the languages listed.
+	# If allowed_languages is blank, then any language for which
+	# translations exist may be shown.
+	$settings->{'allowed_languages'} = '';
+
+	# Parameter name that specifies the language in which
+	# contact form should be shown or blank not to use.
+	# If this parameter is not used or not present,
+	# contact form tries to detect the language from the
+	# users browser settings, then falls back to the default
+	# language setting.  A link to contact form with the param
+	# might look something like this:
+	# /contact.pl?cflang=de
+	$settings->{'language_param'} = 'cflang';
+
+	# The text shown to users by contact form. Each item should be
+	# translated into each language used.
+	#
+	# Language keys: lower case two letter language code, optionally
+	# followed by an underscore and uppercase two letter country code.
+	# eg. en or en_US
+	#
+	# Translation keys: All lowercase letters, numbers, and underscores.
+	# Each must contain at least one underscore.  New keys may be
+	# added when adding new fields.
+	#
+	# NOTE to translators: Use a UTF-8 capable editor when saving
+	# translations.  Text in curly braces in the translations such
+	# as {required_marker} or {server_administrator} is replaced
+	# automatically and should not be translated.
+	$translations = {
+		# English
+		'en' => {
+			# Core messaging
+			'input_page_title' => 'Contact Us',
+			'input_page_instructions' => 'Fill out the form below to send your comments.',
+			'required_marker_description' => '{required_marker} denotes a required field.',
+			'preview_button' => 'Preview',
+			'send_button' => 'Send',
+			'preview_page_instructions' => 'Please review your message before sending it. Changes can be made below.',
+			'sent_page_title' => 'Message Sent',
+			'sent_page_thank_you' => 'Thank you for your comments!',
+			'email_header_to' => 'To:',
+			'email_header_from' => 'From:',
+			'email_header_subject' => 'Subject:',
+			'contact_form_version' => 'Contact Form {version_number}',
+			# Core fields
+			'field_to_description' => 'To',
+			'field_to_error' => 'You must specify a recipient.',
+			'field_email_description' => 'Your email address:',
+			'field_email_error' => 'The email address you entered does not appear to be valid.',
+			'field_email_default' => 'nobody',
+			'field_trap_description' => 'Leave blank:',
+			'field_trap_error' => 'This field should be left blank.',
+			'field_name_description' => 'Your name:',
+			'field_name_error' => 'You must enter your name.',
+			'field_subject_description' => 'Subject:',
+			'field_subject_error' => 'You must enter a subject.',
+			'field_subject_default' => 'Website Form Submission',
+			'field_message_error' => 'You must enter a message.',
+			'field_captcha_description' => 'Prove that you are a human:',
+			'field_captcha_error' => 'Captcha problem',
+			# Error messaging
+			'error_get_post_only' => "This form must be submitted via either 'GET' or 'POST'.",
+			'error_bad_referrer' => 'This form cannot be submitted from {referrer}.',
+			'error_bad_recipient' => 'Your message cannot be sent to the specified recipient.',
+			'error_generic_field' => "The field '{field_key}' does not appear to be valid.",
+			'error_correction_required' => 'Please correct the error to continue.',
+			'error_corrections_required' => 'Please correct all errors to continue.',
+			'error_disallow_html_formatted_links' => 'You appear to be trying to include HTML formatted links.  Links should not be formatted like this.',
+			'error_disallow_board_formatted_links' => 'You appear to be trying to include message board formatted links.  Links should not be formatted like this.',
+			'error_module_missing_title' => '{perl_module} Perl Module Not Installed',
+			'error_module_missing_no_config_file' => 'Install the {perl_module} module or do not use the configuration file feature',
+			'error_module_missing_no_captcha' => 'Install the {perl_module} module or do not use the captcha feature',
+			'error_bad_config_file_title' => 'Could Not Read Configuration File',
+			'error_bad_config_file' => 'Check configuration file existence, permissions, and validity of XML; or do not use a configuration file.',
+			'error_template_file_problem' => 'The template file could not be opened.',
+			# Configuration examples
+			'contact_administrator_name' => 'administrator',
+			'contact_customer_support_name' => 'Customer Support',
+			'contact_customer_support_email' => 'support@yoursite.tld',
+			'contact_postmaster_name' => 'postmaster',
+			'field_phone_error' => 'The phone number you entered does not appear to be valid.',
+			'field_phone_description' => 'Phone Number:',
+			'field_fax_error' => 'The fax number you entered does not appear to be valid.',
+			'field_fax_description' => 'Fax Number:',
+			'field_address_error' => 'Please enter your address.',
+			'field_address_description' => 'Address:',
+			'field_city_error' => 'Your city does not appear to be valid.',
+			'field_city_description' => 'City:',
+			'field_state_error' => 'Please choose your state.',
+			'field_state_description' => 'State:',
+			'field_zip_error' => 'Your zipcode does not appear to be valid.',
+			'field_zip_description' => 'Zipcode:',
+			'field_color_required' => '^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$',
+			'field_color_error' => 'Please choose a color.',
+			'field_color_description' => 'Choose a color:',
+			'field_vegetable_required' => '^(?:|Corn|Peas|Beans|Carrots|Broccoli)$',
+			'field_vegetable_error' => 'Please choose a valid vegetable.',
+			'field_vegetable_description' => 'Which (if any) is your favorite vegetable:',
+			'field_letter_required' => '^(?:A|B|C|D)$',
+			'field_letter_error' => 'Please choose on of the four letters.',
+			'field_letter_description' => 'Choose a letter (C is selected by default):',
+			'field_letter_selected' => 'C',
+			'field_yes_no_required' => '^(?:yes|no)$',
+			'field_yes_no_error' => 'Please answer the yes/no question',
+			'field_yes_no_description' => 'Yes or no:',
+			'field_true_false_required' => '^(?:true|false)$',
+			'field_true_false_error' => 'Please answer the true/false question',
+			'field_true_false_description' => 'True or false (false is selected by default):',
+			'field_true_false_selected' => 'false',
+			'field_vegetable2_required' => '^(?:|Lettuce|Tomato|Brussel Sprouts)$',
+			'field_about_error' => 'Please enter what this message is about.',
+			'field_about_description' => 'What is this message about:',
+			'field_about_default' => 'Email',
+			# No translation needed
+			'contact_administrator_email' => '{server_admin}',
+		},
+		# Pig Latin (for testing)
+		'pig' => {
+			# Core messaging
+			'input_page_title' => 'Ontactcay Uslay',
+			'input_page_instructions' => 'Illfay outyay ethay ormfay elowbay ootay endsay oryay ommentscay.',
+			'required_marker_description' => '{required_marker} enotesday ayay equiredray ieldfay.',
+			'preview_button' => 'Eviewpray',
+			'send_button' => 'Endsay',
+			'preview_page_instructions' => 'Easeplay eviewray oryay essagemay eforeBay endingsay ityay. Angeschay ancay ebay ademay elowbay.',
+			'sent_page_title' => 'Essagemay Entsay',
+			'sent_page_thank_you' => 'Ankthay ooyay orfay oryay ommentsCay!',
+   			'email_header_to' => 'Ootay:',
+			'email_header_from' => 'Omfray:',
+			'email_header_subject' => 'Ubjectsay:',
+			'contact_form_version' => 'Ontactcay Ormfay {version_number}',
+			# Core fields
+			'field_to_description' => 'Ootay:',
+			'field_to_error' => 'Ouyay ustmay ecifyspay ayay ecipientray.',
+			'field_email_description' => 'Ouryay emailyay addressyay:',
+			'field_email_error' => 'Ethay emailyay addressyay ouyay enteredyay oesday otnay appearyay ootay ebay alidvay.',
+			'field_trap_description' => 'Eavelay ankblay:',
+			'field_trap_error' => 'Isthay ieldfay ouldshay ebay eftlay ankblay.',
+			'field_name_description' => 'Ouryay amenay:',
+			'field_name_error' => 'Ouyay ustmay enteryay ouryay amenay.',
+			'field_subject_description' => 'Ubjectsay:',
+			'field_subject_error' => 'Ouyay ustmay enteryay ayay ubjectsay.',
+			'field_message_error' => 'Ouyay ustmay enteryay ayay essagemay.',
+			'field_captcha_description' => 'Ovepray atthay ouyay areyay ayay umanhay:',
+			'field_captcha_error' => 'Aptchacay oblempray',
+			# Error messaging
+			'error_get_post_only' => "Isthay ormfay ustmay ebay ubmittedsay iavay eitheryay 'GET' oryay 'POST'.",
+			'error_bad_referrer' => 'Isthay ormfay annotcay ebay ubmittedsay romfay {referrer}.',
+			'error_bad_recipient' => 'Oryay essagemay annotcay ebay entsay ootay ethey ecifiedspay ecipientray.',
+			'error_generic_field' => "Ethay ielday '{field_key}' oesday otnay appearyay ootay ebay alidvay.",
+			'error_correction_required' => 'Easeplay orrectcay ethay erroryay ootay ontinuecay.',
+			'error_corrections_required' => 'Easeplay orrectcay allyay errorsyay ootay ontinuecay.',
+			'error_disallow_html_formatted_links' => 'Ouyay appearyay ootay ebay yingtray ootay includeyay HTML ormattedfay inkslay.  Inkslay ouldshay otnay ebay ormattedfay ikelay isthay.',
+			'error_disallow_board_formatted_links' => 'Ouyay appearyay ootay ebay yingtray ootay includeyay essagemay oardbay ormattedfay inkslay.  Inkslay ouldshay otnay ebay ormattedfay ikelay isthay.',
+			'error_module_missing_title' => '{perl_module} Erlpay Odulemay Otnay Installedyay',
+			'error_module_missing_no_config_file' => 'Installyay ethay {perl_module} odulemay oryay ooday otnay useyay ethay onfigurationcay ilefay eaturefay',
+			'error_module_missing_no_captcha' => 'Installyay ethay {perl_module} odulemay oryay ooday otnay useyay ethay aptchacay eaturefay',
+			'error_bad_config_file_title' => 'Ouldcay Otnay Eadray Onfigurationcay Ilefay',
+			'error_bad_config_file' => 'Eckchay onfigurationcay ilefay existenceyay, ermissionspay, andyay alidityvay ofyay XML; oryay ooday otnay useyay ayay onfigurationcay ilefay.',
+			'error_template_file_problem' => 'Ethay emplatetay ilefay ouldcay otnay ebay openedyay.',
+			'field_captcha_error' => 'Aptchacay oblempray',
+			'contact_administrator_name' => 'administratoryay',
+			'field_email_default' => 'obodynay',
+			# Configuration examples
+			'contact_customer_support_name' => 'Ustomercay Upportsay',
+			'contact_customer_support_email' => 'upportsay@ouyayrsite.tld',
+			'contact_postmaster_name' => 'ostmasterpay',
+			'field_onephay_error' => 'Ethay onephay umbernay ouyay enteredyay oesday otnay appearyayyay ootay ebay alidvay.',
+			'field_onephay_description' => 'Onephay umbernay:',
+			'field_fax_error' => 'Ethay axfay umbernay ouyay enteredyay oesday otnay appearyay ootay ebay alidvay.',
+			'field_fax_description' => 'Axfay Umbernay:',
+			'field_address_error' => 'Easeplay enteryay ouyayr addressyay.',
+			'field_address_description' => 'Addressyay:',
+			'field_city_error' => 'Ouryay itycay oesday otnay appearyay ootay ebay alidvay.',
+			'field_city_description' => 'Itycay:',
+			'field_state_error' => 'Easeplay oosechay ouyayr atestay.',
+			'field_state_description' => 'Atestay:',
+			'field_zip_error' => 'Ouryay ipcodezay oesday otnay appearyay ootay ebay alidvay.',
+			'field_zip_description' => 'Ipcodezay:',
+			'field_color_required' => '^(?:Edray|Orangeyay|Ellowyay|Eengray|Ueblay|Urplepay|Ackblay|Itewhay)$',
+			'field_color_error' => 'Easeplay oosechay ayay olorcay.',
+			'field_color_description' => 'Choose ayay olorcay:',
+			'field_vegetable_required' => '^(?:|Orncay|Easpay|Eansbay|Arrotscay|Occolibray)$',
+			'field_vegetable_error' => 'Easeplay oosechay ayay alidvay egetablevay.',
+			'field_vegetable_description' => 'Ichwhay (ifyay anyay) isyay ouyayr avoritefay egetablevay:',
+			'field_letter_required' => '^(?:Ayay|Byay|Cyay|Dyay)$',
+			'field_letter_error' => 'Easeplay oosechay onyay ofyay ethay ourfay etterslay.',
+			'field_letter_description' => 'Oosechay ayay etterlay (Cyay isyay electedsay ybay efaultday):',
+			'field_letter_selected' => 'Cyay',
+			'field_yes_no_required' => '^(?:esyay|onay)$',
+			'field_yes_no_error' => 'Easeplay answeryay ethay esyay/onay estionquay',
+			'field_yes_no_description' => 'Esyay or onay:',
+			'field_true_false_required' => '^(?:uetray|alsefay)$',
+			'field_true_false_error' => 'Easeplay answeryay ethay uetray/alsefay estionquay',
+			'field_true_false_description' => 'Uetray or alsefay (alsefay isyay electedsay ybay efaultday):',
+			'field_true_false_selected' => 'alsefay',
+			'field_vegetable2_required' => '^(?:|Ettucelay|Omatotay|Usselbray Routspay)$',
+			'field_about_error' => 'Easeplay enteryay atwhay isthay essagemay isyay aboutyay.',
+			'field_about_description' => 'What isyay isthay essagemay aboutyay:',
+			'field_about_default' => 'Emailyay',
+		},
+	};
+
+	# These settings are here for backwards compatability
+	# It is better to modify the translations directly
+	$settings->{'input_page_title'} = 'input_page_title';
+	$settings->{'sent_page_title'} = 'sent_page_title';
 }
 
 #=====================================================================
 # You need to know Perl to and have a strong stomach to
 # modify much of anything below this line
 
-
 &initConstants();
-my %settings = &settings();
+&settings();
 &loadConfiguration();
 &loadTemplate();
 &parseInput();
@@ -470,6 +714,10 @@ my %settings = &settings();
 
 sub initConstants {
 
+	$settings = {};
+
+	$translations = {};
+
 	# initialize the path to something safe so we can later call sendmail
 	$ENV{'PATH'} = '/bin:/usr/bin:/usr/local/bin';
 
@@ -481,7 +729,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$version = "3.00.00";
+	$VERSION = "4.00.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -529,37 +777,37 @@ sub initConstants {
 }
 
 sub loadConfiguration(){
-	return if (! defined $settings{'configuration_file'} or $settings{'configuration_file'} eq "");
+	return if (! defined $settings->{'configuration_file'} or $settings->{'configuration_file'} eq "");
 
 	my $xmlmodule = "XML::Simple";
 	eval "use $xmlmodule";
 	if ($@) {
 		&errorPage(
-			"$xmlmodule Perl Module Not Installed",
-			"Install the $xmlmodule module or do not use the configuration file feature"
+			&trans('error_module_missing_title',{'perl_module'=>$xmlmodule}),
+			&trans('error_module_missing_no_config_file',{'perl_module'=>$xmlmodule})
 		);
 	}
-	my $xmlsimple = $xmlmodule->new(forcearray => 1, keyattr => ['Aliases','FormFields']);
+	my $xmlsimple = $xmlmodule->new(forcearray => 1, keyattr => ['Aliases','FormFields','Translations']);
 	my $xmlconf;
 	eval {
-		$xmlconf = $xmlsimple->XMLin($settings{'configuration_file'});
+		$xmlconf = $xmlsimple->XMLin($settings->{'configuration_file'});
 	};
 	if ($@) {
 		&errorPage(
-			"Could Not Read Configuration File",
-			"Check configuration file existence, permissions, and validity of XML, or do not use a configuration file."
+			&trans('error_bad_config_file_title'),
+			&trans('error_bad_config_file')
 		);
 	}
 
 	if ($xmlconf->{Aliases}){
-		@Aliases = ();
+		$Aliases = [];
 		if ($xmlconf->{Aliases}->[0] and $xmlconf->{Aliases}->[0]->{Alias}){
 			foreach my $alias(@{$xmlconf->{Aliases}->[0]->{Alias}}){
 				my $name =  $alias->{name};
 				my $email = $alias->{content};
 				$email = &safeHeader($ENV{'SERVER_ADMIN'}) if ($email eq "SERVER_ADMIN");
-				push(@Aliases, $name);
-				push(@Aliases, $email);
+				push(@$Aliases, $name);
+				push(@$Aliases, $email);
 			}
 		}
 	}
@@ -570,30 +818,43 @@ sub loadConfiguration(){
 			if ($name){
 				my $value = $setting->{content};
 				$value='' if (!$value);
-				$value =~ s/CONTACTFORM_VERSION/$version/g;
-				$value =~ s/REQUIRED_MARKER/$settings{'required_marker'}/g;
 				if (defined $ENV{'SCRIPT_NAME'}){
-					$value =~ s/SCRIPT_NAME_ESCAPED/&escapeHTML($ENV{'SCRIPT_NAME'})/g;
+					my $escapedScript = &escapeHTML($ENV{'SCRIPT_NAME'});
+					$value =~ s/SCRIPT_NAME_ESCAPED/$escapedScript/g;
 				}
 				$value = &trimEachLine($value);
-				$settings{$name} = $value;
+				$settings->{$name} = $value;
 			}
 		}
 	}
 
 	if ($xmlconf->{DisallowedText}){
-		%disallowed_text = ();
+		$disallowed_text = {};
 		if ($xmlconf->{DisallowedText}->[0] and $xmlconf->{DisallowedText}->[0]->{Disallow}){
 			foreach my $disallow(@{$xmlconf->{DisallowedText}->[0]->{Disallow}}){
 				my $regex =  &trimEachLine($disallow->{content});
 				my $message = $disallow->{message};
-				$disallowed_text{$regex} = $message;
+				$disallowed_text->{$regex} = $message;
+			}
+		}
+	}
+
+	if ($xmlconf->{Translations}){
+		if ($xmlconf->{Translations}->[0] and $xmlconf->{Translations}->[0]->{Language}){
+			foreach my $lang(@{$xmlconf->{Translations}->[0]->{Language}}){
+				my $langname = $lang->{name};
+				$translations->{$langname} = {} if (! exists $translations->{$langname});
+				foreach my $translation (@{$lang->{Translation}}){
+					my $content = "";
+					$content = $translation->{'content'} if (exists $translation->{'content'});
+					$translations->{$langname}->{$translation->{'key'}} = $content;
+				}
 			}
 		}
 	}
 
 	if ($xmlconf->{FormFields}){
-		@FormFields = ();
+		$FormFields = [];
 		if ($xmlconf->{FormFields}->[0] and $xmlconf->{FormFields}->[0]->{Field}){
 			foreach my $field(@{$xmlconf->{FormFields}->[0]->{Field}}){
 				my $name = $field->{name};
@@ -625,8 +886,8 @@ sub loadConfiguration(){
 				my $default = $field->{default};
 				my $selected = $field->{selected};
 				my $special = $field->{special};
-				push (@FormFields, $name);
-				push (@FormFields, {
+				push (@$FormFields, $name);
+				push (@$FormFields, {
 					'required' =>  $required,
 					'error' =>  $error,
 					'type' =>  $type,
@@ -652,31 +913,40 @@ sub trimEachLine(){
 
 sub loadTemplate(){
 	$template_error = "";
-	if (defined $settings{'page_template_file'} and $settings{'page_template_file'} ne ""){
-		if (!open(TEMPLATE, $settings{'page_template_file'})){
-			$template_error = '<div class="contactform cf_error cf_message">The template file could not be opened.</div>\n';
+	if (defined $settings->{'page_template_file'} and $settings->{'page_template_file'} ne ""){
+		if (!open(TEMPLATE, &trans($settings->{'page_template_file'}))){
+			$template_error = "<div class=\"contactform cf_error\">".&trans('error_template_file_problem')."</div>\n";
 			return;
 		}
-		$settings{'page_template'} = join("", <TEMPLATE>);
+		$settings->{'page_template'} = join("", <TEMPLATE>);
 		close(TEMPLATE);
 	}
+}
+
+sub createOrderedMap(){
+	my ($arr, $keytransformfunction) = @_;
+	my $orderarr = [];
+	my $hash = {};
+	my $key;
+	foreach my $value (@$arr){
+		if ($key){
+			$hash->{$key} = $value;
+			undef $key;
+		} else {
+			$key = $keytransformfunction->($value);
+			push(@$orderarr, $key);
+		}
+	}
+	return ($orderarr, $hash);
 }
 
 sub createMaps {
 	# Since hash maps are not ordered, Aliases and Form_Fields
 	# Are declared as arrays.  We need to create two data structures
-	# from each.  The first is an undered map, the second is an
-	# ordered key set.
-	%AliasesMap = @Aliases;
-	my $useAlias = 1;
-	foreach my $alias (@Aliases){
-		if ($useAlias){
-			push(@AliasesOrdered, $alias);
-			$useAlias = 0;
-		} else {
-			$useAlias = 1;
-		}
-	}
+	# from each.  The first is an ordered key list, the second is an
+	# unordered map
+
+	($AliasesOrdered,$AliasesMap) = &createOrderedMap($Aliases,\&trans);
 
 	$field_name_to = '';
 	$field_name_from_email = '';
@@ -685,38 +955,47 @@ sub createMaps {
 	$field_name_regarding = '';
 	$field_name_referrer = '';
 
-	%FieldMap = @FormFields;
-	foreach my $key (@FormFields){
-		if ($FieldMap{$key} and (! defined ${$FieldMap{$key}}{"enabled"} or ${$FieldMap{$key}}{"enabled"} != 0)){
-			push(@Field_Order, $key);
-			if (defined ${$FieldMap{$key}}{"special"}){
-				my $special = ${$FieldMap{$key}}{"special"};
-				if ($special eq "to"){
-					$field_name_to = $key;
-				} elsif ($special eq "from"){
-					$field_name_from_email = $key;
-				} elsif ($special eq "name"){
-					$field_name_from_name = $key;
-				} elsif ($special eq "subject"){
-					$field_name_subject = $key;
-				} elsif ($special eq "regarding"){
-					$field_name_regarding = $key;
-				} elsif ($special eq "referrer"){
-					$field_name_referrer = $key;
+	$FieldMap = {};
+	my $key;
+	foreach my $value (@$FormFields){
+		if ($key){
+			my $field = $value;
+			if (! defined $field->{"enabled"} or $field->{"enabled"} != 0){
+				push(@Field_Order, $key);
+				if (defined $field->{"special"}){
+					my $special = $field->{"special"};
+					if ($special eq "to"){
+						$field_name_to = $key;
+					} elsif ($special eq "from"){
+						$field_name_from_email = $key;
+					} elsif ($special eq "name"){
+						$field_name_from_name = $key;
+					} elsif ($special eq "subject"){
+						$field_name_subject = $key;
+					} elsif ($special eq "regarding"){
+						$field_name_regarding = $key;
+					} elsif ($special eq "referrer"){
+						$field_name_referrer = $key;
+					}
 				}
+				if (defined $field->{"default"}){
+					# 'default' is a synonym for 'selected', just copy it over
+					$field->{"selected"} = $field->{"default"};
+				}
+				$FieldMap->{$key} = $field;
 			}
-			if (defined ${$FieldMap{$key}}{"default"}){
-				${$FieldMap{$key}}{"selected"} = ${$FieldMap{$key}}{"default"};
-			}
+			undef $key;
+		} else {
+			$key = $value;
 		}
 	}
 
 	# Put the referrer header into the map if it is not there already
-	if ($field_name_referrer ne "" and $FieldMap{$field_name_referrer} and ! exists $SubmittedData{$field_name_referrer}){
+	if ($field_name_referrer ne "" and $FieldMap->{$field_name_referrer} and ! exists $SubmittedData->{$field_name_referrer}){
 		if (defined $ENV{'HTTP_REFERER'}){
-			$SubmittedData{$field_name_referrer} = $ENV{'HTTP_REFERER'};
+			$SubmittedData->{$field_name_referrer} = $ENV{'HTTP_REFERER'};
 		} else {
-			$SubmittedData{$field_name_referrer} = "-";
+			$SubmittedData->{$field_name_referrer} = "-";
 		}
 	}
 }
@@ -735,13 +1014,13 @@ sub errorPage {
 sub parseInput {
 	my ($pair, @pairs, $buffer);
 
-	if ($settings{'recaptcha_public_key'} and $settings{'recaptcha_private_key'}){
+	if ($settings->{'recaptcha_public_key'} and $settings->{'recaptcha_private_key'}){
 		my $captchamodule = "Captcha::reCAPTCHA";
 		eval "use $captchamodule";
 		if ($@) {
 			&errorPage(
-				"$captchamodule Perl Module Not Installed",
-				"Install the $captchamodule module or do not use the captcha feature"
+				&trans('error_module_missing_title',{'perl_module'=>$captchamodule}),
+				&trans('error_module_missing_no_captcha',{'perl_module'=>$captchamodule})
 			);
 		}
 		$captcha = $captchamodule->new();
@@ -753,7 +1032,7 @@ sub parseInput {
 		read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
 		@pairs = split(/&/, $buffer);
 	} elsif ($ENV{'SERVER_NAME'}){
-		&inputPage("This form must be submitted via either 'GET' or 'POST'.");
+		&inputPage(&trans('error_get_post_only'));
 	}
 
 	foreach $pair (@pairs){
@@ -772,87 +1051,70 @@ sub parseInput {
 				$value =~ tr/\0//d;
 			}
 
-			$SubmittedData{$name} = $value;
+			$SubmittedData->{$name} = $value;
 		}
 	}
 }
 
 sub getRequired {
 	my ($key) = @_;
-	if (defined ${$FieldMap{$key}}{"required"}){
-		return ${$FieldMap{$key}}{"required"};
-	} elsif (&getType($key) eq "select" || &getType($key) eq "radio"){
-		return "";
-	} else {
-		return $ANYTHING;
-	}
+	return &trans($FieldMap->{$key}->{"required"}) if (defined $FieldMap->{$key}->{"required"});
+	return "" if (&getType($key) eq "select" || &getType($key) eq "radio");
+	return $ANYTHING;
 }
 
 sub getError {
 	my ($key) = @_;
-	if (defined ${$FieldMap{$key}}{"error"}){
-		return ${$FieldMap{$key}}{"error"};
-	} else {
-		return "The field '$key' does not appear to be valid.";
-	}
+	return &trans($FieldMap->{$key}->{"error"}) if (defined $FieldMap->{$key}->{"error"});
+	return &trans('error_generic_field', {'field_key'=>$key});
+}
+
+sub getSpecial {
+	my ($key) = @_;
+	return $FieldMap->{$key}->{"special"} if (defined $FieldMap->{$key}->{"special"});
+	return undef;
 }
 
 sub getType {
 	my ($key) = @_;
 	if ($key eq $field_name_to){
-		if ($#AliasesOrdered > 0){
-			 return "select";
-		} else {
-			return "hidden";
-		}
+		return "select" if (scalar(@$AliasesOrdered) > 1);
+		return "hidden";
 	}
-	if (defined ${$FieldMap{$key}}{"type"}){
-		return ${$FieldMap{$key}}{"type"};
-	} else {
-		return "text";
-	}
+	return $FieldMap->{$key}->{"type"} if (defined $FieldMap->{$key}->{"type"});
+	return "text";
 }
 
 sub getSelected {
 	my ($key) = @_;
-	if (defined ${$FieldMap{$key}}{"selected"}){
-		return ${$FieldMap{$key}}{"selected"};
-	} else {
-		return undef;
-	}
+	return &trans($FieldMap->{$key}->{"selected"}) if (defined $FieldMap->{$key}->{"selected"});
+	return undef;
 }
 
 sub getDescription {
 	my ($key) = @_;
-	if (defined ${$FieldMap{$key}}{"description"}){
-		return ${$FieldMap{$key}}{"description"};
-	} else {
-		"$key:";
-	}
+	return &trans($FieldMap->{$key}->{"description"}) if (defined $FieldMap->{$key}->{"description"});
+	return "$key:";
 }
 
 sub isDefined(){
 	my ($key) = @_;
-	return defined($SubmittedData{$key});
+	return defined($SubmittedData->{$key});
 }
 
 sub getSelection {
 	my ($key) = @_;
-	if (defined($SubmittedData{$key})){
-		return $SubmittedData{$key};
-	}
-	if (&getSelected($key)){
-		return &getSelected($key);
-	}
+	return $SubmittedData->{$key} if (defined($SubmittedData->{$key}));
+	return &getSelected($key) if (&getSelected($key));
 	return "";
 }
 
 sub sanityCheck {
 
 	# Check the referrer
-	my $allowedReferers = $settings{'allowedReferers'};
+	my $allowedReferers = $settings->{'allowedReferers'};
 	if (&safeHeader($ENV{'HTTP_REFERER'}) && &safeHeader($ENV{'HTTP_REFERER'}) !~ /$allowedReferers/g){
-		&inputPage("This form cannot be submitted from".&escapeHTML($ENV{'HTTP_REFERER'}).".");
+		&inputPage(&trans('error_bad_referrer',{'referrer'=>&escapeHTML($ENV{'HTTP_REFERER'})}));
 	}
 
 	my $some_required_field_present = 0;
@@ -874,15 +1136,15 @@ sub sanityCheck {
 			$some_required_field_present = 1;
 		}
 
-		foreach my $disallow_check (keys(%disallowed_text)){
+		foreach my $disallow_check (keys(%$disallowed_text)){
 			if ($data =~ /$disallow_check/){
 				$errorCount++;
-				$errorHash{$key} .= $disallowed_text{$disallow_check};
+				$errorHash{$key} .= &trans($disallowed_text->{$disallow_check});
 			}
 		}
 	}
-	if (!($some_required_field_present) or defined($SubmittedData{"prefill"})){
-		&inputPage('', $settings{'input_page_text'});
+	if (!($some_required_field_present) or defined($SubmittedData->{"prefill"})){
+		&inputPage('', &trans('input_page_instructions'));
 	}
 
 	foreach my $key (@field_keys){
@@ -892,94 +1154,144 @@ sub sanityCheck {
 		}
 	}
 	if ($errorCount > 0){
-		my $errorMessage = "";
-		if ($errorCount == 1){
-			$errorMessage = "<p>Please correct the error to continue.</p>";
-		} else {
-			$errorMessage = "<p>Please correct all errors to continue.</p>";
-		}
-		&inputPage($errorMessage, "", \%errorHash);
+		my $errorMessage = &getCorrectionsRequiredText($errorCount);
+		&inputPage($errorMessage, "", "", \%errorHash);
 	}
 
 	if ($captcha and !&messagePreviewSubmitted()){
-		my $captchaResult = $captcha->check_answer(
-			$settings{'recaptcha_private_key'},
+		$captchaResult = $captcha->check_answer(
+			$settings->{'recaptcha_private_key'},
 			$ENV{'REMOTE_ADDR'},
-			$SubmittedData{"recaptcha_challenge_field"},
-			$SubmittedData{"recaptcha_response_field"}
+			$SubmittedData->{"recaptcha_challenge_field"},
+			$SubmittedData->{"recaptcha_response_field"}
 		);
 		if (!$captchaResult->{is_valid}){
-			$errorHash{"captcha"} = $captchaResult->{error}. " -- Please try again";
-			&inputPage("<p>Please correct the error to continue.</p>", "", \%errorHash, 1);
+			$errorHash{"captcha"} = &trans('field_captcha_error');
+			&inputPage(&getCorrectionsRequiredText(1), "", "", \%errorHash, 1);
 		}
 	}
 
-	if ((!$SubmittedData{$field_name_to}) || $SubmittedData{$field_name_to} eq ""){
-		&inputPage('', $settings{'input_page_text'});
+	if ((!$SubmittedData->{$field_name_to}) || $SubmittedData->{$field_name_to} eq ""){
+		&inputPage('', &trans('input_page_instructions'));
 	} else {
-		my $recipent = $SubmittedData{$field_name_to};
-		if ((!$AliasesMap{$recipent})){
-			&inputPage("Your message cannot be sent to the specified recipient.");
+		my $recipent = $SubmittedData->{$field_name_to};
+		if ((!$AliasesMap->{$recipent})){
+			&inputPage(&trans('error_bad_recipient'));
 		}
 	}
+}
+
+sub getCorrectionsRequiredText(){
+	my ($errorCount) = @_;
+	return &trans('error_correction_required') if ($errorCount == 1);
+	return &trans('error_corrections_required');
+}
+
+sub getFromEmail(){
+	if ($field_name_from_email and $FieldMap->{$field_name_from_email}){
+		my $email = &getSelection($field_name_from_email);
+		return $email if ($email);
+	}
+	return &trans('field_email_default');
+}
+
+sub getFromName(){
+	return &getSelection($field_name_from_name) if ($field_name_from_name and $FieldMap->{$field_name_from_name});
+	return undef;
+}
+
+sub getFrom(){
+	my $email = &getFromEmail();
+	my $name = &getFromName();
+	return "$name <$email>" if ($name);
+	return $email;
+}
+
+sub getTo(){
+	my ($email) = @_;
+	my $name = &getToName();
+	return "$name <$email>" if ($name);
+	return $email;
+}
+
+sub getToName(){
+	return &getSelection($field_name_to) if ($field_name_to and $FieldMap->{$field_name_to});
+	return undef;
+}
+
+sub getSubject(){
+	my $subject = "";
+	$subject .= &trans($settings->{'subject_prepend'})." " if ($settings->{'subject_prepend'});
+	$subject .= &getSelection($field_name_subject) if ($field_name_subject and $FieldMap->{$field_name_subject});
+	$subject .= &trans('field_subject_default') if (!$subject);
+	return $subject;
+}
+
+sub getRegarding(){
+	return &getSelection($field_name_regarding) if ($field_name_regarding and $FieldMap->{$field_name_regarding});
+	return undef;
+}
+
+sub getSubjectAndRegarding(){
+	my $subject = &getSubject();
+	my $regarding = &getRegarding();
+	return "$subject ($regarding)" if ($regarding);
+	return $subject;
+}
+
+sub includeFieldInEmailBody(){
+	my ($key) = @_;
+	return 0 if (&getType($key) eq "trap");
+	if ($key eq $field_name_to){
+		return 1 if ('yes' eq $settings->{'show_to_in_message'});
+		return 0 if ('multiple' ne $settings->{'show_to_in_message'});
+		return 1 if (&getToEmail() =~ /,/);
+		return 0;
+	}
+	return 0 if (&getSpecial($key));
+	return 1;
 }
 
 sub composeEmail {
-	my ($subject, $from, @field_keys, $key);
-
-	if ($field_name_from_email ne '' and $FieldMap{$field_name_from_email}){
-		$from = &safeHeader(&getSelection($field_name_from_email));
-	} else {
-		$from = '';
-	}
-	if ($from !~ /$EMAIL_REQUIRED/g){
-		$from = 'nobody';
-	}
-	if ($field_name_from_name ne "" and $FieldMap{$field_name_from_name} and &getSelection($field_name_from_name) ne ''){
-		$from = &safeHeaderName(&getSelection($field_name_from_name))." <$from>";
-	}
-
-	if ($field_name_subject ne "" and $FieldMap{$field_name_subject} and &getSelection($field_name_subject)){
-		$subject = &safeHeader(&getSelection($field_name_subject));
-	} else {
-		$subject = "Website Form Submission";
-	}
-
-	if ($field_name_regarding ne "" and $FieldMap{$field_name_regarding} and &getSelection($field_name_regarding) ne ''){
-		$subject .= " (".&safeHeader(&getSelection($field_name_regarding)).")";
-	}
-
-
-	$mail_message	= "From: $from\n";
-	$mail_message .= "Subject: $subject\n";
-	$mail_message .= "\n";
-
-	@field_keys = &getOrderedFields();
-	foreach $key (@field_keys){
-		if ($key ne $field_name_to && $key ne $field_name_subject &&
-			$key ne $field_name_from_name && $key ne $field_name_from_email &&
-			$key ne $field_name_regarding && $key ne $field_name_referrer &&
-			&getType($key) ne "trap"){
+	my @field_keys = &getOrderedFields();
+	my $needsnewline=-1;
+	foreach my $key (@field_keys){
+		if (&includeFieldInEmailBody($key)){
+			my $surroundfieldwithnewlines = 0;
+			my $value = &getSelection($key);
 			my $mail_description = &getDescription($key);
 			if ($mail_description eq $NO_DESCRIPTION){
 				$mail_description = "";
-			} else {
+				$surroundfieldwithnewlines = 1;
+			} elsif ($value =~ /[\r\n]/){
 				$mail_description .= "\n";
+				$surroundfieldwithnewlines = 1;
+			} else {
+				$mail_description .= " ";
+			}
+			if ($needsnewline >= 0){
+				$mail_message .= "\n" if ($needsnewline or $surroundfieldwithnewlines);
 			}
 			$mail_message .= $mail_description;
 			$mail_message .= &getSelection($key)."\n";
-			$mail_message .= "\n";
+			$needsnewline = $surroundfieldwithnewlines;
 		}
 	}
 }
 
+sub getToEmail(){
+	return &trans($AliasesMap->{&getSelection($field_name_to)},{'server_admin'=>&safeHeader($ENV{'SERVER_ADMIN'})});
+}
+
 sub sendEmail {
-	my @to_address_list = split(/,/,$AliasesMap{&getSelection($field_name_to)});
+	my @to_address_list = split(/,/,&getToEmail());
 	foreach my $to_address (@to_address_list){
-		open(MAIL,"|".$settings{'sendmail'});
-		print MAIL "To: ".&safeHeader($to_address)."\n";
-		print MAIL "Content-Type: text/plain; charset=".&safeHeader($settings{'charset'})."\n";
-		print MAIL "X-Mailer: ContactForm/".&safeHeader($version)." (http://ostermiller.org/contactform/)\n";
+		open(MAIL,"|".$settings->{'sendmail'});
+		print MAIL "To: ".&safeHeader(&getTo($to_address))."\n";
+		print MAIL "From: ".&safeHeader(&getFrom())."\n";
+		print MAIL "Subject: ".&safeHeader(&getSubjectAndRegarding())."\n";
+		print MAIL "Content-Type: text/plain; charset=".&safeHeader($settings->{'charset'})."\n";
+		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
 		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
 		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
 		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
@@ -998,42 +1310,51 @@ sub sendEmail {
 }
 
 sub previewRequired(){
-	return 1 if ($settings{'require_preview'} == 1);
+	return 1 if ($settings->{'require_preview'} == 1);
+	return 0;
+}
+
+sub previewAllowed(){
+	return 1 if ($settings->{'require_preview'} != 0);
 	return 0;
 }
 
 sub previewMessage(){
-	return if (!&previewRequired());
+	return if (!&previewAllowed());
 	return if (&messageSendSubmitted());
+	&inputPage('',&trans('preview_page_instructions'),&getMessageForWebDisplay());
+}
 
-	my ($message);
-	$message = &textToHTML("To: ".&getSelection($field_name_to)."\n".$mail_message);
-
-	&inputPage(
-		'',
-		$settings{'preview_page_text'}."<div class=\"contactform cf_preview\">$message</div>"
-	);
+sub getMessageForWebDisplay(){
+	my $s = "";
+	$s .= &trans('email_header_to')." ".&getSelection($field_name_to)."\n";
+	$s .= &trans('email_header_from')." ".&getFrom()."\n";
+	$s .= &trans('email_header_subject')." ".&getSubjectAndRegarding()."\n";
+	$s .= "\n";
+	$s .= $mail_message;
+	return &textToHTML($s);
 }
 
 sub sentPage {
-	my ($message);
-	$message = &textToHTML("To: ".&getSelection($field_name_to)."\n".$mail_message);
-
 	my $javascript = ""; # No javascript
 
-	if ($settings{'redirect_url_sent'} ne ""){
-		if ($settings{'redirect_delay_sent'} == 0){
-			&redirect($settings{'redirect_url_sent'});
+	if ($settings->{'redirect_url_sent'} ne ""){
+		my $url = &trans($settings->{'redirect_url_sent'});
+		if ($settings->{'redirect_delay_sent'} == 0){
+			&redirect($url);
 		} else {
-			$javascript = "<meta http-equiv=\"refresh\" content=\"".$settings{'redirect_delay_sent'}.";url=".$settings{'redirect_url_sent'}."\">\n"
+			$javascript = "<meta http-equiv=\"refresh\" content=\"".$settings->{'redirect_delay_sent'}.";url=$url\">\n"
 		}
 	}
 
+	my $sentthankyou = &trans('sent_page_thank_you');
+	$sentthankyou = "<div class=\"contactform cf_thankyou\">$sentthankyou</div>" if ($sentthankyou);
+
 	&outputPage(
-		$settings{'sent_page_title'},
-		$settings{'sent_page_css'},
+		&trans($settings->{'sent_page_title'}),
+		$settings->{'sent_page_css'},
 		$javascript,
-		$settings{'sent_page_text'}."<div class=\"contactform cf_sent\">$message</div>"
+		$sentthankyou."<div class=\"contactform cf_sent\">".&getMessageForWebDisplay()."</div>"
 	);
 }
 
@@ -1044,7 +1365,7 @@ sub redirect {
 }
 
 sub inputPage {
-	my ($error, $preview, $fieldErrors, $allowSendAnyway) = @_;
+	my ($error, $instructions, $preview, $fieldErrors, $allowSendAnyway) = @_;
 	my $haserror = 1;
 	if (!defined($error) or $error eq ""){
 		$error = "";
@@ -1054,34 +1375,49 @@ sub inputPage {
 	if (defined($fieldErrors)){
 		%FieldErrorsHash = %$fieldErrors;
 	}
+
+	if (!defined($instructions)){
+		$instructions = "";
+	} elsif ($instructions){
+		$instructions="<div class=\"contactform cf_instructions\" id=\"cf_instructions\">$instructions</div>"
+	}
+
 	if (!defined($preview)){
 		$preview = "";
+	} elsif ($preview){
+		$preview="<div class=\"contactform cf_preview\">$preview</div>"
 	}
+
 	my (@orderedKeys, $key, $form_html, $script_call, $alias_selected, $client_side_check_script);
 
 	my $errorStyle=" style=\"display:none;\"";
 	if ($error ne ""){
 		$errorStyle="";
 	}
-	$error = "<div id=cf_global_error$errorStyle class=\"contactform cf_error cf_message\">\n" . $error . "</div>\n";
+
+	# Error div must always be present, even with no contents, for javascript output
+	$error="<div id=\"cf_global_error\"$errorStyle class=\"contactform cf_error\">$error</div>";
+
 	$script_call = '';
-	if ($settings{'use_client_side_verification'}){
-		$script_call="onSubmit='return cfCheckForm(this);'";
+	if ($settings->{'use_client_side_verification'}){
+		$script_call="onSubmit=\"return cfCheckForm(this);\"";
 	}
 
 	my $submit_method = "POST";
-	if (defined $settings{'submit_method'} and $settings{'submit_method'} eq "GET"){
+	if (defined $settings->{'submit_method'} and $settings->{'submit_method'} eq "GET"){
 		$submit_method = "GET";
 	}
 
-	$form_html="<form class=contactform id=cf_form action=\"".&escapeHTML($ENV{'SCRIPT_NAME'})."\" method=".$settings{'submit_method'}." $script_call>\n";
+	$form_html="<form class=\"contactform\" id=\"cf_form\" action=\"".&escapeHTML($ENV{'SCRIPT_NAME'})."\" method=".$settings->{'submit_method'}." $script_call>\n";
+	my $lang = &escapeHTML(&getLanguageParamValue());
+	$form_html.= "<input type=\"hidden\" name=\"".$settings->{language_param}."\" value=\"$lang\">\n" if ($lang);
 	@orderedKeys = &getOrderedFields();
 	foreach $key (@orderedKeys){
 		my $html_description = &getDescription($key);
 		if ($html_description eq $NO_DESCRIPTION){
 			$html_description = '';
 		} else {
-			$html_description = "<label class=\"contactform cf_fieldlabel\" for='$key'>$html_description</label>";
+			$html_description = "<label class=\"contactform cf_fieldlabel\" for=\"$key\">$html_description</label>";
 		}
 		my $fieldErrorMessage = "";
 		my $errorStyle=" style=\"display:none;\"";
@@ -1089,21 +1425,21 @@ sub inputPage {
 			$fieldErrorMessage = $FieldErrorsHash{$key};
 			$errorStyle = "";
 		}
-		$fieldErrorMessage= "<span id=cf_error_$key$errorStyle class=\"contactform cf_error cf_fielderror\">".&escapeHTML($fieldErrorMessage)."</span>";
+		$fieldErrorMessage= "<span id=\"cf_error_$key\"$errorStyle class=\"contactform cf_error cf_fielderror\">".&escapeHTML($fieldErrorMessage)."</span>";
 		if ($key eq $field_name_to){
-			if ($#AliasesOrdered == 0){
-				my $alias = $AliasesOrdered[0];
-				$form_html.= "$fieldErrorMessage <input type=hidden name='$field_name_to' value='$alias'>\n";
+			if (scalar(@$AliasesOrdered) == 1){
+				my $alias = $AliasesOrdered->[0];
+				$form_html.= "$fieldErrorMessage <input type=\"hidden\" name=\"$field_name_to\" value=\"$alias\">\n";
 			} else {
-				$form_html.= "<div class=\"contactform cf_field\">".$settings{'required_marker'}." $html_description $fieldErrorMessage\n<div class=\"contactform cf_userentry\"><select id='$key' name='$field_name_to'>\n";
-				$form_html.= "<option value=''></option>\n";
-				foreach my $alias (@AliasesOrdered){
-					if (defined $SubmittedData{$field_name_to} and $alias eq $SubmittedData{$field_name_to}){
+				$form_html.= "<div class=\"contactform cf_field\">".&trans($settings->{'required_marker'})." $html_description $fieldErrorMessage\n<div class=\"contactform cf_userentry\"><select id=\"$key\" name=\"$field_name_to\">\n";
+				$form_html.= "<option value\"\"></option>\n";
+				foreach my $alias (@$AliasesOrdered){
+					if (defined $SubmittedData->{$field_name_to} and $alias eq $SubmittedData->{$field_name_to}){
 						$alias_selected = 'selected'
 					} else {
 						$alias_selected = '';
 					}
-						$form_html.= "<option value='$alias' $alias_selected>$alias</option>\n";
+						$form_html.= "<option value=\"$alias\" $alias_selected>$alias</option>\n";
 				}
 				$form_html.= "</select></div></div>\n";
 			}
@@ -1116,7 +1452,7 @@ sub inputPage {
 				if (length($fieldText) > 0){
 					$fieldText .= " ";
 				}
-				$fieldText .= $settings{'required_marker'};
+				$fieldText .= &trans($settings->{'required_marker'});
 			}
 			if (length($html_description) > 0){
 				if (length($fieldText) > 0){
@@ -1132,7 +1468,7 @@ sub inputPage {
 			}
 			my $form_type=&getType($key);
 			if ($form_type eq 'select'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><select id='$key' class=\"contactform cf_select\" name='$key'>";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><select id=\"$key\" class=\"contactform cf_select\" name=\"$key\">";
 				my $required = &getRequired($key);
 				if ("" !~ /$required/ and !&getSelected($key)){
 					$form_html.="<option value=\"\"></option>";
@@ -1153,7 +1489,7 @@ sub inputPage {
 				}
 				$form_html.="</select></div></div>\n";
 			} elsif ($form_type eq 'radio'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><span id='$key' class=\"contactform cf_radio\">";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><span id=\"$key\" class=\"contactform cf_radio\">";
   				my $selectvalue = &getRequired($key);
 				$selectvalue =~ s/^[\^\(\?\:]+//g;
 				$selectvalue =~ s/[\)\$]+$//g;
@@ -1174,40 +1510,45 @@ sub inputPage {
 				}
 				$form_html.="</span></div></div>\n";
 			} elsif ($form_type eq 'textarea'){
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id='$key' class=\"contactform cf_textentry\" wrap=virtual name='$key'>".&escapeHTML($data)."</textarea></div></div>\n";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><textarea id=\"$key\" class=\"contactform cf_textentry\" wrap=\"virtual\" name=\"$key\">".&escapeHTML($data)."</textarea></div></div>\n";
 			} elsif ($form_type eq 'hidden'){
-				$form_html.="$fieldErrorMessage <input type=hidden name='$key' value='".&escapeHTML($data)."'>\n";
+				$form_html.="$fieldErrorMessage <input type=\"hidden\" name=\"$key\" value=\"".&escapeHTML($data)."\">\n";
 			} elsif ($form_type eq 'trap'){
-				$form_html.="<div class=\"contactform cf_field cf_nt\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($data)."'></div></div>\n";
+				$form_html.="<div class=\"contactform cf_field cf_nt\">$fieldText<div class=\"contactform cf_userentry\"><input id=\"$key\" class=\"contactform cf_textentry\" type=\"text\" name=\"$key\" value=\"".&escapeHTML($data)."\"></div></div>\n";
 			} else {
-				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id='$key' class=\"contactform cf_textentry\" type=text name='$key' value='".&escapeHTML($data)."'></div></div>\n";
+				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><input id=\"$key\" class=\"contactform cf_textentry\" type=\"text\" name=\"$key\" value=\"".&escapeHTML($data)."\"></div></div>\n";
 			}
 		}
 	}
 	my $hasSendButton = &hasSendButton($haserror);
 	$hasSendButton = 1 if ($allowSendAnyway);
 	if ($hasSendButton and $captcha){
-		$form_html.="<div class=\"contactform cf_field\"><label class=\"contactform cf_fieldlabel\" for='recaptcha_response_field'>";
-		$form_html.=$settings{'required_marker'}." Prove that you are a human:";
+		$form_html.="<div class=\"contactform cf_field\"><label class=\"contactform cf_fieldlabel\" for=\"recaptcha_response_field\">";
+		$form_html.=&trans($settings->{'required_marker'})." ".&trans('field_captcha_description');
 		if (defined $FieldErrorsHash{"captcha"} and $FieldErrorsHash{"captcha"} ne ""){
-			$form_html.=" <span id=cf_error_captcha class=\"contactform cf_error cf_fielderror\">".$FieldErrorsHash{"captcha"}."</span> ";
+			$form_html.=" <span id=\"cf_error_captcha\" class=\"contactform cf_error cf_fielderror\">".$FieldErrorsHash{"captcha"}."</span> ";
 		}
 		$form_html.="</label>\n";
-		$form_html.=$captcha->get_html($settings{'recaptcha_public_key'});
+		my $captcha_error=undef;
+		$captcha_error = $captchaResult->{error} if ($captchaResult and !$captchaResult->{is_valid});
+		$form_html.=$captcha->get_html($settings->{'recaptcha_public_key'}, $captcha_error, undef, {lang=>&getUserLanguage()});
 		$form_html.="</div>\n";
 	}
-	if ($settings{'require_preview'} eq "1" or $settings{'require_preview'} eq "2"){
-		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=".$settings{'field_name_submit'}." value=Preview>\n";
+	if ($settings->{'require_preview'} eq "1" or $settings->{'require_preview'} eq "2"){
+		$form_html.="<input class=\"contactform\" id=\"cf_submit\" type=\"submit\" name=\"".$settings->{'field_name_submit'}."\" value=\"".&escapeHTML(&trans('preview_button'))."\">\n";
 	}
 	if ($hasSendButton){
-		$form_html.="<input class=\"contactform\" id=cf_submit type=submit name=".$settings{'field_name_submit'}." value=Send>\n";
+		$form_html.="<input class=\"contactform\" id=\"cf_submit\" type=\"submit\" name=\"".$settings->{'field_name_submit'}."\" value=\"".&escapeHTML(&trans('send_button'))."\">\n";
 	}
-	$form_html.=$settings{'required_marker_note'}."\n";
+	my $requiredMarkerDescription = &trans('required_marker_description',{required_marker=>&trans($settings->{'required_marker'})});
+	if ($requiredMarkerDescription){
+		$form_html.="<p class=\"contactform\" id=\"cf_requiredexplain\">$requiredMarkerDescription</p>\n";
+	}
 	$form_html.="</form>";
 
 	$client_side_check_script = "";
-	if ($settings{'use_client_side_verification'}){
-		$client_side_check_script .= "<script language=javascript type='text/javascript'><!--\n";
+	if ($settings->{'use_client_side_verification'}){
+		$client_side_check_script .= "<script language=\"javascript\" type=\"text/javascript\"><!--\n";
 		$client_side_check_script .= "function cfRadioSelected(r){\n";
 		$client_side_check_script .= "for (i=0;i<r.length;i++) {\n";
 		$client_side_check_script .= "if (r[i].checked)return true;\n";
@@ -1283,7 +1624,7 @@ sub inputPage {
 		}
 		$client_side_check_script .= "\n";
 		$client_side_check_script .= "if(ec>0){\n";
-		$client_side_check_script .= "cfErrorOn('','cf_global_error','Please correct '+(ec==1?'the error':'all errors')+' to continue.',false,false,'block');\n";
+		$client_side_check_script .= "cfErrorOn('','cf_global_error',(ec==1?'".&escapeJavaScript(&getCorrectionsRequiredText(1))."':'".&escapeJavaScript(&getCorrectionsRequiredText(2))."'),false,false,'block');\n";
 		$client_side_check_script .= "scroll(0,0);";
 		$client_side_check_script .= "return false;\n";
 		$client_side_check_script .= "} else {\n";
@@ -1295,48 +1636,131 @@ sub inputPage {
 	}
 
 	&outputPage(
-		$settings{'input_page_title'},
-		$settings{'input_page_css'},
+		&trans($settings->{'input_page_title'}),
+		$settings->{'input_page_css'},
 		$client_side_check_script,
-		$preview.$error.$form_html
+		$instructions.$preview.$error.$form_html
 	);
+}
+
+
+sub getUserLanguage(){
+	return &getUserLanguages()->[0];
+}
+
+sub getLanguageParamValue(){
+	return "" if (!$settings->{'language_param'});
+	my $value = $SubmittedData->{$settings->{'language_param'}};
+	return "" if (!$value);
+	return "" if ($value !~ /^[a-zA-Z_]+$/);
+	return $value;
+}
+
+sub getUserLanguages(){
+	return $userLangs if ($userLangs);
+
+	my $allowed;
+	if ($settings->{'allowed_languages'}){
+		$allowed = {};
+		for my $lang (split(/[\,\; ]+/, $settings->{'allowed_languages'})){
+			$allowed->{$lang} = 1;
+		}
+	}
+	$userLangs = [];
+	my $langSet = {};
+	my $langs = "";
+	my $byparam = &getLanguageParamValue();
+	if ($byparam){
+		if (!$allowed or $allowed->{$byparam}){
+			push(@$userLangs, $byparam);
+		}
+	}
+	$langs = $ENV{HTTP_ACCEPT_LANGUAGE} if (defined $ENV{HTTP_ACCEPT_LANGUAGE});
+	for my $lang (split(/[\,\; ]+/, $langs)){
+		if ($lang =~ /^([A-Za-z]{2})(?:[\-\_]([A-Za-z]{2}))?$/){
+			my ($l, $c) = ($1, $2);
+			$l = lc($l);
+			if ($c){
+				$c = uc($c);
+				if (!$langSet->{"${l}_$c"}){
+					if (!$allowed or $allowed->{"${l}_$c"}){
+						push(@$userLangs, "${l}_$c");
+						$langSet->{"${l}_$c"}=1;
+					}
+				}
+			}
+			if (!$langSet->{$l}){
+				if (!$allowed or $allowed->{$l}){
+					push(@$userLangs, $l);
+					$langSet->{$l}=1;
+				}
+			}
+		}
+	}
+	if (!$langSet->{$settings->{'default_language'}}){
+		push(@$userLangs, $settings->{'default_language'});
+	}
+	return $userLangs;
+}
+
+sub trans(){
+	my ($key, $vars) = @_;
+	return $key if ($key !~ /^[a-z0-9]+_[a-z_0-9]+$/);
+	for my $lang (@{&getUserLanguages()}){
+		if (exists $translations->{$lang} and exists $translations->{$lang}->{$key}){
+			return &messageFormat($translations->{$lang}->{$key}, $vars);
+		}
+	}
+	return $key;
+}
+
+sub messageFormat(){
+	my ($s, $vars) = @_;
+	return $s if (!$vars);
+	foreach my $name (keys(%$vars)){
+		my $value = $vars->{$name};
+		$s =~ s/\{$name\}/$value/g;
+	}
+	return $s;
 }
 
 sub hasSendButton(){
 	my ($haserror) = @_;
-	return 1 if ($settings{'require_preview'} eq "0");
-	return 1 if ($settings{'require_preview'} eq "2" );
+	return 1 if ($settings->{'require_preview'} eq "0");
+	return 1 if ($settings->{'require_preview'} eq "2" );
 	return 1 if (!$haserror and &messagePreviewSubmitted());
 	return 0;
 }
 
 sub messagePreviewSubmitted(){
-	return 0 if (!defined $SubmittedData{$settings{'field_name_submit'}});
-	return 1 if ($SubmittedData{$settings{'field_name_submit'}} eq "Preview");
+	return 0 if (!defined $SubmittedData->{$settings->{'field_name_submit'}});
+	return 1 if ($SubmittedData->{$settings->{'field_name_submit'}} eq &trans('preview_button'));
 	return 0;
 }
 
 sub messageSendSubmitted(){
-	return 1 if (!defined $SubmittedData{$settings{'field_name_submit'}});
-	return 1 if ($SubmittedData{$settings{'field_name_submit'}} eq "Send");
+	return 1 if (!defined $SubmittedData->{$settings->{'field_name_submit'}});
+	return 1 if ($SubmittedData->{$settings->{'field_name_submit'}} eq &trans('send_button'));
 	return 0;
 }
 
 sub outputPage(){
 	my ($title, $css, $javascript, $content) = @_;
 
-	my $page = $settings{'page_template'};
+	my $page = &trans($settings->{'page_template'});
 	$page =~ s/\$title/$title/g;
 	$page =~ s/\$css/$css/g;
-	my $icon_link = $settings{'icon_link'};
-	my $copyright_link = $settings{'copyright_link'};
+	my $icon_link = $settings->{'icon_link'};
+	my $copyright_link = $settings->{'copyright_link'};
 	$page =~ s/\$javascript/$javascript$icon_link\n$copyright_link/g;
-	my $contact_form_link = $settings{'contact_form_link'};
+	my $contact_form_link = "<p class=\"contactform\" id=\"cf_version\"><a class=\"contactform cf_link\" href=\"http://ostermiller.org/contactform/\">".&trans('contact_form_version',{'version_number'=>$VERSION})."</a></p>";
+	$contact_form_link = "" if (defined $settings->{'contact_form_link'} and "" eq $settings->{'contact_form_link'});
+	$contact_form_link = "" if (!$settings->{'show_contact_form_link'});
 	$template_error = "" if (!$template_error);
 	$page =~ s/\$content/$template_error$content$contact_form_link/g;
 
 	if ($ENV{'SERVER_NAME'}){
-		print "Content-type: text/html; charset=",$settings{'charset'},"\n";
+		print "Content-type: text/html; charset=",$settings->{'charset'},"\n";
 		print "\n";
 	}
 

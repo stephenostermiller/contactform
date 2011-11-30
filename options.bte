@@ -77,7 +77,7 @@ There are plenty of prebuilt regular expressions to choose from:
 <li>$EMAIL_OPTIONAL - For an optional email address</li>
 <li>$PRICE_REQUIRED - A required price (number with two decimal points)</li>
 <li>$PRICE_OPTIONAL - An optional price (number with two decimal points)</li>
-<li>FLOAT_REQUIRED - A number, possibly with decimal points</li>
+<li>$FLOAT_REQUIRED - A number, possibly with decimal points</li>
 <li>$FLOAT_OPTIONAL - A number, possibly with decimal points (optional)</li>
 <li>$INTEGER_REQUIRED - A number without decimal points</li>
 <li>$INTEGER_OPTIONAL - A number without decimal points (optional)</li>
@@ -95,7 +95,7 @@ Unicode (UTF-8) or something else that can handle characters in a wider variety 
 do so simply modify the my $charset variable.
 
 <h2><a name=client_verification>Turn Off Client Side Verification</a></h2>
-Setting "my $use_client_side_verification = 0;" will turn off the javascript check in the browser
+Setting use_client_side_verification to 0 will turn off the javascript check in the browser
 that makes sure the form elements are valid before submission.  Contact Form also does a server side
 check, so this is not needed (in fact some browsers can't handle it and Contact Form doesn't make
 them do the check).  You might want to turn this off if you don't want users to be able to look

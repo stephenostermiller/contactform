@@ -23,7 +23,7 @@
 <p>Because most of the contact form spam is aimed at spreading links, any easy way to get rid of it is to disallow all links in messages.  The default configuration of contact form does not allow html or bulliten board formatted links already.  Additional configuration could be added that would disallow pretty much any links:</p>
 
 <code><pre>
-my %disallowed_text = (
+$disallowed_text = (
 	"[Hh][Tt][Tt][Pp]|[Hh][Tt][Mm][Ll]|[Ww][Ww][Ww]","Please remove links from your message to continue.",
 );
 </pre></code>

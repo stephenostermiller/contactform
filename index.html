@@ -24,24 +24,6 @@ through a web interface.  Unlike other web to email gateways, Contact Form is de
 thwart spammers.  It does not allow email to be sent to unknown addresses, nor does it
 reveal addresses that it knows.
 
-<div style="padding-top:1cm;">
-<script type="text/javascript"><!--
-google_ad_client = "pub-2385172974335864";
-google_ad_width = 468;
-google_ad_height = 60;
-google_ad_format = "468x60_as";
-google_ad_type = "text";
-google_ad_channel ="";
-google_color_border = "336699";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "008000";
-google_color_text = "000000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</div>
 </div>
 
 <br clear=all>
@@ -70,6 +52,7 @@ google_color_text = "000000";
 <li>A default configuration that requires only a list of email addresses to be ready for use.</li>
 <li>A customizable interface that allows arbitrary fields.</li>
 <li>Easy to change the look and feel for website integration.</li>
+<li>Able to be easily translated into any language.</li>
 </ul>
 
 <div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
@@ -163,7 +146,7 @@ google_color_text = "000000";
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_3_00_00.tar.gz">contactform_3_00_00.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_4_00_00.tar.gz">contactform_4_00_00.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
@@ -172,12 +155,37 @@ google_color_text = "000000";
 </ul>
 
 <h2>Keep up to date</h2>
-Like or subscribe to the 
-<a href="https://www.facebook.com/pages/Ostermiller-Contact-Form/223102674409793">Ostermiller 
-Contact Form page on Facebook</a> to get notifications of updates and new releases.
-
-<h2>Changes</h2>
+The following sites are updated about new releases.  Follow or like contact form in one of the following places to be kept up to date:
 <ul>
+<li><a href="https://www.facebook.com/pages/Ostermiller-Contact-Form/223102674409793">Ostermiller 
+Contact Form page on Facebook</a></li>
+<li><a href="http://freecode.com/projects/easycontactform">Contact Form on freecode.com</a></li>
+</ul>
+
+<h2>Bugs and Feature Requests</h2>
+Bugs and features are tracked using Bugzilla.  
+<ul>
+<li><a href="http://bugzilla.ostermiller.com/buglist.cgi?bug_status=__open__&product=ContactForm">See open issues</a>
+<li><a href="http://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">File a bug or request a feature</a>
+</ul>
+
+<h2>Languages</h2>
+Contact form can be easily translated.  See instructions in the contact.pl file of the download.  To submit a translation for a new language, <a href="http://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">use bugzilla to open a new feature request</a> and attach the translations.
+It currently comes in the following languages:
+<ul>
+<li>English (en)</li>
+<li>Pig Latin (pig) -- for testing, <a href="http://ostermiller.org/contactform/example_one_address.pl?cflang=pig">see example</a></li>
+</ul>
+
+<h2>Changes</h2><ul>
+<li>Version 4.00.00<ul>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=362">Allow contact form to be translated more easily</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=363">Allow recipients to easily see that the email was sent to a group rather than an individual</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=364">Captcha errors not handled correctly -- contact form displays error keys</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=365">Allow configuration for constant text to be pre-pended to the subject.</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=366">The preview button sends the message rather than previews it when preview_allowed=2</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=361">new line shown as text when template cannot be opened</a></li>
+</ul></li></li>
 <li>Version 3.00.00<ul>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=3">Add captchas to contactform</a></li>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=23">Allow addresses and other configuration to be specified from an external file</a></li>
@@ -307,13 +315,12 @@ General Public License</a> for more details.</p>
 <tr><td><a href="ftp://ftp.monkeys.com/pub/formmail/">Monkey's FormMail</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Modified (for security) version of Matt's FormMail, does not hide email addresses.</td></tr>
 <tr><td><a href="http://nms-cgi.sourceforge.net/">nms</a></td><td>Open source (GPL or Artistic)</td><td>Perl</td><td>A replacement for all of Matt's scripts including FormMail.  Can send directly to an SMTP server without sendmail.  Does not hide email addresses.</td></tr>
 <tr><td><a href="http://moensted.dk/formmail/">Dr. J&oslash;rgen Mash's FormMail.pl</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Another modified version of Matt's FormMail.  Does not hide email addresses.</td></tr>
-<tr><td><a href="http://www.stargeek.com/php_scripts.php?script=12&cat=blog">Stargeek's PHP email form</a></td><td>Open source, unspecified license</td><td>PHP, SendMail</td><td>Designed to hide the email address of a single individual.</td></tr>
-<tr><td><a href="http://ente.limmat.ch:8080/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
+<tr><td><a href="http://ente.limmat.ch/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
 <tr><td><a href="http://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
 </table>
 
 
-<p>Copyright (C) 2002-2007 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+<p>Copyright (C) 2002-2011 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
 <div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
 

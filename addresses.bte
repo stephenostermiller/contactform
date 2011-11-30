@@ -12,41 +12,52 @@ contact form page or in the page source.
 <%bte.tpl name=content %>
 
 <h2><a name=default_config>Default Configuration</a></h2>
-<pre>my @Aliases = (
-	'administrator',&safeHeader($ENV{'SERVER_ADMIN'}),
-	# The following aliases are commented out examples, remove the leading # sign to use them
-	#'webmaster','webmaster@yoursite.tld',
-	#'postmaster','postmaster@yoursite.tld',
+<pre>$Aliases = [
+	'contact_administrator_name', 'contact_administrator_email',
+
+	#### The following aliases are commented out examples, remove the leading # sign to use them
+
+	## A simple example of mail sent to John Smith
+	#'John Smith','john@yoursite.tld',
+
+	## Here both the name and the email are translated.
+	## Translations can be edited in the translations section.
+	#'contact_customer_support_name','contact_customer_support_email',
+
+	## Just the name is translated
+	#'contact_postmaster_name','postmaster@yoursite.tld',
+
+	## A mailing list with multiple addresses separated by commas
 	#'two people','webmaster@yoursite.tld,postmaster@yoursite.tld',
-);</pre>
+];</pre>
 
 The lines that start with # are commented out.  In this configuration the form will
 send email only to the web server administrator (as defined in the web server configuration).  
 It is almost certain that you want to change this.
 
 <h2><a name=single_config>Just One Person</a></h2>
-<pre>my @Aliases = (
+<pre>$Aliases = [
 	'John Doe','johndoe@example.com',
-);</pre>
+];</pre>
 
 In this configuration, only John Doe can get email. Users will not be given a choice to send
 email to other people.
 
 <h2><a name=multiple_config>Choice of Multiple People</a></h2>
-<pre>my @Aliases = (
+<pre>$Aliases = [
 	'John Doe','johndoe@example.com',
 	'Jane Doe','janedoe@example.com',
 	'The Webmaster','webmaster@example.com',
 	'Sales Department','sales@example.com',
-);</pre>
+]</pre>
 
 In this configuration, the form can send email to John, Jane, Sales, or Webmaster.  Users of the
 will see a drop down menu from which they can choose one of these four options.
 
 <h2><a name=list_config>List of Addresses</a></h2>
-<pre>my @Aliases = (
+<pre>$Aliases = [
 	'support','johndoe@example.com,janedoe@example.com',
-);</pre>
+];</pre>
 
 A single alias can support a comma separated list of addresses.  In this case, an email to support will be sent to both John and Jane.
 
