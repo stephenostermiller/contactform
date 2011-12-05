@@ -391,7 +391,7 @@ sub settings(){
 	# 0 -- preview disabled (allows users to send mail the fastest)
 	# 1 -- preview required (best for spam prevention)
 	# 2 -- preview available, but not required  (most choice for users)
-	$settings->{'require_preview'} = 2;
+	$settings->{'require_preview'} = 1;
 
 	# Whether or not to include the "To: <alias>" field in the email body.
 	# This is usually desired when there are multiple recipients so that
@@ -481,7 +481,7 @@ sub settings(){
 
 	# The language to display to the user if the users preferred
 	# language cannot be determined.
-	$settings->{'default_language'} = '';
+	$settings->{'default_language'} = 'en';
 
 	# A list of allowed languages separated by spaces.
 	# eg $settings->{'allowed_languages'} = 'en en_US fr de';
@@ -602,6 +602,95 @@ sub settings(){
 			'field_about_default' => 'Email',
 			# No translation needed
 			'contact_administrator_email' => '{server_admin}',
+		},
+		# Dutch (Nederlands)
+		# Copyright 2011 Piet Tutelaers
+		# http://tuite.nl/contact.html
+		'nl' => {
+			# Hoofdmeldingen
+			'input_page_title' => 'Neem contact met ons op',
+			'input_page_instructions' => 'Vul dit formulier in als u opmerkingen heeft.',
+			'required_marker_description' => '{required_marker} geeft een verplicht veld aan.',
+			'preview_button' => 'Bericht bekijken',
+			'send_button' => 'Versturen',
+			'preview_page_instructions' => 'Controleer uw bericht a.u.b. voordat u het gaat versturen. Veranderingen kunnen hieronder worden aangebracht.',
+			'sent_page_title' => 'Bericht verstuurd',
+			'sent_page_thank_you' => 'Bedankt voor uw commentaar!',
+			'email_header_to' => 'Aan:',
+			'email_header_from' => 'Van:',
+			'email_header_subject' => 'Onderwerp:',
+			'contact_form_version' => 'Contactformulier {version_number}',
+			# Hoofdvelden
+			'field_to_description' => 'Aan',
+			'field_to_error' => 'U moet een geadresseerde opgeven.',
+			'field_email_description' => 'Uw e-mailadres:',
+			'field_email_error' => 'Het door u opgegeven e-mailadres klopt niet.',
+			'field_email_default' => 'onbekend',
+			'field_trap_description' => 'Blanco laten:',
+			'field_trap_error' => 'Dit veld blanco laten.',
+			'field_name_description' => 'Uw naam:',
+			'field_name_error' => 'Vul hier uw naam in.',
+			'field_subject_description' => 'Onderwerp:',
+			'field_subject_error' => 'U moet hier een onderwerp opgeven.',
+			'field_subject_default' => 'Website formulier verzending',
+			'field_message_error' => 'U moet hier een bericht invoeren.',
+			'field_captcha_description' => 'Bewijs dat u een mens bent:',
+			'field_captcha_error' => 'Captcha probleem',
+			# Foutmeldingen
+			'error_get_post_only' => "Dit formulier moet worden verstuurd via 'GET' of 'POST'.",
+			'error_bad_referrer' => 'Dit formulier kan niet worden verstuurd van {referrer}.',
+			'error_bad_recipient' => 'Uw bericht kan niet worden verstuurd
+			naar de opgegeven geadresseerde.',
+			'error_generic_field' => "Het opgegeven veld '{field_key}' lijkt niet te bestaan.",
+			'error_correction_required' => 'Korrigeer de fout voordat u verder gaat.',
+			'error_corrections_required' => 'Korrigeer alle fouten voordat u verder gaat.',
+			'error_disallow_html_formatted_links' => 'Het lijkt erop dat u links gebruikt in HTML formaat. Dergelijke links kunnen niet gebruikt worden.',
+			'error_disallow_board_formatted_links' => 'Het lijkt erop dat u
+			links gebruikt in prikbord formaat. Dergelijke links kunnen niet gebruikt worden.',
+			'error_module_missing_title' => '{perl_module} Perl module niet geïnstalleerd.',
+			'error_module_missing_no_config_file' => 'Installeer de {perl_module} module of gebruik geen configuratiebestand".',
+			'error_module_missing_no_captcha' => 'Installeer de {perl_module} module of gebruik geen "captcha".',
+			'error_bad_config_file_title' => 'Configuratiebestand kan niet gelezen worden',
+			'error_bad_config_file' => 'Controleer of er een configuratiebestand aanwezig is, de permissies en geldigheid van de XML; of gebruik geen configuratiebestand.',
+			'error_template_file_problem' => 'Het templatebestand kan niet worden geopend.',
+			# Configuratie voorbeelden
+			'contact_administrator_name' => 'beheerder',
+			'contact_customer_support_name' => 'Klantenondersteuning',
+			'contact_customer_support_email' => 'support@yoursite.tld',
+			'contact_postmaster_name' => 'postmaster',
+			'field_phone_error' => 'Het opgegeven telefoonnummer lijkt ongeldig.',
+			'field_phone_description' => 'Telefoonnummer:',
+			'field_fax_error' => 'Het opgegeven faxnummer lijkt ongeldig.',
+			'field_fax_description' => 'Faxnummer:',
+			'field_address_error' => 'Geef a.u.b. uw adres.',
+			'field_address_description' => 'Adres:',
+			'field_city_error' => 'De opgegeven woonplaats lijkt ongeldig.',
+			'field_city_description' => 'Woonplaats:',
+			'field_state_error' => 'Geef a.u.b. uw provincie.',
+			'field_state_description' => 'Provincie:',
+			'field_zip_error' => 'De opgegeven postcode lijkt ongeldig.',
+			'field_zip_description' => 'Postcode:',
+			'field_color_required' => '^(?:Rood|Oranje|Geel|Groen|Blauw|Paars|Zwart|Wit)$',
+			'field_color_error' => 'Kies een kleur a.u.b.',
+			'field_color_description' => 'Kies een kleur:',
+			'field_vegetable_required' => '^(?:|Maïs|Erwten|Bonen|Wortels|Broccoli)$',
+			'field_vegetable_error' => 'Kies een geldige groente a.u.b.',
+			'field_vegetable_description' => 'Wat (indien van toepassing) is je favouriete groente:',
+			'field_letter_required' => '^(?:A|B|C|D)$',
+			'field_letter_error' => 'Kies a.u.b. één van de vier letters.',
+			'field_letter_description' => 'Kies een letter (anders wordt C gekozen):',
+			'field_letter_selected' => 'C',
+			'field_yes_no_required' => '^(?:ja|nee)$',
+			'field_yes_no_error' => 'Beantwoord a.u.b. de ja/nee vraag',
+			'field_yes_no_description' => 'Ja of nee:',
+			'field_true_false_required' => '^(?:waar|onwaar)$',
+			'field_true_false_error' => 'Beantwoord a.u.b. de waar/onwaar vraag',
+			'field_true_false_description' => 'Waar of onwaar (onwaar is standaard):',
+			'field_true_false_selected' => 'onwaar',
+			'field_vegetable2_required' => '^(?:|Sla|Tomaat|Spruitjes)$',
+			'field_about_error' => 'Geef a.u.b. aan waarover dit bericht gaat.',
+			'field_about_description' => 'Waarover gaat dit bericht:',
+			'field_about_default' => 'E-mail',
 		},
 		# Pig Latin (for testing)
 		'pig' => {
@@ -729,7 +818,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.00.00";
+	$VERSION = "4.01.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";

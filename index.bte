@@ -126,7 +126,7 @@ reveal addresses that it knows.
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_4_00_00.tar.gz">contactform_4_00_00.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_4_01_00.tar.gz">contactform_4_01_00.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
@@ -158,6 +158,10 @@ It currently comes in the following languages:
 </ul>
 
 <h2>Changes</h2><ul>
+<li>Version 4.01.00<ul>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=367">Default language not specified</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=368">Dutch (nl) translation</a></li>
+</ul></li></li>
 <li>Version 4.00.00<ul>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=362">Allow contact form to be translated more easily</a></li>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=363">Allow recipients to easily see that the email was sent to a group rather than an individual</a></li>
