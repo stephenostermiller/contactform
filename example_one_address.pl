@@ -5,7 +5,7 @@ use strict;
 # Contact Form is a Perl script that you can run on your website that will
 # allow others to send you email through a web interface.
 # See: http://ostermiller.org/contactform/
-# Copyright (C) 2002-2011 Stephen Ostermiller
+# Copyright (C) 2002-2014 Stephen Ostermiller
 # http://ostermiller.org/contact.pl?regarding=Contact+Form
 #
 # This program is free software; you can redistribute it and/or modify
@@ -76,6 +76,21 @@ sub settings(){
 		## A mailing list with multiple addresses separated by commas
 		#'two people','webmaster@yoursite.tld,postmaster@yoursite.tld',
 	];
+
+    # The email address that appears in the From and Sender field of sent
+    # emails.  The email address of the user will then be used in the
+    # Reply-To field, making it possible to respond to users.
+    #
+    # Historically, this contact form has put the user's email address in
+    # the From field. That doesn't work well. Your mail server may not
+    # accept mail, or will mark mail as spam, if it is sent on behalf of
+    # the user but  doesn't come from the user's designated email server.
+    # This behavior is still available by specifying 'user' as the value.
+    #
+    # If this is left blank, the from Field will be the same as the To field.
+    #
+    # Example: $settings->{'sender_email'} = "john.smith@example.com";
+    $settings->{'sender_email'} = '';
 
 	# Modify the following to control how the HTML pages look
 
@@ -639,14 +654,12 @@ sub settings(){
 			# Foutmeldingen
 			'error_get_post_only' => "Dit formulier moet worden verstuurd via 'GET' of 'POST'.",
 			'error_bad_referrer' => 'Dit formulier kan niet worden verstuurd van {referrer}.',
-			'error_bad_recipient' => 'Uw bericht kan niet worden verstuurd
-			naar de opgegeven geadresseerde.',
+			'error_bad_recipient' => 'Uw bericht kan niet worden verstuurd naar de opgegeven geadresseerde.',
 			'error_generic_field' => "Het opgegeven veld '{field_key}' lijkt niet te bestaan.",
 			'error_correction_required' => 'Korrigeer de fout voordat u verder gaat.',
 			'error_corrections_required' => 'Korrigeer alle fouten voordat u verder gaat.',
 			'error_disallow_html_formatted_links' => 'Het lijkt erop dat u links gebruikt in HTML formaat. Dergelijke links kunnen niet gebruikt worden.',
-			'error_disallow_board_formatted_links' => 'Het lijkt erop dat u
-			links gebruikt in prikbord formaat. Dergelijke links kunnen niet gebruikt worden.',
+			'error_disallow_board_formatted_links' => 'Het lijkt erop dat u	links gebruikt in prikbord formaat. Dergelijke links kunnen niet gebruikt worden.',
 			'error_module_missing_title' => '{perl_module} Perl module niet geïnstalleerd.',
 			'error_module_missing_no_config_file' => 'Installeer de {perl_module} module of gebruik geen configuratiebestand".',
 			'error_module_missing_no_captcha' => 'Installeer de {perl_module} module of gebruik geen "captcha".',
@@ -818,7 +831,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.01.00";
+	$VERSION = "4.02.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1296,6 +1309,24 @@ sub getFrom(){
 	return $email;
 }
 
+sub getFromSender()){
+	my $email = &getSenderEmail();
+	my $name = &getFromName();
+	return "$name (via contact form) <$email>" if ($name);
+	return $email;
+}
+
+sub getSenderEmail(){
+    return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
+    renurn $settings->{'sender_email'};
+}
+
+sub useSender(){
+    return 1 if ($settings->{'sender_email'} eq "");
+    return 1 if ($settings->{'sender_email'} =~ /\@/);
+    return 0;
+}
+
 sub getTo(){
 	my ($email) = @_;
 	my $name = &getToName();
@@ -1377,7 +1408,13 @@ sub sendEmail {
 	foreach my $to_address (@to_address_list){
 		open(MAIL,"|".$settings->{'sendmail'});
 		print MAIL "To: ".&safeHeader(&getTo($to_address))."\n";
-		print MAIL "From: ".&safeHeader(&getFrom())."\n";
+        if (&useSender()){
+		    print MAIL "From: ".&safeHeader(&getFromSender())."\n";
+		    print MAIL "Sender: ".&safeHeader(&getSenderEmail())."\n";
+		    print MAIL "Reply-To: ".&safeHeader(&getFrom())."\n";
+        } else {
+		    print MAIL "From: ".&safeHeader(&getFrom())."\n";
+        }
 		print MAIL "Subject: ".&safeHeader(&getSubjectAndRegarding())."\n";
 		print MAIL "Content-Type: text/plain; charset=".&safeHeader($settings->{'charset'})."\n";
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
