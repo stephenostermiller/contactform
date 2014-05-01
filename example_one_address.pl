@@ -1309,7 +1309,7 @@ sub getFrom(){
 	return $email;
 }
 
-sub getFromSender()){
+sub getFromSender(){
 	my $email = &getSenderEmail();
 	my $name = &getFromName();
 	return "$name (via contact form) <$email>" if ($name);
@@ -1318,7 +1318,7 @@ sub getFromSender()){
 
 sub getSenderEmail(){
     return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
-    renurn $settings->{'sender_email'};
+    return $settings->{'sender_email'};
 }
 
 sub useSender(){
@@ -1420,6 +1420,7 @@ sub sendEmail {
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
 		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
 		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
+		print MAIL "X-Hostname: ".&safeHeader($ENV{'HTTP_HOST'})."\n";
 		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
 		print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
 		print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
