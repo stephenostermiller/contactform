@@ -77,20 +77,20 @@ sub settings(){
 		#'two people','webmaster@yoursite.tld,postmaster@yoursite.tld',
 	];
 
-    # The email address that appears in the From and Sender field of sent
-    # emails.  The email address of the user will then be used in the
-    # Reply-To field, making it possible to respond to users.
-    #
-    # Historically, this contact form has put the user's email address in
-    # the From field. That doesn't work well. Your mail server may not
-    # accept mail, or will mark mail as spam, if it is sent on behalf of
-    # the user but  doesn't come from the user's designated email server.
-    # This behavior is still available by specifying 'user' as the value.
-    #
-    # If this is left blank, the from Field will be the same as the To field.
-    #
-    # Example: $settings->{'sender_email'} = "john.smith@example.com";
-    $settings->{'sender_email'} = '';
+	# The email address that appears in the From and Sender field of sent
+	# emails.  The email address of the user will then be used in the
+	# Reply-To field, making it possible to respond to users.
+	#
+	# Historically, this contact form has put the user's email address in
+	# the From field. That doesn't work well. Your mail server may not
+	# accept mail, or will mark mail as spam, if it is sent on behalf of
+	# the user but  doesn't come from the user's designated email server.
+	# This behavior is still available by specifying 'user' as the value.
+	#
+	# If this is left blank, the from Field will be the same as the To field.
+	#
+	# Example: $settings->{'sender_email'} = "john.smith@example.com";
+	$settings->{'sender_email'} = '';
 
 	# Modify the following to control how the HTML pages look
 
@@ -197,7 +197,7 @@ sub settings(){
 			'description' => 'field_to_description',
 			# Alias of the address put in the "To:" field of the email.
 			'special' => 'to',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		'email', {
 			'required' => $EMAIL_REQUIRED,
@@ -206,7 +206,7 @@ sub settings(){
 			'description' => 'field_email_description',
 			# Put in the "From:" field of the email as the email of the person it is from
 			'special' => 'from',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		'confirm', {
 			# This is a field designed to thwart automated submissions
@@ -224,7 +224,7 @@ sub settings(){
 			'description' => 'field_name_description',
 			# Put in the "From:" field of the email as the name of the person it is from
 			'special' => 'name',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		'subject', {
 			'required' => $ONE_LINE_REQUIRED,
@@ -233,7 +233,7 @@ sub settings(){
 			'description' => 'field_subject_description',
 			# Put in the "Subject:" field of the email.
 			'special' => 'subject',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		'message', {
 			'required' => $SOMETHING,
@@ -248,7 +248,7 @@ sub settings(){
 			'description' => $NO_DESCRIPTION,
 			# Put in the "Subject:" field of the email in parenthesis.
 			'special' => 'regarding',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		'referrer', {
 			'required' => $ANYTHING,
@@ -257,7 +257,7 @@ sub settings(){
 			'description' => $NO_DESCRIPTION,
 			# The original referring url.
 			'special' => 'referrer',
-            'show_in_message' => 'false',
+			'show_in_message' => 'false',
 		},
 		# The following fields are disabled examples, remove the 'enabled' => 1 line to use them
 		'phone', {
@@ -1332,14 +1332,14 @@ sub getFromSender(){
 }
 
 sub getSenderEmail(){
-    return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
-    renurn $settings->{'sender_email'};
+	return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
+	renurn $settings->{'sender_email'};
 }
 
 sub useSender(){
-    return 1 if ($settings->{'sender_email'} eq "");
-    return 1 if ($settings->{'sender_email'} =~ /\@/);
-    return 0;
+	return 1 if ($settings->{'sender_email'} eq "");
+	return 1 if ($settings->{'sender_email'} =~ /\@/);
+	return 0;
 }
 
 sub getTo(){
@@ -1375,10 +1375,10 @@ sub getSubjectAndRegarding(){
 }
 
 sub isAffirmative(){
-    my ($s) = @_;
-    return 0 if (!$s);
-    return 1 if ($s =~ /^(?:1|true|t|yes|y)$/);
-    return 0;
+	my ($s) = @_;
+	return 0 if (!$s);
+	return 1 if ($s =~ /^(?:1|true|t|yes|y)$/);
+	return 0;
 }
 
 sub includeFieldInEmailBody(){
@@ -1390,7 +1390,7 @@ sub includeFieldInEmailBody(){
 }
 
 sub getShowToInMessage(){
-    return 1 if (&getShowInMessage($field_name_to));
+	return 1 if (&getShowInMessage($field_name_to));
 	return 1 if (&isAffirmative($settings->{'show_to_in_message'}));
 	return 0 if ('multiple' ne $settings->{'show_to_in_message'});
 	return 1 if (&getToEmail() =~ /,/);
@@ -1433,13 +1433,13 @@ sub sendEmail {
 	foreach my $to_address (@to_address_list){
 		open(MAIL,"|".$settings->{'sendmail'});
 		print MAIL "To: ".&safeHeader(&getTo($to_address))."\n";
-        if (&useSender()){
-		    print MAIL "From: ".&safeHeader(&getFromSender())."\n";
-		    print MAIL "Sender: ".&safeHeader(&getSenderEmail())."\n";
-		    print MAIL "Reply-To: ".&safeHeader(&getFrom())."\n";
-        } else {
-		    print MAIL "From: ".&safeHeader(&getFrom())."\n";
-        }
+		if (&useSender()){
+			print MAIL "From: ".&safeHeader(&getFromSender())."\n";
+			print MAIL "Sender: ".&safeHeader(&getSenderEmail())."\n";
+			print MAIL "Reply-To: ".&safeHeader(&getFrom())."\n";
+		} else {
+			print MAIL "From: ".&safeHeader(&getFrom())."\n";
+		}
 		print MAIL "Subject: ".&safeHeader(&getSubjectAndRegarding())."\n";
 		print MAIL "Content-Type: text/plain; charset=".&safeHeader($settings->{'charset'})."\n";
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
