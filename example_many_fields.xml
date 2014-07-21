@@ -297,7 +297,7 @@
     </Field>
     
     <!-- special="subject": Put in the "Subject:" field of the email. -->    
-    <Field name="subject" type="text" error="You must enter a subject." description="Subject:" special="subject">
+    <Field name="subject" type="text" error="You must enter a subject." description="Subject:" special="subject" show_in_message="true">
         $ONE_LINE_REQUIRED
     </Field>
     

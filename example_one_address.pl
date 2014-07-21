@@ -197,6 +197,7 @@ sub settings(){
 			'description' => 'field_to_description',
 			# Alias of the address put in the "To:" field of the email.
 			'special' => 'to',
+            'show_in_message' => 'false',
 		},
 		'email', {
 			'required' => $EMAIL_REQUIRED,
@@ -205,6 +206,7 @@ sub settings(){
 			'description' => 'field_email_description',
 			# Put in the "From:" field of the email as the email of the person it is from
 			'special' => 'from',
+            'show_in_message' => 'false',
 		},
 		'confirm', {
 			# This is a field designed to thwart automated submissions
@@ -222,6 +224,7 @@ sub settings(){
 			'description' => 'field_name_description',
 			# Put in the "From:" field of the email as the name of the person it is from
 			'special' => 'name',
+            'show_in_message' => 'false',
 		},
 		'subject', {
 			'required' => $ONE_LINE_REQUIRED,
@@ -230,6 +233,7 @@ sub settings(){
 			'description' => 'field_subject_description',
 			# Put in the "Subject:" field of the email.
 			'special' => 'subject',
+            'show_in_message' => 'false',
 		},
 		'message', {
 			'required' => $SOMETHING,
@@ -244,6 +248,7 @@ sub settings(){
 			'description' => $NO_DESCRIPTION,
 			# Put in the "Subject:" field of the email in parenthesis.
 			'special' => 'regarding',
+            'show_in_message' => 'false',
 		},
 		'referrer', {
 			'required' => $ANYTHING,
@@ -252,6 +257,7 @@ sub settings(){
 			'description' => $NO_DESCRIPTION,
 			# The original referring url.
 			'special' => 'referrer',
+            'show_in_message' => 'false',
 		},
 		# The following fields are disabled examples, remove the 'enabled' => 1 line to use them
 		'phone', {
@@ -831,7 +837,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.02.00";
+	$VERSION = "4.03.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -988,6 +994,7 @@ sub loadConfiguration(){
 				my $default = $field->{default};
 				my $selected = $field->{selected};
 				my $special = $field->{special};
+				my $show_in_message = $field->{show_in_message};
 				push (@$FormFields, $name);
 				push (@$FormFields, {
 					'required' =>  $required,
@@ -998,6 +1005,7 @@ sub loadConfiguration(){
 					'default' =>  $default,
 					'selected' =>  $selected,
 					'special' =>  $special,
+					'show_in_message' =>  $show_in_message,
 				});
 			}
 		}
@@ -1177,6 +1185,13 @@ sub getSpecial {
 	return undef;
 }
 
+sub getShowInMessage {
+	my ($key) = @_;
+	return 1 if &isAffirmative($FieldMap->{$key}->{"show_in_message"});
+	return undef;
+}
+
+
 sub getType {
 	my ($key) = @_;
 	if ($key eq $field_name_to){
@@ -1318,7 +1333,7 @@ sub getFromSender(){
 
 sub getSenderEmail(){
     return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
-    return $settings->{'sender_email'};
+    renurn $settings->{'sender_email'};
 }
 
 sub useSender(){
@@ -1359,17 +1374,27 @@ sub getSubjectAndRegarding(){
 	return $subject;
 }
 
+sub isAffirmative(){
+    my ($s) = @_;
+    return 0 if (!$s);
+    return 1 if ($s =~ /^(?:1|true|t|yes|y)$/);
+    return 0;
+}
+
 sub includeFieldInEmailBody(){
 	my ($key) = @_;
 	return 0 if (&getType($key) eq "trap");
-	if ($key eq $field_name_to){
-		return 1 if ('yes' eq $settings->{'show_to_in_message'});
-		return 0 if ('multiple' ne $settings->{'show_to_in_message'});
-		return 1 if (&getToEmail() =~ /,/);
-		return 0;
-	}
-	return 0 if (&getSpecial($key));
+	return &getShowToInMessage() if ($key eq $field_name_to);
+	return &getShowInMessage($key) if (&getSpecial($key));
 	return 1;
+}
+
+sub getShowToInMessage(){
+    return 1 if (&getShowInMessage($field_name_to));
+	return 1 if (&isAffirmative($settings->{'show_to_in_message'}));
+	return 0 if ('multiple' ne $settings->{'show_to_in_message'});
+	return 1 if (&getToEmail() =~ /,/);
+	return 0;
 }
 
 sub composeEmail {
@@ -1420,7 +1445,6 @@ sub sendEmail {
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
 		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
 		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
-		print MAIL "X-Hostname: ".&safeHeader($ENV{'HTTP_HOST'})."\n";
 		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
 		print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
 		print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
@@ -1454,9 +1478,9 @@ sub previewMessage(){
 
 sub getMessageForWebDisplay(){
 	my $s = "";
-	$s .= &trans('email_header_to')." ".&getSelection($field_name_to)."\n";
-	$s .= &trans('email_header_from')." ".&getFrom()."\n";
-	$s .= &trans('email_header_subject')." ".&getSubjectAndRegarding()."\n";
+	$s .= &trans('email_header_to')." ".&getSelection($field_name_to)."\n" if (!getShowToInMessage());
+	$s .= &trans('email_header_from')." ".&getFrom()."\n" if (!getShowInMessage($field_name_from_name) and !getShowInMessage($field_name_from_email));
+	$s .= &trans('email_header_subject')." ".&getSubjectAndRegarding()."\n" if (!getShowInMessage($field_name_subject) and !getShowInMessage($field_name_regarding));
 	$s .= "\n";
 	$s .= $mail_message;
 	return &textToHTML($s);
