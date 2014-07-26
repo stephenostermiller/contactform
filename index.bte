@@ -161,6 +161,7 @@ It currently comes in the following languages:
 <h2>Changes</h2><ul>
 <li>Version 4.03.01<ul>
 <li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=377">Typo: "renurn" instead of "return"</a></li>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
 </ul></li></li>
 <li>Version 4.03.00<ul>
 <li>Allow any special fields such as subject, and name to be shown in the email body with "show_in_message" configuration</li>

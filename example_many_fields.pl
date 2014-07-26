@@ -1265,7 +1265,7 @@ sub sanityCheck {
 	}
 
 	foreach my $key (@field_keys){
-		if (&getType($key) eq "trap" and !&isDefined($key)){
+		if (&getType($key) eq "trap" and "trap" and !&isDefined($key)){
 			$errorCount++;
 			$errorHash{$key} .=  &getError($key);
 		}
