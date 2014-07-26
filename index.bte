@@ -126,7 +126,7 @@ reveal addresses that it knows.
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_4_02_00.tar.gz">contactform_4_02_00.tar.gz</a></p>
+<p><a href="http://ostermiller.org/contactform/contactform_4_03_01.tar.gz">contactform_4_03_01.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
@@ -159,6 +159,9 @@ It currently comes in the following languages:
 </ul>
 
 <h2>Changes</h2><ul>
+<li>Version 4.03.01<ul>
+<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=377">Typo: "renurn" instead of "return"</a></li>
+</ul></li></li>
 <li>Version 4.03.00<ul>
 <li>Allow any special fields such as subject, and name to be show in the email body with "show_in_message" configuration</li>
 </ul></li></li>

@@ -837,7 +837,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.03.00";
+	$VERSION = "4.03.01";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1333,7 +1333,7 @@ sub getFromSender(){
 
 sub getSenderEmail(){
 	return &getToEmail() if ($settings->{'sender_email'} !~ /\@/);
-	renurn $settings->{'sender_email'};
+	return $settings->{'sender_email'};
 }
 
 sub useSender(){
