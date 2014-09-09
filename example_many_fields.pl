@@ -110,7 +110,8 @@ sub settings(){
 	# This may be a translation key for providing different templates
 	# for different languages.
 	$settings->{'page_template'} =
-	'<html>
+	'<!DOCTYPE html>
+	<html>
 	<head>
 	<title>$title</title>
 	$css
@@ -837,7 +838,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.03.01";
+	$VERSION = "4.03.02";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1219,6 +1220,11 @@ sub isDefined(){
 	return defined($SubmittedData->{$key});
 }
 
+sub isNotEmpty(){
+	my ($key) = @_;
+	return (&isDefined($key) and $SubmittedData->{$key} ne '');
+}
+
 sub getSelection {
 	my ($key) = @_;
 	return $SubmittedData->{$key} if (defined($SubmittedData->{$key}));
@@ -1265,7 +1271,7 @@ sub sanityCheck {
 	}
 
 	foreach my $key (@field_keys){
-		if (&getType($key) eq "trap" and "trap" and !&isDefined($key)){
+		if (&getType($key) eq "trap" and &isNotEmpty($key)){
 			$errorCount++;
 			$errorHash{$key} .=  &getError($key);
 		}
