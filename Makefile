@@ -36,7 +36,7 @@ neaten:
 	@build/src-neaten.sh
 
 .PHONY: website
-website:
+website: src
 	@build/website-build.sh
 
 .PHONY: release
