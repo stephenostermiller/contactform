@@ -16,6 +16,11 @@ then
 	fi
 fi
 
+if ! grep -q "Version $version" doc/www/bte/index.bte
+then
+  echo "Change log does not have information about $version in doc/www/bte/index.bte"
+fi
+
 rm -rf target/www
 mkdir -p target/www
 
