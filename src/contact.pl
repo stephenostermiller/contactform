@@ -1,7 +1,4 @@
 #!/usr/bin/perl -T -w
-
-use strict;
-
 # Contact Form is a Perl script that you can run on your website that will
 # allow others to send you email through a web interface.
 # See: http://ostermiller.org/contactform/
@@ -19,6 +16,7 @@ use strict;
 # GNU General Public License for more details.
 #
 # See copying.txt for details.
+use strict;
 
 my($SubmittedData, $mail_message, $AliasesMap, $AliasesOrdered,
 $FieldMap, @Field_Order, $template_error, $field_name_to,
@@ -723,7 +721,7 @@ sub settings(){
 			'preview_page_instructions' => 'Easeplay eviewray oryay essagemay eforeBay endingsay ityay. Angeschay ancay ebay ademay elowbay.',
 			'sent_page_title' => 'Essagemay Entsay',
 			'sent_page_thank_you' => 'Ankthay ooyay orfay oryay ommentsCay!',
-   			'email_header_to' => 'Ootay:',
+			'email_header_to' => 'Ootay:',
 			'email_header_from' => 'Omfray:',
 			'email_header_subject' => 'Ubjectsay:',
 			'contact_form_version' => 'Ontactcay Ormfay {version_number}',
@@ -1647,7 +1645,7 @@ sub inputPage {
 				$form_html.="</select></div></div>\n";
 			} elsif ($form_type eq 'radio'){
 				$form_html.="<div class=\"contactform cf_field\">$fieldText<div class=\"contactform cf_userentry\"><span id=\"$key\" class=\"contactform cf_radio\">";
-  				my $selectvalue = &getRequired($key);
+				my $selectvalue = &getRequired($key);
 				$selectvalue =~ s/^[\^\(\?\:]+//g;
 				$selectvalue =~ s/[\)\$]+$//g;
 				my @selectvalues = split(/\|/, $selectvalue);
