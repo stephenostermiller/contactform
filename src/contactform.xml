@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContactFormConfiguration>
+
+<!-- Contact Form configuration file
+	 See: http://ostermiller.org/contactform/
+	 Copyright (C) 2002-2014 Stephen Ostermiller
+	 http://ostermiller.org/contact.pl?regarding=Contact+Form
+
+	 This program is free software; you can redistribute it and/or modify
+	 it under the terms of the GNU General Public License as published by
+	 the Free Software Foundation; either version 2 of the License, or
+	 (at your option) any later version.
+
+	 This program is distributed in the hope that it will be useful,
+	 but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	 GNU General Public License for more details.
+
+	 THIS FILE SHOULD BE PLACED IN A DIRECTORY THAT IS NOT SERVED BY THE WEBSERVER
+	 To use this file, edit contact.pl's $configuration_file variable
+	 to point to it.
+ -->
+
+<!-- List of email address to which mail can be sent.
+	 Mail cannot be sent to any email address which is not on this list.
+	 If a single address is listed, it will be a hidden value on the
+	 form, otherwise, the user will be presented with a pulldown menu
+	 of aliases to which email can be sent.
+	 The addresses listed here are never visible via served web pages.
+
+	 Both the names and the addresses here can be (but don't have to be)
+	 translated. You might want to translate names for functional duties
+	 such as 'webmaster' or 'customer support'.  You might want to put in
+	 translations for the email addresses when different people or teams
+	 would want to recieve the email in a different language.-->
+<Aliases>
+  <Alias name="contact_administrator_name">contact_administrator_email</Alias>
+  <!-- The following aliases are commented out examples -->
+
+  <!-- A simple example of mail sent to John Smith -->
+  <!-- <Alias name="John Smith">john@yoursite.tld</Alias> -->
+
+  <!-- Here both the name and the email are translated.
+	   Translations can be edited in the translations section. -->
+  <!-- <Alias name="contact_customer_support_name">contact_customer_support_email</Alias> -->
+
+  <!-- Just the name is translated -->
+  <!-- <Alias name="contact_postmaster_name">postmaster@yoursite.tld</Alias> -->
+
+  <!-- A mailing list with multiple addresses separated by commas -->
+  <!-- <Alias name="two people">webmaster@yoursite.tld,postmaster@yoursite.tld</Alias> -->
+</Aliases>
+
+
+<!-- The email address that appears in the From and Sender field of sent
+	 emails.  The email address of the user will then be used in the
+	 Reply-To field, making it possible to respond to users.
+
+	 Historically, this contact form has put the user's email address in
+	 the From field. That doesn't work well. Your mail server may not
+	 accept mail, or will mark mail as spam, if it is sent on behalf of
+	 the user but  doesn't come from the user's designated email server.
+	 This behavior is still available by specifying 'user' as the value.
+
+	 If this is left blank, the from Field will be the same as the To field.
+
+	 Example: <Setting name="sender_email">john.smith@example.com</Setting>
+	 -->
+<Setting name="sender_email"></Setting>
+
+<!-- Page structure - the look and feel of the page
+	 This variable may be either changed directly, or if the
+	 page_template_file variable is set, this variable is
+	 ignored and the template file is used instead.
+	 Contact form can place content into any of four places:
+	 $title - the title of the page
+	 $css - style rules that control how the form looks
+	 $javascript - client side validation rules.
+	 $content - the form itself.
+	 The css and title variables are optional and can easily
+	 be omitted and replaced with your own elements to better
+	 suit your taste.  The form will not work properly if either
+	 the javascript or content variables are removed or duplicated.
+	 This may be a translation key for providing different templates
+	 for different languages.-->
+<Setting name="page_template"><![CDATA[
+  <html>
+	<head>
+	  <title>$title</title>
+	  $css
+	  $javascript
+	</head>
+	<body class="contactform cf_body" id="cf_body">
+	  <h1 class="contactform cf_header" id="cf_titleheader">$title</h1>
+	  $content
+	</body>
+  </html>
+]]></Setting>
+
+<!-- if the template file is set, the page_template variable
+	 is ignored and the template is loaded from the named file.
+	 for example:
+	 <Setting name="page_template_file">mytemplate.html</Setting>
+	 or
+	 <Setting name="page_template_file">/home/me/contact.template</Setting>
+	 If this file is set, the file will be read every time this script
+	 is called, not the most efficient, but very convenient.
+	 The template file must be in the same format as the page_template
+	 variable above.
+	 This may be a translation key for providing different templates
+	 for different languages.-->
+<Setting name="page_template_file"></Setting>
+
+<!-- Whether or not to show a link to the contact form website.
+	 Set to 0 to disable.
+	 If you do remove the link, please tell your friends about contact form,
+	 link to contact form somewhere else, write a blog entry about
+	 contact form, post in a forum about contact form, or otherwise
+	 spread the word. -->
+<Setting name="show_contact_form_link">1</Setting>
+
+<!-- Captcha settings - Displays distorted text that the user
+	 must type in to prove that they are human.
+	 Sign up for a recaptach account at http://recaptcha.net/
+	 enter the public and private keys that they give you here
+	 Your server must have the Captcha::reCAPTCHA library installed.
+	 To install it, talk to your admin or use the command line:
+	 cpan install 'Captcha::reCAPTCHA' -->
+<Setting name="recaptcha_public_key"></Setting>
+<Setting name="recaptcha_private_key"></Setting>
+
+<!-- The name of the field for submit/preview action -->
+<Setting name="field_name_submit">do</Setting>
+
+<!-- Regular expression describing urls which can host forms
+	 pointing to this program. The referral URL is generated on the
+	 client side by the browser. Therefore it useless to prevent
+	 unauthorized submission by mail software robots. You can
+	 prevent somebody from reliably hosting, on another server,
+	 a form pointing to this email software.
+	 Consider the following options:
+	 This form can be used from any site at all: .*
+	 This form can only be used from pages on yoursite.tld: ^http[s]?\:\/\/yoursite\.tld\/
+	 This form can only be used from pages on the domain or ip address: ^http[s]?\:\/\/((yoursite\.tld)|(127\.0\.0\.1))\/
+	 This form can only be used from a specific page: ^http[s]?\:\/\/yoursite\.tld\/directory\/page\.html\$
+	 -->
+<Setting name="allowedReferers">.*</Setting>
+
+<!-- Whether or not users are required to preview
+	 their message before sending.
+	 0 - preview disabled (allows users to send mail the fastest)
+	 1 - preview required (best for spam prevention)
+	 2 - preview available, but not required  (most choice for users) -->
+<Setting name="require_preview">1</Setting>
+
+<!-- Whether or not to include the "To: <alias>" field in the email body.
+	 This is usually desired when there are multiple recipients so that
+	 each recipient can tell that the email was sent to multiple people.
+	 yes - always include the to field
+	 multiple - include the to field only when there are multiple recipients
+	 no - do not include the to field -->
+<Setting name="show_to_in_message">multiple</Setting>
+
+<!-- The character set for the contact page -->
+<Setting name="charset">UTF-8</Setting>
+
+<!-- Command line program used to send email
+	 '/usr/lib/sendmail -i -t' almost always works fine -->
+<Setting name="sendmail">/usr/lib/sendmail -i -t</Setting>
+
+<!-- Whether or not to include javascript that checks the form
+	 before it is submitted.
+	 This is generally good, but it increases the page size, increases the
+	 complexity of the page, and could alert hackers to the
+	 regular expressions you are using for verification.
+	 Set to 0 to disable, 1 to enable. -->
+<Setting name="use_client_side_verification">1</Setting>
+
+<!-- This should be either 'POST' or 'GET' -->
+<Setting name="submit_method">POST</Setting>
+
+<!-- Placed next to form elements that must be filled in
+	 The required marker can be set to a translation key
+	 such that translated text for something like "REQUIRED"
+	 is shown to users rather than an asterisk.-->
+<Setting name="required_marker"><![CDATA[
+  <span class="contactform cf_required">*</span>
+]]></Setting>
+
+<!-- Text that should always go at the beginning of the subject
+	 of emails that this contact form sends out.  This could be
+	 useful as a signal for filtering email or seeing which emails
+	 come in through contact form when scanning your inbox.
+	 eg <Setting name="subject_prepend">[WEB]</Setting>
+	 This may be (but does not have to be) set to a translation key. -->
+<Setting name="subject_prepend"></Setting>
+
+<!-- Style rules for the input page.
+	 to put question and answer on the same line use:
+	 .cf_userentry, .cf_radioselection { display:inline; margin-left:0.25cm; }
+	 -->
+<Setting name="input_page_css"><![CDATA[
+  <style>
+	.cf_error { color:red; }
+	.cf_textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+	.cf_instructions { margin-bottom:1em; }
+	textarea.contactform { height:4in; }
+	.cf_required { color:green; }
+	#cf_version { text-align:right; }
+	#cf_global_error { margin-bottom:0.25cm; }
+	.cf_field { margin-bottom:0.5cm; }
+	.cf_nt { display:none; }
+	.cf_preview { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");margin-bottom:1cm;}
+  </style>
+]]></Setting>
+
+
+<!-- Style rules for thank you page -->
+<Setting name="sent_page_css"><![CDATA[
+  <style>
+	.cf_thankyou { margin-bottom:1em; }
+	.cf_sent { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
+	#cf_version { text-align:right; }
+  </style>
+]]></Setting>
+
+<!-- Link to favicon, placed in the head after the JavaScript -->
+<Setting name="icon_link"><![CDATA[
+  <link rel="icon" href="SCRIPT_NAME_ESCAPED/contactformicon.png" type="image/png">
+]]></Setting>
+
+<!-- Form copyright header placed in the head after the JavaScript -->
+<Setting name="copyright_link"><![CDATA[
+  <link rel="copyright" href="http://ostermiller.org/contactform/" type="text/html">
+]]></Setting>
+
+<!-- Redirect to this url after the message has been sent
+	 By default there is no redirect.  The url must
+	 be fully qualified (must start with http://)
+	 Example: <Setting name="redirect_url_sent">http://example.com/</Setting>
+	 This may be set to a translation key for redirecting to different
+	 urls in different languages. -->
+<Setting name="redirect_url_sent"></Setting>
+
+<!-- Show the sent confirmation for this many seconds before redirecting
+	 after the message has been sent if the redirect_url_sent has been defined.
+	 If zero is specified, the message sent confirmation will not
+	 be shown at all (you can redirect to your own thank you) -->
+<Setting name="redirect_delay_sent">15</Setting>
+
+<!-- Regular expressions for text that is not allowed in any fields.
+	 Messages may be translation keys.
+	 -->
+<DisallowedText>
+  <Disallow message="error_disallow_html_formatted_links"><![CDATA[
+	  \<[ \r\n\t]*[Aa][ \r\n\t]
+  ]]></Disallow>
+  <Disallow message="error_disallow_board_formatted_links"><![CDATA[
+	  \[[ \r\n\t]*[Uu][Rr][Ll][ \r\n\t]*\=
+  ]]></Disallow>
+</DisallowedText>
+
+<!-- FormFields is the list of questions the user is expected
+	 to answer. The questions will appear in the same order as
+	 they are ordered here. You may safely remove the subject,
+	 email, name, and message from the form. The to field should
+	 not be removed. The name of each field should contain only
+	 letters, numbers, and underscore.  Spaces or symbols should
+	 not be used.  Each has several attributes that control the
+	 display of the question to the user.
+
+	 "required"
+	 a regular expression that describes what a valid submission looks
+	 like.  By default, any entry at all is allowed.
+	 Consider using the following pre-defined regular expressions:
+	 $SOMETHING, $ANYTHING, $ONE_LINE_REQUIRED, $ONE_LINE_OPTIONAL,
+	 $ZIPCODE_REQUIRED, $ZIPCODE_OPTIONAL, $PHONE_REQUIRED,
+	 $PHONE_OPTIONAL, $EMAIL_REQUIRED, $EMAIL_OPTIONAL, $PRICE_REQUIRED,
+	 $PRICE_OPTIONAL, $FLOAT_REQUIRED, $FLOAT_OPTIONAL,
+	 $INTEGER_REQUIRED, $INTEGER_OPTIONAL, $BLANK, $PHONE_NO_AREA_CODE_OPTIONAL,
+	 $PHONE_NO_AREA_CODE_REQUIRED
+
+	 "error"
+	 A user friendly error message for each required
+	 element that a user gets wrong.  Translation keys
+	 may also be used.
+
+	 "type"
+	 Type of input in web pages for each field.
+	 Currently supported are 'text</Translation> 'hidden</Translation> 'radio</Translation>
+	 'select</Translation> and 'textarea'
+	 If there is no type, 'text' is assumed.
+	 Setting the type for the to field will have no effect since
+	 the to field is handled specially.
+
+	 "description"
+	 Description to appear next to entry forms and in
+	 the email or $NO_DESCRIPTION for none.  Translation keys
+	 may also be used.
+	 If no description is given, the field name followed
+	 by a colon is used.
+
+	 "selected"
+	 For fields of type "select", or "radio" indicates
+	 the default selection.
+
+	 "special"
+	 Any special purpose for which the field is used.
+	 Must be one of "to", "from", "name", "subject",
+	 "regarding", or "referrer". -->
+<FormFields>
+
+	<!-- special="to": Alias of the address put in the "To:" field of the email. -->
+	<Field name="to" error="field_to_error" description="field_to_description" special="to" show_in_message="false">
+		$ONE_LINE_REQUIRED
+	</Field>
+
+	<!-- special="from": Put in the "From:" field of the email as the email of the person it is from -->
+	<Field name="email" type="text" error="field_email_error" description="field_email_description" special="from" show_in_message="false">
+		$EMAIL_REQUIRED
+	</Field>
+
+	<!-- This is a field designed to thwart automated submissions
+		 This field is not visible to the user.
+		 Bots may attempt to fill it in which will prevent submission.-->
+	<Field name="confirm" type="trap" error="field_trap_error" description="field_trap_description">
+		$BLANK
+	</Field>
+
+	<!-- special="name": Put in the "From:" field of the email as the name of the person it is from -->
+	<Field name="name" type="text" error="field_name_error" description="field_name_description" special="name" show_in_message="false">
+		$ONE_LINE_OPTIONAL
+	</Field>
+
+	<!-- special="subject": Put in the "Subject:" field of the email. -->
+	<Field name="subject" type="text" error="field_subject_error" description="field_subject_description" special="subject" show_in_message="false">
+		$ONE_LINE_REQUIRED
+	</Field>
+
+	<Field name="message" type="textarea" error="field_message_error" description="$NO_DESCRIPTION">
+		$SOMETHING
+	</Field>
+
+	<!-- special="regarding": Put in the "Subject:" field of the email in parenthesis. -->
+	<Field name="regarding" type="hidden" error="" description="$NO_DESCRIPTION" special="regarding" show_in_message="false">
+		$ANYTHING
+	</Field>
+
+	<!-- special="referrer": The original referring url. -->
+	<Field name="referrer" type="hidden" error="" description="$NO_DESCRIPTION" special="referrer" show_in_message="false">
+		$ANYTHING
+	</Field>
+
+	<!-- The following fields are disabled examples, remove the enabled="0" to use them -->
+
+	<Field name="phone" enabled="0" type="text" error="field_phone_error" description="field_phone_description">
+		$PHONE_OPTIONAL
+	</Field>
+
+	<Field name="fax" enabled="0" type="text" error="field_fax_error" description="field_fax_description">
+		$PHONE_OPTIONAL
+	</Field>
+
+	<Field name="address1" enabled="0" type="text" error="field_address_error" description="field_address_description">
+		$ONE_LINE_OPTIONAL
+	</Field>
+
+	<Field name="address2" enabled="0" type="text" error="field_address_error" description="$NO_DESCRIPTION">
+		$ONE_LINE_OPTIONAL
+	</Field>
+
+	<Field name="city" enabled="0" type="text" error="field_city_error" description="field_city_description">
+		^(?:[a-zA-Z ]*)$
+	</Field>
+
+	<Field name="state" enabled="0" type="select" error="field_state_error" description="field_state_description">
+		^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)$
+	</Field>
+
+	<Field name="zip" enabled="0" type="text" error="field_zip_error" description="field_zip_description">
+		$ZIPCODE_OPTIONAL
+	</Field>
+
+	<!-- uses the default values for required, error, type, and description -->
+	<Field name="most_basic_question" enabled="0"></Field>
+
+	<!-- A required select drop down -->
+	<Field name="color" enabled="0" type="select" error="field_color_error" description="field_color_description">
+		field_color_required
+	</Field>
+
+	<!-- An optional select drop down -->
+	<Field name="vegetable" enabled="0" type="select" error="field_vegetable_error" description="field_vegetable_description">
+		field_vegetable_required
+	</Field>
+
+	<!-- A select drop down with a pre-filled option -->
+	<Field name="letter" enabled="0" type="select" error="field_letter_error" description="field_letter_description" selected="field_letter_selected">
+		field_letter_required
+	</Field>
+
+	<!-- required radio buttons -->
+	<Field name="yes_no" enabled="0" type="radio" error="field_yes_no_error" description="field_yes_no_description">
+		field_yes_no_required
+	</Field>
+
+	<!-- radio buttons with a prefilled option -->
+	<Field name="true_false" enabled="0" type="radio" error="field_true_false_error" description="field_true_false_description">
+		field_true_false_required
+	</Field>
+
+	<!-- optional radio buttons -->
+	<Field name="vegetable2" enabled="0" type="radio" error="field_vegetable_error" description="field_vegetable_description">
+		field_vegetable2_required
+	</Field>
+
+	<!-- prefilled -->
+	<Field name="about" enabled="0" type="text" error="field_about_error" description="field_about_description" default="field_about_default">
+		$ANYTHING
+	</Field>
+
+</FormFields>
+
+<!-- The language to display to the user if the users preferred
+	 language cannot be determined. -->
+<Setting name="default_language">en</Setting>
+
+<!-- A list of allowed languages separated by spaces.
+	 eg <Setting name="allowed_languages">en en_US fr de</Setting>
+	 Contact form will only be shown in the languages listed.
+	 If allowed_languages is blank, then any language for which
+	 translations exist may be shown. -->
+<Setting name="allowed_languages"></Setting>
+
+<!-- Parameter name that specifies the language in which
+	 contact form should be shown or blank not to use.
+	 If this parameter is not used or not present,
+	 contact form tries to detect the language from the
+	 users browser settings, then falls back to the default
+	 language setting.  A link to contact form with the param
+	 might look something like this:
+	 /contact.pl?cflang=de
+	 -->
+<Setting name="language_param">cflang</Setting>
+
+<!-- The text shown to users by contact form. Each item should be
+	 translated into each language used.
+
+	 Language keys: lower case two letter language code, optionally
+	 followed by an underscore and uppercase two letter country code.
+	 eg. en or en_US
+
+	 Translation keys: All lowercase letters, numbers, and underscores.
+	 Each must contain at least one underscore.  New keys may be
+	 added when adding new fields.
+
+	 NOTE to translators: Use a UTF-8 capable editor when saving
+	 translations.  Text in curly braces in the translations such
+	 as {required_marker} or {server_administrator} is replaced
+	 automatically and should not be translated.  Not all translations
+	 are listed in this configuration file.  To fully translate contact
+	 form, please translate all the values which are listed in contact.pl. -->
+<Translations>
+	<Language name="en">
+		<!-- Core messaging -->
+		<Translation key="input_page_title">Contact Us</Translation>
+		<Translation key="input_page_instructions">Fill out the form below to send your comments.</Translation>
+		<Translation key="required_marker_description">{required_marker} denotes a required field.</Translation>
+		<Translation key="preview_button">Preview</Translation>
+		<Translation key="send_button">Send</Translation>
+		<Translation key="preview_page_instructions">Please review your message before sending it. Changes can be made below.</Translation>
+		<Translation key="sent_page_title">Message Sent</Translation>
+		<Translation key="sent_page_thank_you">Thank you for your comments!</Translation>
+		<!-- Core fields -->
+		<Translation key="field_to_description">To:</Translation>
+		<Translation key="field_to_error">You must specify a recipient.</Translation>
+		<Translation key="field_email_description">Your email address:</Translation>
+		<Translation key="field_email_error">The email address you entered does not appear to be valid.</Translation>
+		<Translation key="field_trap_description">Leave blank:</Translation>
+		<Translation key="field_trap_error">This field should be left blank.</Translation>
+		<Translation key="field_name_description">Your name:</Translation>
+		<Translation key="field_name_error">You must enter your name.</Translation>
+		<Translation key="field_subject_description">Subject:</Translation>
+		<Translation key="field_subject_error">You must enter a subject.</Translation>
+		<Translation key="field_message_error">You must enter a message.</Translation>
+		<Translation key="field_captcha_description">Prove that you are a human:</Translation>
+		<Translation key="field_captcha_error">Captcha problem</Translation>
+		<!-- Configuration examples -->
+		<Translation key="contact_customer_support_name">Customer Support</Translation>
+		<Translation key="contact_customer_support_email">support@yoursite.tld</Translation>
+		<Translation key="contact_postmaster_name">postmaster</Translation>
+		<Translation key="field_phone_error">The phone number you entered does not appear to be valid.</Translation>
+		<Translation key="field_phone_description">Phone Number:</Translation>
+		<Translation key="field_fax_error">The fax number you entered does not appear to be valid.</Translation>
+		<Translation key="field_fax_description">Fax Number:</Translation>
+		<Translation key="field_address_error">Please enter your address.</Translation>
+		<Translation key="field_address_description">Address:</Translation>
+		<Translation key="field_city_error">Your city does not appear to be valid.</Translation>
+		<Translation key="field_city_description">City:</Translation>
+		<Translation key="field_state_error">Please choose your state.</Translation>
+		<Translation key="field_state_description">State:</Translation>
+		<Translation key="field_zip_error">Your zipcode does not appear to be valid.</Translation>
+		<Translation key="field_zip_description">Zipcode:</Translation>
+		<Translation key="field_color_required">^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$</Translation>
+		<Translation key="field_color_error">Please choose a color.</Translation>
+		<Translation key="field_color_description">Choose a color:</Translation>
+		<Translation key="field_vegetable_required">^(?:|Corn|Peas|Beans|Carrots|Broccoli)$</Translation>
+		<Translation key="field_vegetable_error">Please choose a valid vegetable.</Translation>
+		<Translation key="field_vegetable_description">Which (if any) is your favorite vegetable:</Translation>
+		<Translation key="field_letter_required">^(?:A|B|C|D)$</Translation>
+		<Translation key="field_letter_error">Please choose on of the four letters.</Translation>
+		<Translation key="field_letter_description">Choose a letter (C is selected by default):</Translation>
+		<Translation key="field_letter_selected">C</Translation>
+		<Translation key="field_yes_no_required">^(?:yes|no)$</Translation>
+		<Translation key="field_yes_no_error">Please answer the yes/no question</Translation>
+		<Translation key="field_yes_no_description">Yes or no:</Translation>
+		<Translation key="field_true_false_required">^(?:true|false)$</Translation>
+		<Translation key="field_true_false_error">Please answer the true/false question</Translation>
+		<Translation key="field_true_false_description">True or false (false is selected by default):</Translation>
+		<Translation key="field_true_false_selected">false</Translation>
+		<Translation key="field_vegetable2_required">^(?:|Lettuce|Tomato|Brussel Sprouts)$</Translation>
+		<Translation key="field_about_error">Please enter what this message is about.</Translation>
+		<Translation key="field_about_description">What is this message about:</Translation>
+		<Translation key="field_about_default">Email</Translation>
+	</Language>
+	<Language name="nl"> <!-- Dutch -->
+		<!--  Hoofdmeldingen -->
+		<Translation key="input_page_title">ENeem contact met ons op</Translation>
+		<Translation key="input_page_instructions">EVul dit formulier in als u opmerkingen heeft.</Translation>
+		<Translation key="required_marker_description">E{required_marker} geeft een verplicht veld aan.</Translation>
+		<Translation key="preview_button">EBericht bekijken</Translation>
+		<Translation key="send_button">EVersturen</Translation>
+		<Translation key="preview_page_instructions">EControleer uw bericht a.u.b. voordat u het gaat versturen. Veranderingen kunnen hieronder worden aangebracht.</Translation>
+		<Translation key="sent_page_title">EBericht verstuurd</Translation>
+		<Translation key="sent_page_thank_you">EBedankt voor uw commentaar!</Translation>
+		<!--  Hoofdvelden -->
+		<Translation key="field_to_description">EAan</Translation>
+		<Translation key="field_to_error">EU moet een geadresseerde opgeven.</Translation>
+		<Translation key="field_email_description">EUw e-mailadres:</Translation>
+		<Translation key="field_email_error">EHet door u opgegeven e-mailadres klopt niet.</Translation>
+		<Translation key="field_email_default">Eonbekend</Translation>
+		<Translation key="field_trap_description">EBlanco laten:</Translation>
+		<Translation key="field_trap_error">EDit veld blanco laten.</Translation>
+		<Translation key="field_name_description">EUw naam:</Translation>
+		<Translation key="field_name_error">EVul hier uw naam in.</Translation>
+		<Translation key="field_subject_description">EOnderwerp:</Translation>
+		<Translation key="field_subject_error">EU moet hier een onderwerp opgeven.</Translation>
+		<Translation key="field_subject_default">EWebsite formulier verzending</Translation>
+		<Translation key="field_message_error">EU moet hier een bericht invoeren.</Translation>
+		<Translation key="field_captcha_description">EBewijs dat u een mens bent:</Translation>
+		<Translation key="field_captcha_error">ECaptcha probleem</Translation>
+		<!-- Configuratie voorbeelden -->
+		<Translation key="contact_administrator_name">Ebeheerder</Translation>
+		<Translation key="contact_customer_support_name">EKlantenondersteuning</Translation>
+		<Translation key="contact_customer_support_email">Esupport@yoursite.tld</Translation>
+		<Translation key="contact_postmaster_name">Epostmaster</Translation>
+		<Translation key="field_phone_error">EHet opgegeven telefoonnummer lijkt ongeldig.</Translation>
+		<Translation key="field_phone_description">ETelefoonnummer:</Translation>
+		<Translation key="field_fax_error">EHet opgegeven faxnummer lijkt ongeldig.</Translation>
+		<Translation key="field_fax_description">EFaxnummer:</Translation>
+		<Translation key="field_address_error">EGeef a.u.b. uw adres.</Translation>
+		<Translation key="field_address_description">EAdres:</Translation>
+		<Translation key="field_city_error">EDe opgegeven woonplaats lijkt ongeldig.</Translation>
+		<Translation key="field_city_description">EWoonplaats:</Translation>
+		<Translation key="field_state_error">EGeef a.u.b. uw provincie.</Translation>
+		<Translation key="field_state_description">EProvincie:</Translation>
+		<Translation key="field_zip_error">EDe opgegeven postcode lijkt ongeldig.</Translation>
+		<Translation key="field_zip_description">EPostcode:</Translation>
+		<Translation key="field_color_required">E^(?:Rood|Oranje|Geel|Groen|Blauw|Paars|Zwart|Wit)$</Translation>
+		<Translation key="field_color_error">EKies een kleur a.u.b.</Translation>
+		<Translation key="field_color_description">EKies een kleur:</Translation>
+		<Translation key="field_vegetable_required">E^(?:|Maïs|Erwten|Bonen|Wortels|Broccoli)$</Translation>
+		<Translation key="field_vegetable_error">EKies een geldige groente a.u.b.</Translation>
+		<Translation key="field_vegetable_description">EWat (indien van toepassing) is je favouriete groente:</Translation>
+		<Translation key="field_letter_required">E^(?:A|B|C|D)$</Translation>
+		<Translation key="field_letter_error">EKies a.u.b. één van de vier letters.</Translation>
+		<Translation key="field_letter_description">EKies een letter (anders wordt C gekozen):</Translation>
+		<Translation key="field_letter_selected">EC</Translation>
+		<Translation key="field_yes_no_required">E^(?:ja|nee)$</Translation>
+		<Translation key="field_yes_no_error">EBeantwoord a.u.b. de ja/nee vraag</Translation>
+		<Translation key="field_yes_no_description">EJa of nee:</Translation>
+		<Translation key="field_true_false_required">E^(?:waar|onwaar)$</Translation>
+		<Translation key="field_true_false_error">EBeantwoord a.u.b. de waar/onwaar vraag</Translation>
+		<Translation key="field_true_false_description">EWaar of onwaar (onwaar is standaard):</Translation>
+		<Translation key="field_true_false_selected">Eonwaar</Translation>
+		<Translation key="field_vegetable2_required">E^(?:|Sla|Tomaat|Spruitjes)$</Translation>
+		<Translation key="field_about_error">EGeef a.u.b. aan waarover dit bericht gaat.</Translation>
+		<Translation key="field_about_description">EWaarover gaat dit bericht:</Translation>
+		<Translation key="field_about_default">EE-mail</Translation>
+	</Language>
+	<Language name="pig"> <!-- Pig Latin - for testing -->
+		<!-- Core messaging -->
+		<Translation key="input_page_title">Ontactcay Uslay</Translation>
+		<Translation key="input_page_instructions">Illfay outyay ethay ormfay elowbay ootay endsay oryay ommentscay.</Translation>
+		<Translation key="required_marker_description">{required_marker} enotesday ayay equiredray ieldfay.</Translation>
+		<Translation key="preview_button">Eviewpray</Translation>
+		<Translation key="send_button">Endsay</Translation>
+		<Translation key="preview_page_instructions">Easeplay eviewray oryay essagemay eforeBay endingsay ityay. Angeschay ancay ebay ademay elowbay.</Translation>
+		<Translation key="sent_page_title">Essagemay Entsay</Translation>
+		<Translation key="sent_page_thank_you">Ankthay ooyay orfay oryay ommentsCay!</Translation>
+		<!-- Core fields -->
+		<Translation key="field_to_description">Ootay:</Translation>
+		<Translation key="field_to_error">Ouyay ustmay ecifyspay ayay ecipientray.</Translation>
+		<Translation key="field_email_description">Ouryay emailyay addressyay:</Translation>
+		<Translation key="field_email_error">Ethay emailyay addressyay ouyay enteredyay oesday otnay appearyay ootay ebay alidvay.</Translation>
+		<Translation key="field_trap_description">Eavelay ankblay:</Translation>
+		<Translation key="field_trap_error">Isthay ieldfay ouldshay ebay eftlay ankblay.</Translation>
+		<Translation key="field_name_description">Ouryay amenay:</Translation>
+		<Translation key="field_name_error">Ouyay ustmay enteryay ouryay amenay.</Translation>
+		<Translation key="field_subject_description">Ubjectsay:</Translation>
+		<Translation key="field_subject_error">Ouyay ustmay enteryay ayay ubjectsay.</Translation>
+		<Translation key="field_message_error">Ouyay ustmay enteryay ayay essagemay.</Translation>
+		<Translation key="field_captcha_description">Ovepray atthay ouyay areyay ayay umanhay:</Translation>
+		<Translation key="field_captcha_error">Aptchacay oblempray</Translation>
+		<!-- Configuration examples -->
+		<Translation key="contact_customer_support_name">Ustomercay Upportsay</Translation>
+		<Translation key="contact_customer_support_email">upportsay@ouyayrsite.tld</Translation>
+		<Translation key="contact_postmaster_name">ostmasterpay</Translation>
+		<Translation key="field_onephay_error">Ethay onephay umbernay ouyay enteredyay oesday otnay appearyayyay ootay ebay alidvay.</Translation>
+		<Translation key="field_onephay_description">Onephay umbernay:</Translation>
+		<Translation key="field_fax_error">Ethay axfay umbernay ouyay enteredyay oesday otnay appearyay ootay ebay alidvay.</Translation>
+		<Translation key="field_fax_description">Axfay Umbernay:</Translation>
+		<Translation key="field_address_error">Easeplay enteryay ouyayr addressyay.</Translation>
+		<Translation key="field_address_description">Addressyay:</Translation>
+		<Translation key="field_city_error">Ouryay itycay oesday otnay appearyay ootay ebay alidvay.</Translation>
+		<Translation key="field_city_description">Itycay:</Translation>
+		<Translation key="field_state_error">Easeplay oosechay ouyayr atestay.</Translation>
+		<Translation key="field_state_description">Atestay:</Translation>
+		<Translation key="field_zip_error">Ouryay ipcodezay oesday otnay appearyay ootay ebay alidvay.</Translation>
+		<Translation key="field_zip_description">Ipcodezay:</Translation>
+		<Translation key="field_color_required">^(?:Edray|Orangeyay|Ellowyay|Eengray|Ueblay|Urplepay|Ackblay|Itewhay)$</Translation>
+		<Translation key="field_color_error">Easeplay oosechay ayay olorcay.</Translation>
+		<Translation key="field_color_description">Choose ayay olorcay:</Translation>
+		<Translation key="field_vegetable_required">^(?:|Orncay|Easpay|Eansbay|Arrotscay|Occolibray)$</Translation>
+		<Translation key="field_vegetable_error">Easeplay oosechay ayay alidvay egetablevay.</Translation>
+		<Translation key="field_vegetable_description">Ichwhay (ifyay anyay) isyay ouyayr avoritefay egetablevay:</Translation>
+		<Translation key="field_letter_required">^(?:Ayay|Byay|Cyay|Dyay)$</Translation>
+		<Translation key="field_letter_error">Easeplay oosechay onyay ofyay ethay ourfay etterslay.</Translation>
+		<Translation key="field_letter_description">Oosechay ayay etterlay (Cyay isyay electedsay ybay efaultday):</Translation>
+		<Translation key="field_letter_selected">Cyay</Translation>
+		<Translation key="field_yes_no_required">^(?:esyay|onay)$</Translation>
+		<Translation key="field_yes_no_error">Easeplay answeryay ethay esyay/onay estionquay</Translation>
+		<Translation key="field_yes_no_description">Esyay or onay:</Translation>
+		<Translation key="field_true_false_required">^(?:uetray|alsefay)$</Translation>
+		<Translation key="field_true_false_error">Easeplay answeryay ethay uetray/alsefay estionquay</Translation>
+		<Translation key="field_true_false_description">Uetray or alsefay (alsefay isyay electedsay ybay efaultday):</Translation>
+		<Translation key="field_true_false_selected">alsefay</Translation>
+		<Translation key="field_vegetable2_required">^(?:|Ettucelay|Omatotay|Usselbray Routspay)$</Translation>
+		<Translation key="field_about_error">Easeplay enteryay atwhay isthay essagemay isyay aboutyay.</Translation>
+		<Translation key="field_about_description">What isyay isthay essagemay aboutyay:</Translation>
+		<Translation key="field_about_default">Emailyay</Translation>
+	</Language>
+</Translations>
+
+</ContactFormConfiguration>
