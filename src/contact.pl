@@ -43,7 +43,7 @@ sub settings(){
 	# It is recommended that the configuration file live outside of
 	# webserver document root and it should be accessed by absolute path
 	# here.  For example: $settings->{'configuration_file'} = "/etc/contact_form.conf"
-	$settings->{'configuration_file'} = '../contactform.xml';
+	$settings->{'configuration_file'} = '';
 
 	# List of email address to which mail can be sent.
 	#
