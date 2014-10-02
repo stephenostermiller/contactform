@@ -50,18 +50,18 @@ Contact form comes with standard name, address, subject and message fields.  It 
 additional fields.  There are several unused examples included in the contact form configuration. When you add additional field you need to add them to the @FormFields list.
 
 <pre>
-    'phone', {
-        # A regular expression describing a properly formatted field.
-        # Uses on of the included pre-canned types as enumerated below
-        'required' => $PHONE_OPTIONAL,
-        # What to display to the user when the field is not filled in correctly
-        'error' => 'The phone number you entered does not appear to be valid.',
-        # Type of the field, this will display as a free form entry text box
-        # Other types such as selects, text areas, and radio buttons are available
-        'type' => 'text',
-        # Text to display next to the field for the user
-        'description' => 'Phone Number:',
-    },
+	'phone', {
+		# A regular expression describing a properly formatted field.
+		# Uses on of the included pre-canned types as enumerated below
+		'required' => $PHONE_OPTIONAL,
+		# What to display to the user when the field is not filled in correctly
+		'error' => 'The phone number you entered does not appear to be valid.',
+		# Type of the field, this will display as a free form entry text box
+		# Other types such as selects, text areas, and radio buttons are available
+		'type' => 'text',
+		# Text to display next to the field for the user
+		'description' => 'Phone Number:',
+	},
 </pre>
 There are plenty of prebuilt regular expressions to choose from:
 <ul>
@@ -106,7 +106,7 @@ at the source of the page and figure out what patterns you actually would accept
 Contactform now has the ability to do drop down lists.  To set up a selection field and its options, you need to do two things.  First, in the Form_Type variable, set the field to "select".  Second, in the Form_Fields variable set the regular expression for the field to be a pipe separated ('|') list of options.  The "state" field is done for you as an example.  The 50 states are given as options and the user can select their state from a pull down list.  If your options have spaces in them, they should be enclosed in parenthesis like so: "(Option one)|(Option two)|(Option three)".  Punctuation is not supported in options, stick to only letters, numbers, and spaces.
 
 <h2><a name=xml_configuration>External XML File Configuration</a></h2>
-Contact form can be difficult to upgrade if significant configuration changes are made directly in contact.pl.  Contact form supports an external XML configuration file for all possible configuration options.  An example configuration is included with the download. 
+Contact form can be difficult to upgrade if significant configuration changes are made directly in contact.pl.  Contact form supports an external XML configuration file for all possible configuration options.  An example configuration is included with the download.
 
 <%/bte.tpl%>
 <%/bte.doc%>

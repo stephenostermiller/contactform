@@ -1,5 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Contact form - email form submissions from your website
+  - Copyright (C) 2014 Stephen Ostermiller
+  -
+  - This program is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License along
+  - with this program; if not, write to the Free Software Foundation, Inc.,
+  - 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  -->
 <ContactFormConfiguration>
-
 <Aliases>
 	<Alias name="Mr. Duznut Exist">null@ostermiller.com</Alias>
 	<Alias name="Mrs. Fig Mint">null@ostermiller.com</Alias>
@@ -13,83 +31,83 @@
 <Translations>
 	<Language name="en">
 		<Translation key="input_page_instructions"><![CDATA[
-		  <p>Fill out the form below to test contact form.
-		  <span style="color:red;">All messages submitted here will be discarded.</span>
-		  Feel free to play with this form as much as you would like, it is here to
-		  demonstrate how Contact Form works.</p>
-		  <p>If you really need to contact Stephen (the Contact Form author) please use
-		  the contact link at the bottom of the page.</p>
-		  <p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
-		  <ol>
-		  <li>The recipient has been sent to an email address that ignores all incoming messages.</li>
-		  <li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
-		  <li>This message is set in the input_page_instructions translation</li>
-		  </ol>
+			<p>Fill out the form below to test contact form.
+			<span style="color:red;">All messages submitted here will be discarded.</span>
+			Feel free to play with this form as much as you would like, it is here to
+			demonstrate how Contact Form works.</p>
+			<p>If you really need to contact Stephen (the Contact Form author) please use
+			the contact link at the bottom of the page.</p>
+			<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+			<ol>
+			<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+			<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+			<li>This message is set in the input_page_instructions translation</li>
+			</ol>
 		]]></Translation>
 		<Translation key="preview_page_instructions"><![CDATA[
-		  <p>Please review your message before sending it. Changes can be made below.
-		  <span style="color:red;">All messages submitted here will be discarded.</span></p>
+			<p>Please review your message before sending it. Changes can be made below.
+			<span style="color:red;">All messages submitted here will be discarded.</span></p>
 		]]></Translation>
 		<Translation key="sent_page_thank_you"><![CDATA[
-		  <p>The message you entered was correctly formatted and normally would
-		  have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
-		  This Contact Form was configured to send email to an address that does not exist so
-		  that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
-		  (the Contact Form author) please use the contact link at the bottom of the page.</p>
+			<p>The message you entered was correctly formatted and normally would
+			have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+			This Contact Form was configured to send email to an address that does not exist so
+			that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+			(the Contact Form author) please use the contact link at the bottom of the page.</p>
 		]]></Translation>
 	</Language>
 	<Language name="nl">
 		<Translation key="input_page_instructions"><![CDATA[
-		  <p>Fill out the form below to test contact form.
-		  <span style="color:red;">All messages submitted here will be discarded.</span>
-		  Feel free to play with this form as much as you would like, it is here to
-		  demonstrate how Contact Form works.</p>
-		  <p>If you really need to contact Stephen (the Contact Form author) please use
-		  the contact link at the bottom of the page.</p>
-		  <p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
-		  <ol>
-		  <li>The recipient has been sent to an email address that ignores all incoming messages.</li>
-		  <li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
-		  <li>This message is set in the input_page_instructions translation</li>
-		  </ol>
+			<p>Fill out the form below to test contact form.
+			<span style="color:red;">All messages submitted here will be discarded.</span>
+			Feel free to play with this form as much as you would like, it is here to
+			demonstrate how Contact Form works.</p>
+			<p>If you really need to contact Stephen (the Contact Form author) please use
+			the contact link at the bottom of the page.</p>
+			<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+			<ol>
+			<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+			<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+			<li>This message is set in the input_page_instructions translation</li>
+			</ol>
 		]]></Translation>
 		<Translation key="preview_page_instructions"><![CDATA[
-		  <p>Please review your message before sending it. Changes can be made below.
-		  <span style="color:red;">All messages submitted here will be discarded.</span></p>
+			<p>Please review your message before sending it. Changes can be made below.
+			<span style="color:red;">All messages submitted here will be discarded.</span></p>
 		]]></Translation>
 		<Translation key="sent_page_thank_you"><![CDATA[
-		  <p>The message you entered was correctly formatted and normally would
-		  have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
-		  This Contact Form was configured to send email to an address that does not exist so
-		  that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
-		  (the Contact Form author) please use the contact link at the bottom of the page.</p>
+			<p>The message you entered was correctly formatted and normally would
+			have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+			This Contact Form was configured to send email to an address that does not exist so
+			that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+			(the Contact Form author) please use the contact link at the bottom of the page.</p>
 		]]></Translation>
 	</Language>
 	<Language name="pig">
 		<Translation key="input_page_instructions"><![CDATA[
-		  <p>Fill out the form below to test contact form.
-		  <span style="color:red;">All messages submitted here will be discarded.</span>
-		  Feel free to play with this form as much as you would like, it is here to
-		  demonstrate how Contact Form works.</p>
-		  <p>If you really need to contact Stephen (the Contact Form author) please use
-		  the contact link at the bottom of the page.</p>
-		  <p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
-		  <ol>
-		  <li>The recipient has been sent to an email address that ignores all incoming messages.</li>
-		  <li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
-		  <li>This message is set in the input_page_instructions translation</li>
-		  </ol>
+			<p>Fill out the form below to test contact form.
+			<span style="color:red;">All messages submitted here will be discarded.</span>
+			Feel free to play with this form as much as you would like, it is here to
+			demonstrate how Contact Form works.</p>
+			<p>If you really need to contact Stephen (the Contact Form author) please use
+			the contact link at the bottom of the page.</p>
+			<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+			<ol>
+			<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+			<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+			<li>This message is set in the input_page_instructions translation</li>
+			</ol>
 		]]></Translation>
 		<Translation key="preview_page_instructions"><![CDATA[
-		  <p>Please review your message before sending it. Changes can be made below.
-		  <span style="color:red;">All messages submitted here will be discarded.</span></p>
+			<p>Please review your message before sending it. Changes can be made below.
+			<span style="color:red;">All messages submitted here will be discarded.</span></p>
 		]]></Translation>
 		<Translation key="sent_page_thank_you"><![CDATA[
-		  <p>The message you entered was correctly formatted and normally would
-		  have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
-		  This Contact Form was configured to send email to an address that does not exist so
-		  that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
-		  (the Contact Form author) please use the contact link at the bottom of the page.</p>
+			<p>The message you entered was correctly formatted and normally would
+			have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+			This Contact Form was configured to send email to an address that does not exist so
+			that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+			(the Contact Form author) please use the contact link at the bottom of the page.</p>
 		]]></Translation>
 	</Language>
 </Translations>

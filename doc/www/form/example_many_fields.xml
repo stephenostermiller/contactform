@@ -1,388 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  - Contact form - email form submissions from your website
+  - Copyright (C) 2014 Stephen Ostermiller
+  -
+  - This program is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - This program is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License along
+  - with this program; if not, write to the Free Software Foundation, Inc.,
+  - 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  -->
 <ContactFormConfiguration>
-
-<!-- Contact Form configuration file
-	 See: http://ostermiller.org/contactform/
-	 Copyright (C) 2002-2014 Stephen Ostermiller
-	 http://ostermiller.org/contact.pl?regarding=Contact+Form
-
-	 This program is free software; you can redistribute it and/or modify
-	 it under the terms of the GNU General Public License as published by
-	 the Free Software Foundation; either version 2 of the License, or
-	 (at your option) any later version.
-
-	 This program is distributed in the hope that it will be useful,
-	 but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	 GNU General Public License for more details.
-
-	 THIS FILE SHOULD BE PLACED IN A DIRECTORY THAT IS NOT SERVED BY THE WEBSERVER
-	 To use this file, edit contact.pl's $configuration_file variable
-	 to point to it. 
- -->
-
-<!-- List of email address to which mail can be sent.
-	 Mail cannot be sent to any email address which is not on this list.
-	 If a single address is listed, it will be a hidden value on the
-	 form, otherwise, the user will be presented with a pulldown menu
-	 of aliases to which email can be sent.
-	 The addresses listed here are never visible via served web pages. -->
-<Aliases>
-  <Alias name="administrator">SERVER_ADMIN</Alias>
-  <!-- The following aliases are commented out examples -->
-  <!-- <Alias name="webmaster">webmaster@yoursite.tld</Alias> -->
-  <!-- <Alias name="postmaster">postmaster@yoursite.tld</Alias> -->
-  <!-- <Alias name="two people">webmaster@yoursite.tld,postmaster@yoursite.tld</Alias> -->
-</Aliases>
+	<Aliases>
+		<Alias name="Nobody">null@ostermiller.com</Alias>
+	</Aliases>
 
 
-<!-- Page titles for the input and thank your pages -->
-<Setting name="input_page_title">Contact Us</Setting>
-<Setting name="sent_page_title">Message Sent</Setting>
+	<Setting name="page_template_file">form.html</Setting>
 
-<!-- Extra text (may be html formatted) that will be placed on
-	 the page before the the form -->
-<Setting name="input_page_text"><![CDATA[
-  <p class="contactform cf_message" id="cf_filloutformmessage">Fill out the form below to send your comments.</p>
-]]></Setting>
+	<Translations>
+		<Language name="en">
+			<Translation key="input_page_instructions"><![CDATA[
+				<p>Fill out the form below to test contact form.
+				<span style="color:red;">All messages submitted here will be discarded.</span>
+				Feel free to play with this form as much as you would like, it is here to
+				demonstrate how Contact Form works.</p>
+				<p>If you really need to contact Stephen (the Contact Form author) please use
+				the contact link at the bottom of the page.</p>
+				<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+				<ol>
+				<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+				<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+				<li>This message is set in the input_page_instructions translation</li>
+				</ol>
+			]]></Translation>
+			<Translation key="preview_page_instructions"><![CDATA[
+				<p>Please review your message before sending it. Changes can be made below.
+				<span style="color:red;">All messages submitted here will be discarded.</span></p>
+			]]></Translation>
+			<Translation key="sent_page_thank_you"><![CDATA[
+				<p>The message you entered was correctly formatted and normally would
+				have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+				This Contact Form was configured to send email to an address that does not exist so
+				that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+				(the Contact Form author) please use the contact link at the bottom of the page.</p>
+			]]></Translation>
+		</Language>
+		<Language name="nl">
+			<Translation key="input_page_instructions"><![CDATA[
+				<p>Fill out the form below to test contact form.
+				<span style="color:red;">All messages submitted here will be discarded.</span>
+				Feel free to play with this form as much as you would like, it is here to
+				demonstrate how Contact Form works.</p>
+				<p>If you really need to contact Stephen (the Contact Form author) please use
+				the contact link at the bottom of the page.</p>
+				<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+				<ol>
+				<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+				<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+				<li>This message is set in the input_page_instructions translation</li>
+				</ol>
+			]]></Translation>
+			<Translation key="preview_page_instructions"><![CDATA[
+				<p>Please review your message before sending it. Changes can be made below.
+				<span style="color:red;">All messages submitted here will be discarded.</span></p>
+			]]></Translation>
+			<Translation key="sent_page_thank_you"><![CDATA[
+				<p>The message you entered was correctly formatted and normally would
+				have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+				This Contact Form was configured to send email to an address that does not exist so
+				that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+				(the Contact Form author) please use the contact link at the bottom of the page.</p>
+			]]></Translation>
+		</Language>
+		<Language name="pig">
+			<Translation key="input_page_instructions"><![CDATA[
+				<p>Fill out the form below to test contact form.
+				<span style="color:red;">All messages submitted here will be discarded.</span>
+				Feel free to play with this form as much as you would like, it is here to
+				demonstrate how Contact Form works.</p>
+				<p>If you really need to contact Stephen (the Contact Form author) please use
+				the contact link at the bottom of the page.</p>
+				<p>This contact form has three customizations (<a href="example_three_addresses.xml">view configuration file</a>):</p>
+				<ol>
+				<li>The recipient has been sent to an email address that ignores all incoming messages.</li>
+				<li>A <a href="form.html">template file</a> is used to make it look like the Contact Form web site.</li>
+				<li>This message is set in the input_page_instructions translation</li>
+				</ol>
+			]]></Translation>
+			<Translation key="preview_page_instructions"><![CDATA[
+				<p>Please review your message before sending it. Changes can be made below.
+				<span style="color:red;">All messages submitted here will be discarded.</span></p>
+			]]></Translation>
+			<Translation key="sent_page_thank_you"><![CDATA[
+				<p>The message you entered was correctly formatted and normally would
+				have been sent.  However, <span style="color:red;">your message was sent to nobody!</span>
+				This Contact Form was configured to send email to an address that does not exist so
+				that you could test Contact Form (<a href="example_three_addresses.xml">view configuration file</a>). If you really need to contact Stephen
+				(the Contact Form author) please use the contact link at the bottom of the page.</p>
+			]]></Translation>
+		</Language>
+	</Translations>
 
-<Setting name="sent_page_text"><![CDATA[
-  <p class="contactform cf_message" id="cf_thankyoumessage">Thank you for your comments!</p>
-]]></Setting>
+	<FormFields>
 
-<Setting name="preview_page_text"><![CDATA[
-  <p class="contactform cf_message" id="cf_previewmessage">Please review your message before sending it. Changes can be made below.</p>
-]]></Setting>
+		<!-- special="to": Alias of the address put in the "To:" field of the email. -->
+		<Field name="to" error="You must specify a recipient." description="To:" special="to">
+			$ONE_LINE_REQUIRED
+		</Field>
 
-<!-- Page structure - the look and feel of the page
-	 This variable may be either changed directly, or if the
-	 page_template_file variable is set, this variable is
-	 ignored and the template file is used instead.
-	 Contact form can place content into any of four places:
-	 $title - the title of the page
-	 $css - style rules that control how the form looks
-	 $javascript - client side validation rules.
-	 $content - the form itself.
-	 The css and title variables are optional and can easily
-	 be omitted and replaced with your own elements to better
-	 suit your taste.  The form will not work properly if either
-	 the javascript or content variables are removed or duplicated.-->
-<Setting name="page_template"><![CDATA[
-  <html>
-	<head>
-	  <title>$title</title>
-	  $css
-	  $javascript
-	</head>
-	<body class="contactform cf_body" id="cf_body">
-	  <h1 class="contactform cf_header" id="cf_titleheader">$title</h1>
-	  $content
-	</body>
-  </html>
-]]></Setting>
+		<!-- special="from": Put in the "From:" field of the email as the email of the person it is from -->
+		<Field name="email" type="text" error="The email address you entered does not appear to be valid." description="Your email address:" special="from">
+			$EMAIL_REQUIRED
+		</Field>
 
-<!-- if the template file is set, the page_template variable
-	 is ignored and the template is loaded from the named file.
-	 for example:
-	 <Setting name="page_template_file">mytemplate.html</Setting>
-	 or
-	 <Setting name="page_template_file">/home/me/contact.template</Setting>
-	 If this file is set, the file will be read every time this script
-	 is called, not the most efficient, but very convenient.
-	 The template file must be in the same format as the page_template
-	 variable above. -->
-<Setting name="page_template_file"></Setting>
+		<!-- This is a field designed to thwart automated submissions
+		  - This field is not visible to the user.
+		  - Bots may attempt to fill it in which will prevent submission.-->
+		<Field name="confirm" type="trap" error="This field should be left blank" description="Leave blank:">
+			$BLANK
+		</Field>
 
-<!-- Link back to contact form.
-	 You may remove the link by setting this variable to the empty string:
-	 <Setting name="contact_form_link"></Setting>
-	 If you do remove it, please tell your friends about contact form,
-	 link to contact form somewhere else, write a blog entry about
-	 contact form, post in a forum about contact form, or otherwise
-	 spread the word. -->
-<Setting name="contact_form_link"><![CDATA[
-  <p class="contactform cf_message" id="cf_version"><a class="contactform cf_link" href="http://ostermiller.org/contactform/">Contact Form CONTACTFORM_VERSION</a></p>
-]]></Setting>
+		<!-- special="name": Put in the "From:" field of the email as the name of the person it is from -->
+		<Field name="name" type="text" error="You must enter your name." description="Your name:" special="name">
+			$ONE_LINE_OPTIONAL
+		</Field>
 
+		<!-- special="subject": Put in the "Subject:" field of the email. -->
+		<Field name="subject" type="text" error="You must enter a subject." description="Subject:" special="subject" show_in_message="true">
+			$ONE_LINE_REQUIRED
+		</Field>
 
-<!-- Captcha settings - Displays distorted text that the user
-	 must type in to prove that they are human.
-	 Sign up for a recaptach account at http://recaptcha.net/
-	 enter the public and private keys that they give you here
-	 Your server must have the Captcha::reCAPTCHA library installed.
-	 To install it, talk to your admin or use the command line:
-	 cpan install 'Captcha::reCAPTCHA' -->
-<Setting name="recaptcha_public_key"></Setting>
-<Setting name="recaptcha_private_key"></Setting>
+		<Field name="message" type="textarea" error="You must enter a message." description="$NO_DESCRIPTION">
+			$SOMETHING
+		</Field>
 
-<!-- The name of the field for submit/preview action -->
-<Setting name="field_name_submit">do</Setting>
+		<!-- special="regarding": Put in the "Subject:" field of the email in parenthesis. -->
+		<Field name="regarding" type="hidden" error="" description="$NO_DESCRIPTION" special="regarding">
+			$ANYTHING
+		</Field>
 
-<!-- Regular expression describing urls which can host forms
-	 pointing to this program. The referral URL is generated on the
-	 client side by the browser. Therefore it useless to prevent
-	 unauthorized submission by mail software robots. You can
-	 prevent somebody from reliably hosting, on another server,
-	 a form pointing to this email software.
-	 Consider the following options:
-	 This form can be used from any site at all: .*
-	 This form can only be used from pages on yoursite.tld: ^http[s]?\:\/\/yoursite\.tld\/
-	 This form can only be used from pages on the domain or ip address: ^http[s]?\:\/\/((yoursite\.tld)|(127\.0\.0\.1))\/'
-	 This form can only be used from a specific page: ^http[s]?\:\/\/yoursite\.tld\/directory\/page\.html\$'
-	 -->
-<Setting name="allowedReferers">.*</Setting>
+		<!-- special="referrer": The original referring url. -->
+		<Field name="referrer" type="hidden" error="" description="$NO_DESCRIPTION" special="referrer">
+			$ANYTHING
+		</Field>
 
-<!-- Whether or not users are required to preview
-	 their message before sending.
-	 0 - preview disabled (allows users to send mail the fastest)
-	 1 - preview required (best for spam prevention)
-	 2 - preview available, but not required  (most choice for users) -->
-<Setting name="require_preview">1</Setting>
+		<!-- The following fields are disabled examples, remove the enabled="0" to use them -->
 
-<!-- The character set for the contact page -->
-<Setting name="charset">ISO-8859-1</Setting>
+		<Field name="phone" type="text" error="The phone number you entered does not appear to be valid." description="Phone Number:">
+			$PHONE_OPTIONAL
+		</Field>
 
-<!-- Command line program used to send email
-	 '/usr/lib/sendmail -i -t' almost always works fine -->
-<Setting name="sendmail">/usr/lib/sendmail -i -t</Setting>
+		<Field name="fax" enabled="0" type="text" error="The fax number you entered does not appear to be valid." description="Fax Number:">
+			$PHONE_OPTIONAL
+		</Field>
 
-<!-- Whether or not to include javascript that checks the form
-	 before it is submitted.
-	 This is generally good, but it increases the page size, increases the
-	 complexity of the page, and could alert hackers to the
-	 regular expressions you are using for verification.
-	 Set to 0 to disable, 1 to enable. -->
-<Setting name="use_client_side_verification">1</Setting>
+		<Field name="address1" type="text" error="Please enter your address." description="Address:">
+			$ONE_LINE_OPTIONAL
+		</Field>
 
-<!-- This should be either 'POST' or 'GET' -->
-<Setting name="submit_method">POST</Setting>
+		<Field name="address2" type="text" error="Please enter your address." description="$NO_DESCRIPTION">
+			$ONE_LINE_OPTIONAL
+		</Field>
 
-<!-- Placed next to form elements that must be filled in -->
-<Setting name="required_marker"><![CDATA[
-  <span class="contactform cf_required">*</span>
-]]></Setting>
+		<Field name="city" type="text" error="Your city does not appear to be valid." description="City:">
+			^(?:[a-zA-Z ]*)$
+		</Field>
 
-<Setting name="required_marker_note"><![CDATA[
-  <p class="contactform cf_message" id="cf_requiredexplain">
-	REQUIRED_MARKER denotes a required field.
-  </p>
-]]></Setting>
+		<Field name="state" type="select" error="Please choose your state." description="State:">
+			^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)$
+		</Field>
 
-<!-- Style rules for the input page.
-	 to put question and answer on the same line use:
-	 .cf_userentry, .cf_radioselection { display:inline; margin-left:0.25cm; }
-	 -->
-<Setting name="input_page_css"><![CDATA[
-  <style>
-	.cf_error { color:red; }
-	.cf_textentry { min-width:300px; width:100%; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
-	textarea.contactform { height:4in; }
-	.cf_required { color:green; }
-	#cf_version { text-align:right; }
-	#cf_global_error { margin-bottom:0.25cm; }
-	.cf_field { margin-bottom:0.5cm; }
-	.cf_nt { display:none; }
-	.cf_preview { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");margin-bottom:1cm;}
-  </style>
-]]></Setting>
+		<Field name="zip" type="text" error="Your zipcode does not appear to be valid." description="Zipcode:">
+			$ZIPCODE_OPTIONAL
+		</Field>
+
+		<!-- uses the default values for required, error, type, and description -->
+		<Field name="most_basic_question" enabled="0"></Field>
+
+		<!-- A required select drop down -->
+		<Field name="color" type="select" error="Please choose a color." description="Choose a color:">
+			^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$
+		</Field>
 
 
-<!-- Style rules for thank you page -->
-<Setting name="sent_page_css"><![CDATA[
-  <style>
-	.cf_sent { border:thin black ridge; padding:1cm; max-width:600px; width:expression(document.body.clientWidth>600?"600px":"auto");}
-	#cf_version { text-align:right; }
-  </style>
-]]></Setting>
+		<!-- An optional select drop down -->
+		<Field name="vegetable" type="select" error="Please choose a valid vegetable." description="Which (if any) is your favorite vegetable:">
+			^(?:|Corn|Peas|Beans|Carrots|Broccoli)$
+		</Field>
 
-<!-- Link to favicon, placed in the head after the JavaScript -->
-<Setting name="icon_link"><![CDATA[
-  <link rel="icon" href="SCRIPT_NAME_ESCAPED/contactformicon.png" type="image/png">
-]]></Setting>
+		<!-- A select drop down with a pre-filled option -->
+		<Field name="letter" type="select" error="Please choose on of the four letters." description="Choose a letter (C is selected by default):" selected="C">
+			^(?:A|B|C|D)$
+		</Field>
 
-<!-- Form copyright header placed in the head after the JavaScript -->
-<Setting name="copyright_link"><![CDATA[
-  <link rel="copyright" href="http://ostermiller.org/contactform/" type="text/html">
-]]></Setting>
+		<!-- required radio buttons -->
+		<Field name="yes_no" type="radio" error="Please answer the yes/no question" description="Yes or no:">
+			^(?:yes|no)$
+		</Field>
 
-<!-- Redirect to this url after the message has been sent
-	 By default there is no redirect.  The url must
-	 be fully qualified (must start with http://)
-	 Example: <Setting name="redirect_url_sent">http://example.com/</Setting> -->
-<Setting name="redirect_url_sent"></Setting>
+		<!-- radio buttons with a prefilled option -->
+		<Field name="true_false" type="radio" error="Please answer the true/false question" description="True or false (false is selected by default):">
+			^(?:true|false)$
+		</Field>
 
-<!-- Show the sent confirmation for this many seconds before redirecting
-	 after the message has been sent if the redirect_url_sent has been defined.
-	 If zero is specified, the message sent confirmation will not
-	 be shown at all (you can redirect to your own thank you) -->
-<Setting name="redirect_delay_sent">15</Setting>
+		<!-- optional radio buttons -->
+		<Field name="vegetable2" type="radio" error="Please choose a valid vegetable." description="Which (if any) is your favorite vegetable:">
+			^(?:|Lettuce|Tomato|Brussel Sprouts)$
+		</Field>
 
-<!-- Regular expressions for text that is not allowed in any fields -->
-<DisallowedText>
-  <Disallow message="You appear to be trying to include HTML formatted links.  Links should not be formatted like this."><![CDATA[
-	  \<[ \r\n\t]*[Aa][ \r\n\t]
-  ]]></Disallow>
-  <Disallow message="You appear to be trying to include message board formatted links.  Links should not be formatted like this."><![CDATA[
-	  \[[ \r\n\t]*[Uu][Rr][Ll][ \r\n\t]*\=
-  ]]></Disallow>
-</DisallowedText>
+		<!-- prefilled -->
+		<Field name="about" type="text" error="Please enter what this message is about." description="What is this message about:" default="Email">
+			$ANYTHING
+		</Field>
 
-<!-- FormFields is the list of questions the user is expected
-	 to answer. The questions will appear in the same order as
-	 they are ordered here. You may safely remove the subject,
-	 email, name, and message from the form. The to field should
-	 not be removed. The name of each field should contain only
-	 letters, numbers, and underscore.  Spaces or symbols should
-	 not be used.  Each has several attributes that control the
-	 display of the question to the user.
-
-	 "required"
-	 a regular expression that describes what a valid submission looks
-	 like.  By default, any entry at all is allowed.
-	 Consider using the following pre-defined regular expressions:
-	 $SOMETHING, $ANYTHING, $ONE_LINE_REQUIRED, $ONE_LINE_OPTIONAL,
-	 $ZIPCODE_REQUIRED, $ZIPCODE_OPTIONAL, $PHONE_REQUIRED,
-	 $PHONE_OPTIONAL, $EMAIL_REQUIRED, $EMAIL_OPTIONAL, $PRICE_REQUIRED,
-	 $PRICE_OPTIONAL, $FLOAT_REQUIRED, $FLOAT_OPTIONAL,
-	 $INTEGER_REQUIRED, $INTEGER_OPTIONAL, $BLANK, $PHONE_NO_AREA_CODE_OPTIONAL, 
-	 $PHONE_NO_AREA_CODE_REQUIRED
-
-	 "error"
-	 A user friendly error message for each required
-	 element that a user gets wrong.
-
-	 "type"
-	 Type of input in web pages for each field.
-	 Currently supported are 'text', 'hidden', 'radio',
-	 'select', and 'textarea'
-	 If there is no type, 'text' is assumed.
-	 Setting the type for the to field will have no effect since
-	 the to field is handled specially.
-
-	 "description"
-	 Description to appear next to entry forms and in
-	 the email or $NO_DESCRIPTION for none
-	 If no description is given the field name followed
-	 by a colon is used
-
-	 "selected"
-	 For fields of type "select", or "radio" indicates
-	 the default selection
-
-	 "special"
-	 Any special purpose for which the field is used.
-	 Must be one of "to", "from", "name", "subject",
-	 "regarding", or "referrer" -->
-<FormFields>
-
-	<!-- special="to": Alias of the address put in the "To:" field of the email. -->
-	<Field name="to" error="You must specify a recipient." description="To:" special="to">
-		$ONE_LINE_REQUIRED
-	</Field>
-	
-	<!-- special="from": Put in the "From:" field of the email as the email of the person it is from -->
-	<Field name="email" type="text" error="The email address you entered does not appear to be valid." description="Your email address:" special="from">
-		$EMAIL_REQUIRED
-	</Field>
-	
-	<!-- This is a field designed to thwart automated submissions
-		 This field is not visible to the user.
-		 Bots may attempt to fill it in which will prevent submission.--> 
-	<Field name="confirm" type="trap" error="This field should be left blank" description="Leave blank:">
-		$BLANK
-	</Field>
-	
-	<!-- special="name": Put in the "From:" field of the email as the name of the person it is from -->	
-	<Field name="name" type="text" error="You must enter your name." description="Your name:" special="name">
-		$ONE_LINE_OPTIONAL
-	</Field>
-	
-	<!-- special="subject": Put in the "Subject:" field of the email. -->	
-	<Field name="subject" type="text" error="You must enter a subject." description="Subject:" special="subject" show_in_message="true">
-		$ONE_LINE_REQUIRED
-	</Field>
-	
-	<Field name="message" type="textarea" error="You must enter a message." description="$NO_DESCRIPTION">
-		$SOMETHING
-	</Field>
-	
-	<!-- special="regarding": Put in the "Subject:" field of the email in parenthesis. -->	
-	<Field name="regarding" type="hidden" error="" description="$NO_DESCRIPTION" special="regarding">
-		$ANYTHING
-	</Field>
-	
-	<!-- special="referrer": The original referring url. -->	
-	<Field name="referrer" type="hidden" error="" description="$NO_DESCRIPTION" special="referrer">
-		$ANYTHING
-	</Field>
-	
-	<!-- The following fields are disabled examples, remove the enabled="0" to use them -->
-	
-	<Field name="phone" type="text" error="The phone number you entered does not appear to be valid." description="Phone Number:">
-		$PHONE_OPTIONAL
-	</Field>
-	
-	<Field name="fax" enabled="0" type="text" error="The fax number you entered does not appear to be valid." description="Fax Number:">
-		$PHONE_OPTIONAL
-	</Field>
-	
-	<Field name="address1" type="text" error="Please enter your address." description="Address:">
-		$ONE_LINE_OPTIONAL
-	</Field>
-	
-	<Field name="address2" type="text" error="Please enter your address." description="$NO_DESCRIPTION">
-		$ONE_LINE_OPTIONAL
-	</Field>
-	
-	<Field name="city" type="text" error="Your city does not appear to be valid." description="City:">
-		^(?:[a-zA-Z ]*)$
-	</Field>
-	
-	<Field name="state" type="select" error="Please choose your state." description="State:">
-		^(?:AL|AK|AS|AZ|AR|CA|CO|CT|DE|DC|FL|GA|GU|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MH|MA|MI|FM|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|MP|OH|OK|OR|PW|PA|PR|RI|SC|SD|TN|TX|UT|VT|VA|VI|WA|WV|WI|WY)$
-	</Field>
-	
-	<Field name="zip" type="text" error="Your zipcode does not appear to be valid." description="Zipcode:">
-		$ZIPCODE_OPTIONAL
-	</Field>
-	
-	<!-- uses the default values for required, error, type, and description -->	
-	<Field name="most_basic_question" enabled="0"></Field>
-	
-	<!-- A required select drop down -->
-	<Field name="color" type="select" error="Please choose a color." description="Choose a color:">
-		^(?:Red|Orange|Yellow|Green|Blue|Purple|Black|White)$
-	</Field>
-	
-	
-	<!-- An optional select drop down -->
-	<Field name="vegetable" type="select" error="Please choose a valid vegetable." description="Which (if any) is your favorite vegetable:">
-		^(?:|Corn|Peas|Beans|Carrots|Broccoli)$
-	</Field>
-	
-	<!-- A select drop down with a pre-filled option -->
-	<Field name="letter" type="select" error="Please choose on of the four letters." description="Choose a letter (C is selected by default):" selected="C">
-		^(?:A|B|C|D)$
-	</Field>
-	
-	<!-- required radio buttons -->
-	<Field name="yes_no" type="radio" error="Please answer the yes/no question" description="Yes or no:">
-		^(?:yes|no)$
-	</Field>
-	
-	<!-- radio buttons with a prefilled option -->
-	<Field name="true_false" type="radio" error="Please answer the true/false question" description="True or false (false is selected by default):">
-		^(?:true|false)$
-	</Field>
-	
-	<!-- optional radio buttons -->
-	<Field name="vegetable2" type="radio" error="Please choose a valid vegetable." description="Which (if any) is your favorite vegetable:">
-		^(?:|Lettuce|Tomato|Brussel Sprouts)$
-	</Field>
-	
-	<!-- prefilled -->
-	<Field name="about" type="text" error="Please enter what this message is about." description="What is this message about:" default="Email">
-		$ANYTHING
-	</Field>
-	
-</FormFields>
+	</FormFields>
 </ContactFormConfiguration>
