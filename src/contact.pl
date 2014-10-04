@@ -98,6 +98,7 @@ sub settings(){
 	# ignored and the template file is used instead.
 	# Contact form can place content into any of four places:
 	# $title -- the title of the page
+	# $meta - meta tags such as rel canonical
 	# $css -- style rules that control how the form looks
 	# $javascript -- client side validation rules.
 	# $content -- the form itself.
@@ -112,6 +113,7 @@ sub settings(){
 	<html>
 	<head>
 	<title>$title</title>
+	$meta
 	$css
 	$javascript
 	</head>
@@ -836,7 +838,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.03.02";
+	$VERSION = "4.03.03";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1449,6 +1451,8 @@ sub sendEmail {
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
 		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
 		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
+		print MAIL "X-Http-Url: ".&safeHeader(getCanonicalUrl())."\n";
+		print MAIL "X-Http-Host: ".&safeHeader($ENV{'HTTP_HOST'})."\n";
 		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
 		print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
 		print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
@@ -1899,12 +1903,23 @@ sub messageSendSubmitted(){
 	return 0;
 }
 
+sub getCanonicalUrl(){
+	my $protocol = "http://";
+	$protocol = "https://" if ($ENV{'HTTPS'} eq 'ON');
+	my $path = $ENV{'SCRIPT_NAME'};
+	my $host = $ENV{'HTTP_HOST'};
+	my $port = "";
+	$port = ":".$ENV{SERVER_PORT} if ($ENV{SERVER_PORT} ne "80");
+	return "$protocol$host$port$path";
+}
+
 sub outputPage(){
 	my ($title, $css, $javascript, $content) = @_;
-
+	my $meta = "<link rel=\"canonical\" href=\"".getCanonicalUrl()."\"/>";
 	my $page = &trans($settings->{'page_template'});
 	$page =~ s/\$title/$title/g;
 	$page =~ s/\$css/$css/g;
+	$page =~ s/\$meta/$meta/g;
 	my $icon_link = $settings->{'icon_link'};
 	my $copyright_link = $settings->{'copyright_link'};
 	$page =~ s/\$javascript/$javascript$icon_link\n$copyright_link/g;

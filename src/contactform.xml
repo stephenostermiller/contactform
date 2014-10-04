@@ -71,6 +71,7 @@
   -  ignored and the template file is used instead.
   -  Contact form can place content into any of four places:
   -  $title - the title of the page
+  -  $meta - meta tags such as rel canonical
   -  $css - style rules that control how the form looks
   -  $javascript - client side validation rules.
   -  $content - the form itself.
@@ -84,6 +85,7 @@
 	<html>
 		<head>
 			<title>$title</title>
+			$meta
 			$css
 			$javascript
 		</head>
