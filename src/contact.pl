@@ -98,10 +98,7 @@ sub settings(){
 	# ignored and the template file is used instead.
 	# Contact form can place content into any of four places:
 	# $title -- the title of the page
-<<<<<<< HEAD
-=======
 	# $meta - meta tags such as rel canonical
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 	# $css -- style rules that control how the form looks
 	# $javascript -- client side validation rules.
 	# $content -- the form itself.
@@ -116,10 +113,7 @@ sub settings(){
 	<html>
 	<head>
 	<title>$title</title>
-<<<<<<< HEAD
-=======
 	$meta
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 	$css
 	$javascript
 	</head>
@@ -844,11 +838,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-<<<<<<< HEAD
-	$VERSION = "4.03.02";
-=======
 	$VERSION = "4.03.03";
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1461,11 +1451,8 @@ sub sendEmail {
 		print MAIL "X-Mailer: ContactForm/".&safeHeader($VERSION)." (http://ostermiller.org/contactform/)\n";
 		print MAIL "X-Server-Name: ".&safeHeader($ENV{'SERVER_NAME'})."\n";
 		print MAIL "X-Server-Admin: ".&safeHeader($ENV{'SERVER_ADMIN'})."\n";
-<<<<<<< HEAD
-=======
 		print MAIL "X-Http-Url: ".&safeHeader(getCanonicalUrl())."\n";
 		print MAIL "X-Http-Host: ".&safeHeader($ENV{'HTTP_HOST'})."\n";
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 		print MAIL "X-Script-Name: ".&safeHeader($ENV{'SCRIPT_NAME'})."\n";
 		print MAIL "X-Path-Info: ".&safeHeader($ENV{'PATH_INFO'})."\n";
 		print MAIL "X-Remote-Host: ".&safeHeader($ENV{'REMOTE_HOST'})."\n";
@@ -1916,14 +1903,6 @@ sub messageSendSubmitted(){
 	return 0;
 }
 
-<<<<<<< HEAD
-sub outputPage(){
-	my ($title, $css, $javascript, $content) = @_;
-
-	my $page = &trans($settings->{'page_template'});
-	$page =~ s/\$title/$title/g;
-	$page =~ s/\$css/$css/g;
-=======
 sub getCanonicalUrl(){
 	my $protocol = "http://";
 	$protocol = "https://" if ($ENV{'HTTPS'} eq 'ON');
@@ -1941,7 +1920,6 @@ sub outputPage(){
 	$page =~ s/\$title/$title/g;
 	$page =~ s/\$css/$css/g;
 	$page =~ s/\$meta/$meta/g;
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 	my $icon_link = $settings->{'icon_link'};
 	my $copyright_link = $settings->{'copyright_link'};
 	$page =~ s/\$javascript/$javascript$icon_link\n$copyright_link/g;

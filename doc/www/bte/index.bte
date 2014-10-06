@@ -159,12 +159,9 @@ It currently comes in the following languages:
 </ul>
 
 <h2>Changes</h2><ul>
-<<<<<<< HEAD
-=======
 <li>Version 4.03.03<ul>
 <li>Added rel canonical meta tag to the HTML</li>
 </ul></li></li>
->>>>>>> 15b5cea6068f84401d0d499688973ecdc16471b4
 <li>Version 4.03.02<ul>
 <li>Add HTML5 doctype to default HTML page</li>
 <li>More correct fix for <a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
