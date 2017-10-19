@@ -3,18 +3,19 @@
 <%bte.tpl name=description %>A web form that will send contents via email, but without allowing spammers to harvest addresses.<%/bte.tpl%>
 <%bte.tpl name=keywords %>contact form, form mail, formmail, email form, spam prevention, email gateway, web to email<%/bte.tpl%>
 <%bte.tpl name=topContent %>
+
 <h1>Contact Form</h1>
 A Perl script that you can run on your website that will allow others to send you email
 through a web interface.  Unlike other web to email gateways, Contact Form is designed to
 thwart spammers.  It does not allow email to be sent to unknown addresses, nor does it
 reveal addresses that it knows.
+
 <%/bte.tpl%>
 <%bte.tpl name=content %>
 
-<div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
 <h2>Work Flow</h2>
-<p><a href="http://ostermiller.org/contactform/workflow.html"><img src="http://ostermiller.org/contactform/workflow_sm.png" width=200 height=78 style="padding:10px;"></a></p>
-<p>Use case: <a href="http://ostermiller.org/contactform/workflow.html">User wants to contact you using this email form script.</a></p>
+<p><a href="https://ostermiller.org/contactform/workflow.html"><img src="https://ostermiller.org/contactform/workflow_sm.png" width=200 height=78 style="padding:10px;"></a></p>
+<p>Use case: <a href="https://ostermiller.org/contactform/workflow.html">User wants to contact you using this email form script.</a></p>
 
 </div>
 
@@ -38,67 +39,67 @@ reveal addresses that it knows.
 <div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
 <h2>FAQ</h2>
 <ul>
-<li><a href="http://ostermiller.org/contactform/addresses.html">Email Address Configuration</a>
+<li><a href="https://ostermiller.org/contactform/addresses.html">Email Address Configuration</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/addresses.html#default_config">Default Configuration</a></li>
-<li><a href="http://ostermiller.org/contactform/addresses.html#single_config">Just One Person</a></li>
-<li><a href="http://ostermiller.org/contactform/addresses.html#multiple_config">Choice of Multiple People</a></li>
-<li><a href="http://ostermiller.org/contactform/addresses.html#list_config">List of Addresses</a></li>
+<li><a href="https://ostermiller.org/contactform/addresses.html#default_config">Default Configuration</a></li>
+<li><a href="https://ostermiller.org/contactform/addresses.html#single_config">Just One Person</a></li>
+<li><a href="https://ostermiller.org/contactform/addresses.html#multiple_config">Choice of Multiple People</a></li>
+<li><a href="https://ostermiller.org/contactform/addresses.html#list_config">List of Addresses</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/options.html">Optional Configuration</a>
+<li><a href="https://ostermiller.org/contactform/options.html">Optional Configuration</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/options.html#look_and_feel">Change the Look and Feel</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#add_fields">Add Fields</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#restrict_referrer">Restrict the Referrer</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#internationalization">Allow International Characters</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#select_fields">Drop down select lists</a></li>
-<li><a href="http://ostermiller.org/contactform/options.html#xml_configuration">External XML File Configuration</a></li></ul>
+<li><a href="https://ostermiller.org/contactform/options.html#look_and_feel">Change the Look and Feel</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#add_fields">Add Fields</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#restrict_referrer">Restrict the Referrer</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#internationalization">Allow International Characters</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#client_verification">Turn Off Client Side Verification</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#select_fields">Drop down select lists</a></li>
+<li><a href="https://ostermiller.org/contactform/options.html#xml_configuration">External XML File Configuration</a></li></ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/link.html">Integrate Contact Form to Your Site</a>
+<li><a href="https://ostermiller.org/contactform/link.html">Integrate Contact Form to Your Site</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/link.html#hidden_subject">Append Hidden Text to Subject</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#prefill_data">Prefill Data</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#embed">Embed the Form in Other Pages</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#outside_cgibin">Deploy Outside cgi-bin</a></li>
-<li><a href="http://ostermiller.org/contactform/link.html#hide_pl">Hide the .pl Extension</a></li>
+<li><a href="https://ostermiller.org/contactform/link.html#hidden_subject">Append Hidden Text to Subject</a></li>
+<li><a href="https://ostermiller.org/contactform/link.html#prefill_data">Prefill Data</a></li>
+<li><a href="https://ostermiller.org/contactform/link.html#embed">Embed the Form in Other Pages</a></li>
+<li><a href="https://ostermiller.org/contactform/link.html#outside_cgibin">Deploy Outside cgi-bin</a></li>
+<li><a href="https://ostermiller.org/contactform/link.html#hide_pl">Hide the .pl Extension</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/problems.html">Problem Resolution</a>
+<li><a href="https://ostermiller.org/contactform/problems.html">Problem Resolution</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/problems.html#file_permissions">File Permissions</a></li>
-<li><a href="http://ostermiller.org/contactform/problems.html#server_configuration">Web Server Configuration</a></li>
-<li><a href="http://ostermiller.org/contactform/problems.html#syntax_error">Syntax Error</a></li>
-<li><a href="http://ostermiller.org/contactform/problems.html#taint_mode">Too Late for Taint Mode</a></li>
-<li><a href="http://ostermiller.org/contactform/problems.html#sendmail">Sendmail Not Installed or Misconfigured</a></li>
-<li><a href="http://ostermiller.org/contactform/problems.html#selinux">Security Enhanced Linux</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#file_permissions">File Permissions</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#server_configuration">Web Server Configuration</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#syntax_error">Syntax Error</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#taint_mode">Too Late for Taint Mode</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#sendmail">Sendmail Not Installed or Misconfigured</a></li>
+<li><a href="https://ostermiller.org/contactform/problems.html#selinux">Security Enhanced Linux</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/errors.html">Error Messages</a>
+<li><a href="https://ostermiller.org/contactform/errors.html">Error Messages</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/errors.html#email_invalid">Invalid email address</a></li>
-<li><a href="http://ostermiller.org/contactform/errors.html#no_subject">Missing subject</a></li>
-<li><a href="http://ostermiller.org/contactform/errors.html#no_message">No message</a></li>
-<li><a href="http://ostermiller.org/contactform/errors.html#no_recipient">Recipient not specified</a></li>
-<li><a href="http://ostermiller.org/contactform/errors.html#html_link">HTML link</a></li>
-<li><a href="http://ostermiller.org/contactform/errors.html#forum_link">Message board link</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#email_invalid">Invalid email address</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#no_subject">Missing subject</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#no_message">No message</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#no_recipient">Recipient not specified</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#html_link">HTML link</a></li>
+<li><a href="https://ostermiller.org/contactform/errors.html#forum_link">Message board link</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/spam.html">Spam</a>
+<li><a href="https://ostermiller.org/contactform/spam.html">Spam</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/spam.html#contact_form_spam">My contact form is being spammed</a></li>
-<li><a href="http://ostermiller.org/contactform/spam.html#disallow_links">Disallow links</a></li>
-<li><a href="http://ostermiller.org/contactform/spam.html#preview">Require Preview</a></li>
-<li><a href="http://ostermiller.org/contactform/spam.html#add_anti_spam_fields">Add anti-spam fields</a></li>
-<li><a href="http://ostermiller.org/contactform/spam.html#trap">Bot Trap Field</a></li>
-<li><a href="http://ostermiller.org/contactform/spam.html#captchas">Captchas</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#contact_form_spam">My contact form is being spammed</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#disallow_links">Disallow links</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#preview">Require Preview</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#add_anti_spam_fields">Add anti-spam fields</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#trap">Bot Trap Field</a></li>
+<li><a href="https://ostermiller.org/contactform/spam.html#captchas">Captchas</a></li>
 </ul>
 </li>
-<li><a href="http://ostermiller.org/contactform/bugs.html">Bugs and Features</a>
+<li><a href="https://ostermiller.org/contactform/bugs.html">Bugs and Features</a>
 <ul>
-<li><a href="http://ostermiller.org/contactform/bugs.html#open">Open Issues</a></li>
-<li><a href="http://ostermiller.org/contactform/bugs.html#new">Submit Issues</a></li>
+<li><a href="https://ostermiller.org/contactform/bugs.html#open">Open Issues</a></li>
+<li><a href="https://ostermiller.org/contactform/bugs.html#new">Submit Issues</a></li>
 </ul>
 </li>
 </ul>
@@ -119,19 +120,19 @@ reveal addresses that it knows.
 <ul>
 <li>A web server that can execute Perl scripts.</li>
 <li>A command line program to send electronic mail. ("sendmail" is installed on most servers.)</li>
-<li>If captchas are used, the Captcha::reCAPTCHA perl module must be installed<br>
-(cpan install Captcha::reCAPTCHA <i>or</i> apt-get install libcaptcha-recaptcha-perl <i>or</i> yum install perl-Captcha-reCAPTCHA)</li>
+<li>If captchas are used, the Captcha::reCAPTCHA::V2 perl module must be installed<br>
+(cpan install Captcha::reCAPTCHA::V2 <i>or</i> apt-get install libcaptcha-recaptcha-perl <i>or</i> yum install perl-Captcha-reCAPTCHA)</li>
 <li>If external XML file configuration is used, the XML::Simple perl module must be installed<br>
 (cpan install XML::Simple <i>or</i> apt-get install libxml-simple-perl <i>or</i> yum install perl-XML-Simple)</li>
 </ul>
 
 <h2>Download</h2>
-<p><a href="http://ostermiller.org/contactform/contactform_FILEVERSION.tar.gz">contactform_FILEVERSION.tar.gz</a></p>
+<p><a href="https://ostermiller.org/contactform/contactform_5_00_00.tar.gz">contactform_5_00_00.tar.gz</a></p>
 
 <h2>Examples</h2>
 <ul>
-<li><a href="http://ostermiller.org/contactform/example_one_address.pl">An example Contact Form with a single recipient and preview required.</a></li>
-<li><a href="http://ostermiller.org/contactform/example_three_addresses.pl">An example Contact Form from which any of three recipients can be chosen.  No message preview is required.</a></li>
+<li><a href="https://ostermiller.org/contactform/example_one_address.pl">An example Contact Form with a single recipient and preview required.</a></li>
+<li><a href="https://ostermiller.org/contactform/example_three_addresses.pl">An example Contact Form from which any of three recipients can be chosen.  No message preview is required.</a></li>
 </ul>
 
 <h2>Keep up to date</h2>
@@ -154,11 +155,14 @@ Contact form can be easily translated.  See instructions in the contact.pl file 
 It currently comes in the following languages:
 <ul>
 <li>English (en)</li>
-<li>Dutch (nl) <a href="http://ostermiller.org/contactform/example_one_address.pl?cflang=nl">example</a></li>
-<li>Pig Latin (pig) (for testing) <a href="http://ostermiller.org/contactform/example_one_address.pl?cflang=pig">example</a></li>
+<li>Dutch (nl) <a href="https://ostermiller.org/contactform/example_one_address.pl?cflang=nl">example</a></li>
+<li>Pig Latin (pig) (for testing) <a href="https://ostermiller.org/contactform/example_one_address.pl?cflang=pig">example</a></li>
 </ul>
 
 <h2>Changes</h2><ul>
+<li>Version 5.00.00<ul>
+<li>Upgraded recaptcha to v2.  This enables the "check this box" challenge rather than the "decipher these letters" challenge.  Note that Google will stop supporting recaptcha v1 on March 31, 2018, so all ContactForm installations will either need to upgrade or disable recaptcha.   In most cases upgrading will entail generating new recaptcha keys from Google because old "global" keys cannot be used with V2.  The Perl module Captcha::reCAPTCHA::V2 needs to be installed.   ContactForm configuration value names were changed to "recaptcha_site_key" and "recaptcha_secret_key" to match the language currently used by Google.</li>
+</ul></li></li>
 <li>Version 4.03.03<ul>
 <li>Added rel canonical meta tag to the HTML</li>
 </ul></li></li>
@@ -320,5 +324,6 @@ General Public License</a> for more details.</p>
 <tr><td><a href="http://ente.limmat.ch/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
 <tr><td><a href="http://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
 </table>
+
 <%/bte.tpl%>
 <%/bte.doc%>

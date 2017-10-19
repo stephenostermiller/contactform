@@ -377,13 +377,13 @@ sub settings(){
 
 	# Captcha settings -- Displays distorted text that the user
 	# must type in to prove that they are human.
-	# Sign up for a recaptach account at http://recaptcha.net/
-	# enter the public and private keys that they give you here
-	# Your server must have the Captcha::reCAPTCHA library installed.
+	# Sign up for a recaptach account at https://www.google.com/recaptcha/
+	# enter the site and secret keys that they give you here
+	# Your server must have the Captcha::reCAPTCHA::V2 library installed.
 	# To install it, talk to your admin or use the command line:
-	# cpan install 'Captcha::reCAPTCHA'
-	$settings->{'recaptcha_public_key'} = '';
-	$settings->{'recaptcha_private_key'} = '';
+	# cpan install 'Captcha::reCAPTCHA::V2'
+	$settings->{'recaptcha_site_key'} = '';
+	$settings->{'recaptcha_secret_key'} = '';
 
 	# The name of the field for submit/preview action
 	$settings->{'field_name_submit'} = 'do';
@@ -838,7 +838,7 @@ sub initConstants {
 	$NO_DESCRIPTION = "-";
 
 	# Version number of this software.
-	$VERSION = "4.03.03";
+	$VERSION = "5.00.00";
 
 	# Reqular expression building blocks
 	$LETTER = "[a-zA-Z]";
@@ -1125,8 +1125,8 @@ sub errorPage {
 sub parseInput {
 	my ($pair, @pairs, $buffer);
 
-	if ($settings->{'recaptcha_public_key'} and $settings->{'recaptcha_private_key'}){
-		my $captchamodule = "Captcha::reCAPTCHA";
+	if ($settings->{'recaptcha_site_key'} and $settings->{'recaptcha_secret_key'}){
+		my $captchamodule = "Captcha::reCAPTCHA::V2";
 		eval "use $captchamodule";
 		if ($@) {
 			&errorPage(
@@ -1282,13 +1282,12 @@ sub sanityCheck {
 	}
 
 	if ($captcha and !&messagePreviewSubmitted()){
-		$captchaResult = $captcha->check_answer(
-			$settings->{'recaptcha_private_key'},
-			$ENV{'REMOTE_ADDR'},
-			$SubmittedData->{"recaptcha_challenge_field"},
-			$SubmittedData->{"recaptcha_response_field"}
+		$captchaResult = $captcha->verify(
+			$settings->{'recaptcha_secret_key'},
+			$SubmittedData->{"g-recaptcha-response"},
+			$ENV{'REMOTE_ADDR'}
 		);
-		if (!$captchaResult->{is_valid}){
+		if (!$captchaResult->{success}){
 			$errorHash{"captcha"} = &trans('field_captcha_error');
 			&inputPage(&getCorrectionsRequiredText(1), "", "", \%errorHash, 1);
 		}
@@ -1690,7 +1689,7 @@ sub inputPage {
 		$form_html.="</label>\n";
 		my $captcha_error=undef;
 		$captcha_error = $captchaResult->{error} if ($captchaResult and !$captchaResult->{is_valid});
-		$form_html.=$captcha->get_html($settings->{'recaptcha_public_key'}, $captcha_error, undef, {lang=>&getUserLanguage()});
+		$form_html.=$captcha->html($settings->{'recaptcha_site_key'}, $captcha_error, undef, {lang=>&getUserLanguage()});
 		$form_html.="</div>\n";
 	}
 	if ($settings->{'require_preview'} eq "1" or $settings->{'require_preview'} eq "2"){
@@ -1905,7 +1904,7 @@ sub messageSendSubmitted(){
 
 sub getCanonicalUrl(){
 	my $protocol = "http://";
-	$protocol = "https://" if ($ENV{'HTTPS'} eq 'ON');
+	$protocol = "https://" if (&safeHeader($ENV{'HTTPS'}) eq 'ON');
 	my $path = $ENV{'SCRIPT_NAME'};
 	my $host = $ENV{'HTTP_HOST'};
 	my $port = "";

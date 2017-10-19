@@ -120,13 +120,13 @@
 
 <!-- Captcha settings - Displays distorted text that the user
   -  must type in to prove that they are human.
-  -  Sign up for a recaptach account at http://recaptcha.net/
-  -  enter the public and private keys that they give you here
-  -  Your server must have the Captcha::reCAPTCHA library installed.
+  -  Sign up for a recaptach account at https://www.google.com/recaptcha/
+  -  enter the site and secret keys that they give you here
+  -  Your server must have the Captcha::reCAPTCHA::V2 library installed.
   -  To install it, talk to your admin or use the command line:
-  -  cpan install 'Captcha::reCAPTCHA' -->
-<Setting name="recaptcha_public_key"></Setting>
-<Setting name="recaptcha_private_key"></Setting>
+  -  cpan install 'Captcha::reCAPTCHA::V2' -->
+<Setting name="recaptcha_site_key"></Setting>
+<Setting name="recaptcha_secret_key"></Setting>
 
 <!-- The name of the field for submit/preview action -->
 <Setting name="field_name_submit">do</Setting>
