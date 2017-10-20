@@ -35,6 +35,7 @@ do
 	echo "1) Major ($nextmajor.00.00)"
 	echo "2) Minor ($major.$nextminor.00)"
 	echo "3) Bugfix ($major.$minor.$nextbugfix)"
+	echo "4) Current ($version)"
 	read release_type
 	case $release_type in
 		"1" )
@@ -45,6 +46,9 @@ do
 			;;
 		"3" )
 			nextversion="$major.$minor.$nextbugfix"
+			;;
+		"4" )
+			nextversion="$version"
 			;;
 	esac
 done
