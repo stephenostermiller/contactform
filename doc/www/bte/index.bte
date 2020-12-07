@@ -161,7 +161,7 @@ It currently comes in the following languages:
 
 <h2>Changes</h2><ul>
 <li>Version 5.00.00<ul>
-<li>Upgraded recaptcha to v2.  This enables the "check this box" challenge rather than the "decipher these letters" challenge.  Note that Google will stop supporting recaptcha v1 on March 31, 2018, so all ContactForm installations will either need to upgrade or disable recaptcha.   In most cases upgrading will entail generating new recaptcha keys from Google because old "global" keys cannot be used with V2.  The Perl module Captcha::reCAPTCHA::V2 needs to be installed.   ContactForm configuration value names were changed to "recaptcha_site_key" and "recaptcha_secret_key" to match the language currently used by Google.</li>
+<li>Upgraded recaptcha to v2.  This enables the "check this box" challenge rather than the "decipher these letters" challenge.  Note that Google  stopped supporting recaptcha v1 on March 31, 2018, so all ContactForm installations will either need to upgrade or disable recaptcha.   In most cases upgrading will entail generating new recaptcha keys from Google because old "global" keys cannot be used with V2.  The Perl module Captcha::reCAPTCHA::V2 needs to be installed.   ContactForm configuration value names were changed to "recaptcha_site_key" and "recaptcha_secret_key" to match the language currently used by Google.</li>
 </ul></li></li>
 <li>Version 4.03.03<ul>
 <li>Added rel canonical meta tag to the HTML</li>
