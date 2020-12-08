@@ -1,5 +1,5 @@
 <%bte.doc output="false"%>
-<%bte.tpl name=page %><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%bte.tpl name=page %><!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -26,9 +26,9 @@ a:visited:hover{text-decoration:underline;}
 <div style="padding:1cm;">
 <%bte.inc name=content %>
 
-<p>Copyright (C) 2002-2014 <a href="http://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
+<p>Copyright (C) 2002-2020 <a href="https://ostermiller.org/contact.pl?regarding=Contact+Form">Stephen Ostermiller</a></p>
 
-<div style='font-size:small;text-align:right;padding:5mm;'><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+<div style='font-size:small;text-align:right;padding:5mm;'><a href="https://ostermiller.org/">ostermiller.org</a> (<a href="https://ostermiller.org/siteindex.html">site index</a>)</div>
 
 </div>
 

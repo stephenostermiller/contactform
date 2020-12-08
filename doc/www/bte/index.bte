@@ -12,7 +12,7 @@ reveal addresses that it knows.
 
 <%/bte.tpl%>
 <%bte.tpl name=content %>
-
+<div style="float:right;width:3in;padding:5px;margin:5px;border:1px black solid">
 <h2>Work Flow</h2>
 <p><a href="https://ostermiller.org/contactform/workflow.html"><img src="https://ostermiller.org/contactform/workflow_sm.png" width=200 height=78 style="padding:10px;"></a></p>
 <p>Use case: <a href="https://ostermiller.org/contactform/workflow.html">User wants to contact you using this email form script.</a></p>
@@ -146,12 +146,12 @@ Contact Form page on Facebook</a></li>
 <h2>Bugs and Feature Requests</h2>
 Bugs and features are tracked using Bugzilla.
 <ul>
-<li><a href="http://bugzilla.ostermiller.com/buglist.cgi?bug_status=__open__&product=ContactForm">See open issues</a>
-<li><a href="http://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">File a bug or request a feature</a>
+<li><a href="https://bugzilla.ostermiller.com/buglist.cgi?bug_status=__open__&product=ContactForm">See open issues</a>
+<li><a href="https://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">File a bug or request a feature</a>
 </ul>
 
 <h2>Languages</h2>
-Contact form can be easily translated.  See instructions in the contact.pl file of the download.  To submit a translation for a new language, <a href="http://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">use bugzilla to open a new feature request</a> and attach the translations.
+Contact form can be easily translated.  See instructions in the contact.pl file of the download.  To submit a translation for a new language, <a href="https://bugzilla.ostermiller.com/enter_bug.cgi?product=ContactForm">use bugzilla to open a new feature request</a> and attach the translations.
 It currently comes in the following languages:
 <ul>
 <li>English (en)</li>
@@ -168,11 +168,11 @@ It currently comes in the following languages:
 </ul></li></li>
 <li>Version 4.03.02<ul>
 <li>Add HTML5 doctype to default HTML page</li>
-<li>More correct fix for <a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
+<li>More correct fix for <a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
 </ul></li></li>
 <li>Version 4.03.01<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=377">Typo: "renurn" instead of "return"</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=377">Typo: "renurn" instead of "return"</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=369">trap field causes contact form to fail error checking</a></li>
 </ul></li></li>
 <li>Version 4.03.00<ul>
 <li>Allow any special fields such as subject, and name to be shown in the email body with "show_in_message" configuration</li>
@@ -181,46 +181,46 @@ It currently comes in the following languages:
 <li>Use the user's email address in the Reply-To field rather than the From field (by default) to bypass spam filtering</li>
 </ul></li></li>
 <li>Version 4.01.00<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=367">Default language not specified</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=368">Dutch (nl) translation</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=367">Default language not specified</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=368">Dutch (nl) translation</a></li>
 </ul></li></li>
 <li>Version 4.00.00<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=362">Allow contact form to be translated more easily</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=363">Allow recipients to easily see that the email was sent to a group rather than an individual</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=364">Captcha errors not handled correctly -- contact form displays error keys</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=365">Allow configuration for constant text to be pre-pended to the subject.</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=366">The preview button sends the message rather than previews it when preview_allowed=2</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=361">new line shown as text when template cannot be opened</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=362">Allow contact form to be translated more easily</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=363">Allow recipients to easily see that the email was sent to a group rather than an individual</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=364">Captcha errors not handled correctly -- contact form displays error keys</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=365">Allow configuration for constant text to be pre-pended to the subject.</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=366">The preview button sends the message rather than previews it when preview_allowed=2</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=361">new line shown as text when template cannot be opened</a></li>
 </ul></li></li>
 <li>Version 3.00.00<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=3">Add captchas to contactform</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=23">Allow addresses and other configuration to be specified from an external file</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=103">Regex for phone numbers with required area code and not required area code</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=229">Prefill parameter does not completely suppress error message</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=3">Add captchas to contactform</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=23">Allow addresses and other configuration to be specified from an external file</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=103">Regex for phone numbers with required area code and not required area code</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=229">Prefill parameter does not completely suppress error message</a></li>
 </ul></li></li>
 <li>Version 2.01.01<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=198">Client side error checking fails in internet explorer 6, falls through to server site error checking</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=199">Send button appears even when there are preview errors with javascript disabled</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=200">Description for "must leave blank" trap appears in emails</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=201">"Must leave blank" trap can be be undefined</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=202">Single quotes get corrupted on preview when using Internet Explorer</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=198">Client side error checking fails in internet explorer 6, falls through to server site error checking</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=199">Send button appears even when there are preview errors with javascript disabled</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=200">Description for "must leave blank" trap appears in emails</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=201">"Must leave blank" trap can be be undefined</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=202">Single quotes get corrupted on preview when using Internet Explorer</a></li>
 </ul></li></li>
 <li>Version 2.01.00<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=154">Include a bot trap field that must be left blank</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=154">Include a bot trap field that must be left blank</a></li>
 </ul></li></li>
 <li>Version 2.00.02<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=151">XSS: apostrophes are not escaped properly in html on preview</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=151">XSS: apostrophes are not escaped properly in html on preview</a></li>
 </ul></li></li>
 <li>Version 2.00.01<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=105">Client side error checking should be able to report all errors at once</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=102">Allow defaults to be filled in for every field from configuration</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=105">Client side error checking should be able to report all errors at once</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=102">Allow defaults to be filled in for every field from configuration</a></li>
 </ul></li></li>
 <li>Version 2.00.00<ul>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=91">Group configuration parameters better - one entry with multiple properties per field</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=90">Support radio buttons for selects</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=89">Allow better control of field description placement</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=88">Allow selected default value in drop down list</a></li>
-<li><a href="http://bugzilla.ostermiller.com/show_bug.cgi?id=87">Allow droplists to be optional</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=91">Group configuration parameters better - one entry with multiple properties per field</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=90">Support radio buttons for selects</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=89">Allow better control of field description placement</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=88">Allow selected default value in drop down list</a></li>
+<li><a href="https://bugzilla.ostermiller.com/show_bug.cgi?id=87">Allow droplists to be optional</a></li>
 <li>Fixed Perl warnings when using selects</li>
 <li>Don't allow cgi fields such as name, email, and subject to be used in generated emails if they have been removed from the configuration.</li>
 </ul></li></li>
@@ -311,18 +311,16 @@ any later version.</p>
 <p>This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE. See the
-<a href="http://www.gnu.org/copyleft/gpl.html">GNU
+<a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU
 General Public License</a> for more details.</p>
 
 <h2>Other Web to Email Gateways</h2>
 <table border=1>
 <tr><th>Name</th><th>License</th><th>Requirements</th><th>Comments</th></tr>
-<tr><td><a href="http://www.scriptarchive.com/formmail.html">Matt's FormMail</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Most commonly used, does not hide email addresses, often used as an open relay.</td></tr>
-<tr><td><a href="ftp://ftp.monkeys.com/pub/formmail/">Monkey's FormMail</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Modified (for security) version of Matt's FormMail, does not hide email addresses.</td></tr>
+<tr><td><a href="https://www.scriptarchive.com/formmail.html">Matt's FormMail</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Most commonly used, does not hide email addresses, often used as an open relay.</td></tr>
 <tr><td><a href="http://nms-cgi.sourceforge.net/">nms</a></td><td>Open source (GPL or Artistic)</td><td>Perl</td><td>A replacement for all of Matt's scripts including FormMail.  Can send directly to an SMTP server without sendmail.  Does not hide email addresses.</td></tr>
-<tr><td><a href="http://moensted.dk/formmail/">Dr. J&oslash;rgen Mash's FormMail.pl</a></td><td>Open source, freeware, must obtain permission to distribute.</td><td>Perl, Sendmail</td><td>Another modified version of Matt's FormMail.  Does not hide email addresses.</td></tr>
-<tr><td><a href="http://ente.limmat.ch/mailwebform/doc/index.html">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
-<tr><td><a href="http://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
+<tr><td><a href="https://ente.limmat.ch/mailwebform/doc/">MailWebForm</a></td><td>Open source (GPL)</td><td>Java, Java Servlets, Java Mail</td><td>Hides email addresses.</td></tr>
+<tr><td><a href="https://jimsun.linxnet.com/SCForm.html">SCForm</a></td><td>Open source (GPL)</td><td>PHP, Sendmail</td><td>Hides email addresses.</td></tr>
 </table>
 
 <%/bte.tpl%>

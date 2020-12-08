@@ -8,11 +8,11 @@
 <%bte.tpl name=content %>
 Linking to the <a href="./">contact form</a> on your server is very straightforward.  My contact form
 (on ostermiller.org) is in the root directory of the webserver, so it is simply<br>
-http://ostermiller.org/contact.pl.
+https://ostermiller.org/contact.pl.
 <p>
 If your contact form is in your cgi-bin directory, the link will likely look something
 like this:<br>
-http://www.example.com/cgi-bin/contact.pl
+https://www.example.com/cgi-bin/contact.pl
 <p>
 If you want to link to your contact form with prefilled data, there are two ways to do so.
 

@@ -42,7 +42,7 @@ $disallowed_text = (
 
 <h2><a name=captchas>Captchas</a></h2>
 
-<p>Contact Form supports captchas from <a href="http://recaptcha.net/">reCAPTCHA</a>.  To use captchas with the contact form: sign up for an account on reCAPTCHA; generate a public and private reCAPTCHA key for your domain; put the keys in the contact form configuration.</p>
+<p>Contact Form supports captchas from <a href="https://www.google.com/recaptcha/about/">reCAPTCHA</a>.  To use captchas with the contact form: sign up for an account on reCAPTCHA; generate a public and private reCAPTCHA key for your domain; put the keys in the contact form configuration.</p>
 
 <%/bte.tpl%>
 <%/bte.doc%>
